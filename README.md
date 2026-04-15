@@ -72,3 +72,14 @@ Then open `http://localhost:8000`.
    - **Branch:** `main`
    - **Folder:** `/ (root)`
 4. Save and wait for deployment URL.
+
+## React + shadcn/ui SaaS Redesign Blueprint
+
+For a modern Next.js App Router implementation, see `components/dsa-dashboard.tsx`. It includes:
+- two-column SaaS layout (sidebar stats + main table)
+- unified search/filter bar (Command + Popover)
+- compact table row with tooltip-based core idea
+- notes side drawer using `Sheet`
+
+The component uses this schema:
+`{ problem, link, pattern, subPattern, difficulty, coreIdea, complexity, status, notes }`.
