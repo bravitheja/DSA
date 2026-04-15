@@ -49,6 +49,21 @@ table { width: 100%; border-collapse: collapse; min-width: 900px; }
 th { background: var(--panel-soft); padding: 1rem; font-size: 0.7rem; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); text-align: left; position: sticky; top: 0; z-index: 10; }
 td { padding: 1rem; border-bottom: 1px solid var(--border); }
 
+.pagination-bar {
+  margin: 0 1.5rem 1.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  background: var(--panel);
+}
+
+.page-info { font-size: 0.85rem; color: var(--muted); font-weight: 600; min-width: 110px; text-align: center; }
+.pagination-bar button:disabled { opacity: 0.45; cursor: not-allowed; }
+
 tr.is-mastered { opacity: 0.5; background: var(--panel-soft); }
 tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted); }
 
@@ -76,16 +91,18 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
     .main-pane { flex: 1; height: auto; overflow: visible; }
     .filter-bar { flex-direction: column; align-items: stretch; position: static; }
     .table-shell { height: auto; margin: 0; border: none; border-radius: 0; overflow: visible; }
+    table { min-width: 0; }
+    .search-wrap, select, .random-btn { width: 100%; box-sizing: border-box; }
     
     table, tbody, tr, td { display: block; width: 100%; box-sizing: border-box; }
     thead { display: none; }
 
-    tr { border-bottom: 1px solid var(--border); padding: 1rem; cursor: pointer; position: relative; }
+    tr { border-bottom: 1px solid var(--border); padding: 1rem; cursor: pointer; position: relative; overflow: hidden; }
     
     /* Header Line: Checkbox + Problem Title */
-    .check-cell { display: inline-block !important; width: 40px !important; border: none !important; padding: 0 !important; }
-    .problem-cell { display: inline-block !important; width: calc(100% - 70px) !important; border: none !important; padding: 0 !important; }
-    .problem-link { font-size: 1.05rem; font-weight: 700; color: var(--brand); text-decoration: underline; }
+    .check-cell { display: inline-block !important; width: 32px !important; border: none !important; padding: 0 !important; vertical-align: top; }
+    .problem-cell { display: inline-block !important; width: calc(100% - 56px) !important; border: none !important; padding: 0 !important; padding-right: 1.5rem !important; vertical-align: top; }
+    .problem-link { font-size: 1.05rem; font-weight: 700; color: var(--brand); text-decoration: underline; overflow-wrap: anywhere; }
 
     /* The Details (Stacked) */
     td:not(.check-cell):not(.problem-cell) {
@@ -115,8 +132,17 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
     .note-btn { width: 100%; justify-content: center !important; background: var(--brand); color: white; padding: 0.8rem; border: none; font-weight: 700; }
 
     /* Chevron */
-    tr::after { content: '▼'; position: absolute; right: 1.2rem; top: 1.2rem; font-size: 0.6rem; color: var(--muted); transition: transform 0.2s; }
+    tr::after { content: '▼'; position: absolute; right: 0.7rem; top: 1.2rem; font-size: 0.6rem; color: var(--muted); transition: transform 0.2s; }
     tr.is-expanded::after { transform: rotate(180deg); }
+
+    .pagination-bar {
+      margin: 1rem;
+      padding: 0.75rem;
+      gap: 0.5rem;
+      justify-content: space-between;
+    }
+
+    .page-info { min-width: auto; font-size: 0.8rem; }
 
     .notes-sheet { width: 100vw; right: -100vw; }
 }

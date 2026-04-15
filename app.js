@@ -22,12 +22,19 @@ const elements = {
     autoSaveStatus: getEl("autoSaveStatus"),
     sheetSaveBtn: getEl("sheetSaveBtn"),
     sheetCloseBtn: getEl("sheetCloseBtn"),
-    togglePreviewBtn: getEl("togglePreviewBtn")
+    togglePreviewBtn: getEl("togglePreviewBtn"),
+    prevPageBtn: getEl("prevPageBtn"),
+    nextPageBtn: getEl("nextPageBtn"),
+    pageInfo: getEl("pageInfo")
 };
 
 let allProblems = [];
 let trackerState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 let activeNotesId = null;
+let filteredProblems = [];
+let currentPage = 1;
+const ITEMS_PER_PAGE_DESKTOP = 12;
+const ITEMS_PER_PAGE_MOBILE = 6;
 let saveTimeout;
 
 init();
@@ -57,10 +64,19 @@ function bindControls() {
     elements.difficultyFilter.addEventListener("change", applyAndRender);
     elements.sheetCloseBtn.addEventListener("click", closeNotesSheet);
     elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
+    elements.prevPageBtn.addEventListener("click", () => changePage(-1));
+    elements.nextPageBtn.addEventListener("click", () => changePage(1));
     elements.themeToggle.addEventListener("click", () => {
         const next = document.body.classList.contains("dark") ? "light" : "dark";
         applyTheme(next);
         localStorage.setItem(THEME_KEY, next);
+    });
+
+    window.addEventListener("resize", () => {
+        const totalPages = getTotalPages(filteredProblems.length);
+        currentPage = Math.min(currentPage, totalPages);
+        renderProblems();
+        renderPagination(totalPages);
     });
 }
 
@@ -133,15 +149,51 @@ function applyAndRender() {
     const pattern = elements.patternFilter.value;
     const diff = elements.difficultyFilter.value;
 
-    const filtered = allProblems.filter(p => {
+    filteredProblems = allProblems.filter(p => {
         return (p.problem.toLowerCase().includes(query)) &&
                (pattern === "all" || p.pattern === pattern) &&
                (diff === "all" || p.difficulty === diff);
     });
 
-    elements.body.innerHTML = "";
-    filtered.forEach(p => elements.body.appendChild(createProblemRow(p)));
+    currentPage = 1;
+    renderProblems();
+    renderPagination(getTotalPages(filteredProblems.length));
     updateSidebarStats(allProblems);
+}
+
+function renderProblems() {
+    const perPage = getItemsPerPage();
+    const start = (currentPage - 1) * perPage;
+    const pageItems = filteredProblems.slice(start, start + perPage);
+
+    elements.body.innerHTML = "";
+    if (!pageItems.length) {
+        elements.body.innerHTML = `<tr><td colspan="7" class="loading-state">No problems match current filters.</td></tr>`;
+        return;
+    }
+
+    pageItems.forEach(p => elements.body.appendChild(createProblemRow(p)));
+}
+
+function getItemsPerPage() {
+    return window.innerWidth <= 850 ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP;
+}
+
+function getTotalPages(totalItems) {
+    return Math.max(1, Math.ceil(totalItems / getItemsPerPage()));
+}
+
+function changePage(delta) {
+    const totalPages = getTotalPages(filteredProblems.length);
+    currentPage = Math.min(totalPages, Math.max(1, currentPage + delta));
+    renderProblems();
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    elements.pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+    elements.prevPageBtn.disabled = currentPage === 1;
+    elements.nextPageBtn.disabled = currentPage === totalPages;
 }
 
 function updateSidebarStats(items) {
