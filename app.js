@@ -198,8 +198,7 @@ function fillRow(row, problem) {
   anchorWrap.appendChild(link);
   problemCell.appendChild(anchorWrap);
 
-  row.querySelector(".pattern-cell").textContent = problem.pattern;
-  row.querySelector(".sub-pattern-cell").textContent = problem.subPattern;
+  row.querySelector(".concept-cell").appendChild(buildConceptNode(problem));
 
   const diffBadge = row.querySelector(".difficulty-badge");
   diffBadge.textContent = problem.difficulty;
@@ -222,6 +221,26 @@ function fillRow(row, problem) {
   if (problem.status === STATUS_MASTERED) {
     row.classList.add("mastered-row");
   }
+}
+
+function buildConceptNode(problem) {
+  const concept = document.createElement("div");
+  concept.className = "concept";
+
+  const pattern = document.createElement("div");
+  pattern.className = "pattern";
+  pattern.textContent = problem.pattern || "-";
+
+  const subPattern = document.createElement("div");
+  subPattern.className = "sub-pattern";
+  subPattern.textContent = problem.subPattern ? `↳ ${problem.subPattern}` : "";
+
+  const coreIdea = document.createElement("div");
+  coreIdea.className = "core-idea";
+  coreIdea.textContent = problem.coreIdea ? `• ${problem.coreIdea}` : "";
+
+  concept.append(pattern, subPattern, coreIdea);
+  return concept;
 }
 
 function handleTableChange(event) {
@@ -311,7 +330,7 @@ function updateStats(items) {
 }
 
 function showErrorRow(message) {
-  elements.body.innerHTML = `<tr><td colspan="8" class="empty-state">${message}</td></tr>`;
+  elements.body.innerHTML = `<tr><td colspan="7" class="empty-state">${message}</td></tr>`;
 }
 
 function applyColumnVisibility() {

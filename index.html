@@ -75,7 +75,6 @@
 
       <section class="column-toggle-wrap">
         <span>Column visibility:</span>
-        <label><input type="checkbox" class="column-toggle" data-column="subPattern" checked /> Sub Pattern</label>
         <label><input type="checkbox" class="column-toggle" data-column="frequency" checked /> Frequency</label>
         <label><input type="checkbox" class="column-toggle" data-column="complexity" checked /> Complexity</label>
       </section>
@@ -85,8 +84,7 @@
           <thead>
             <tr>
               <th data-col="problem">Problem</th>
-              <th data-col="pattern">Pattern</th>
-              <th data-col="subPattern">Sub Pattern</th>
+              <th data-col="concept">Concept</th>
               <th data-col="difficulty">Difficulty</th>
               <th data-col="frequency">Frequency</th>
               <th data-col="complexity">Complexity</th>
@@ -102,8 +100,7 @@
     <template id="problemRowTemplate">
       <tr>
         <td data-col="problem" class="problem-cell"></td>
-        <td data-col="pattern" class="pattern-cell"></td>
-        <td data-col="subPattern" class="sub-pattern-cell"></td>
+        <td data-col="concept" class="concept-cell"></td>
         <td data-col="difficulty"><span class="difficulty-badge"></span></td>
         <td data-col="frequency"><span class="frequency-badge"></span></td>
         <td data-col="complexity" class="complexity-cell"></td>
