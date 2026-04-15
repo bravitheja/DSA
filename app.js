@@ -136,6 +136,16 @@ function createProblemRow(p) {
     const row = elements.rowTemplate.content.firstElementChild.cloneNode(true);
     if (p.status === "Mastered") row.classList.add("is-mastered");
 
+    // Add labels for mobile cards
+    const cells = row.querySelectorAll('td');
+    cells[0].setAttribute('data-label', 'Done');
+    cells[1].setAttribute('data-label', 'Problem');
+    cells[2].setAttribute('data-label', 'Frequency');
+    cells[3].setAttribute('data-label', 'Concept');
+    cells[4].setAttribute('data-label', 'Complexity');
+    cells[5].setAttribute('data-label', 'Difficulty');
+    cells[6].setAttribute('data-label', 'Notes');
+
     const check = row.querySelector(".mastered-check");
     check.checked = p.status === "Mastered";
     check.addEventListener("change", (e) => {
@@ -165,8 +175,9 @@ function createProblemRow(p) {
     row.querySelector(".complexity-cell").textContent = p.complexity;
     row.querySelector(".difficulty-cell").innerHTML = `<span class="badge difficulty-${p.difficulty.toLowerCase()}">${p.difficulty}</span>`;
     
-    const actions = row.querySelector(".actions-cell");
-    actions.innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="secondary-btn">📝 Notes</button>`;
+    // Standardize the notes button
+    const actionCell = row.querySelector(".actions-cell");
+    actionCell.innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="note-btn">📝 Notes</button>`;
 
     return row;
 }
