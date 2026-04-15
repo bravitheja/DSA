@@ -92,14 +92,38 @@ function normalizeProblemData(items) {
     return items.map((item, idx) => {
         const id = item.problem || `p-${idx}`;
         const stored = trackerState[id] || {};
+        
+        // --- NEW CLEANING LOGIC ---
+        let rawLink = (item.link || "").trim();
+        let cleanLink = rawLink;
+
+        // Check for Markdown format: [link](url)
+        const markdownRegex = /\[.*?\]\((https?:\/\/.*?)\)/;
+        const match = rawLink.match(markdownRegex);
+        
+        if (match && match[1]) {
+            cleanLink = match[1]; // Extract just the URL part
+        } else if (rawLink.startsWith('[') && rawLink.includes(']')) {
+            // Fallback for weirdly formatted brackets
+            cleanLink = rawLink.split('](')[1]?.replace(')', '') || rawLink.replace(/[\[\]]/g, '');
+        }
+
+        // Final safety check: if it contains a Google redirect
+        if (cleanLink.includes('google.com/url')) {
+            try {
+                const urlObj = new URL(cleanLink);
+                cleanLink = urlObj.searchParams.get('q') || cleanLink;
+            } catch (e) { console.error("URL Parsing failed", e); }
+        }
+
         return {
             id,
             problem: item.problem || "Untitled",
-            link: item.link || "#",
+            link: cleanLink, // This is now always clean
             pattern: item.pattern || "General",
             subPattern: item.subPattern || "",
             difficulty: item.difficulty || "Medium",
-            coreIdea: item.coreIdea || "No core logic added.",
+            coreIdea: item.coreIdea || "No core logic available.",
             complexity: item.complexity || "-",
             frequency: parseInt(item.frequency) || 0,
             status: stored.status || "Not Started",
@@ -191,27 +215,12 @@ window.pickRandom = () => {
     
     const r = todo[Math.floor(Math.random() * todo.length)];
     
-    // --- SANITIZATION LOGIC ---
-    let cleanLink = r.link.trim();
-
-    // 1. Remove Markdown brackets if they exist: "[url](...)" -> "url"
-    if (cleanLink.startsWith('[') && cleanLink.includes(']')) {
-        cleanLink = cleanLink.match(/\[?([^\]\s]+)\]?/)[1]; 
+    // Safety check to ensure we have a valid URL
+    if (r.link && r.link.startsWith('http')) {
+        window.open(r.link, '_blank');
+    } else {
+        alert("Found a broken link for: " + r.problem);
     }
-
-    // 2. Remove Google Redirect wrappers if present
-    if (cleanLink.includes('google.com/url')) {
-        const urlParams = new URLSearchParams(cleanLink.split('?')[1]);
-        cleanLink = urlParams.get('q') || cleanLink;
-    }
-
-    // 3. Ensure it starts with https (if it doesn't, browser treats it as relative)
-    if (!cleanLink.startsWith('http')) {
-        console.error("Malformed URL detected:", cleanLink);
-        return alert("The link for this problem is broken in data.json");
-    }
-
-    window.open(cleanLink, '_blank');
 };
 
 window.openNotesSheet = (id) => {
