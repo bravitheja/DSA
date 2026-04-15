@@ -102,7 +102,7 @@ function normalizeProblemData(items) {
 
 function createProblemRow(p) {
     const row = elements.rowTemplate.content.firstElementChild.cloneNode(true);
-    const exploreUrl = `https://www.google.com/search?q=Explain+${encodeURIComponent(p.link)}+solution+GeminiAI`;
+    const exploreUrl = `https://www.google.com/search?q=Explain+${encodeURIComponent(p.problem)}+solution+chatGPT`;
     if (p.status === "Mastered") row.classList.add("is-mastered");
 
     const cells = row.querySelectorAll('td');
