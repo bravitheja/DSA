@@ -102,6 +102,7 @@ function normalizeProblemData(items) {
 
 function createProblemRow(p) {
     const row = elements.rowTemplate.content.firstElementChild.cloneNode(true);
+    const exploreUrl = `https://www.google.com/search?q=Leetcode+${encodeURIComponent(p.problem)}+solution`;
     if (p.status === "Mastered") row.classList.add("is-mastered");
 
     const cells = row.querySelectorAll('td');
@@ -143,6 +144,10 @@ function createProblemRow(p) {
         <div class="concept-stack">
             <div><span class="badge pattern-default">${p.pattern}</span></div>
             <div class="sub-pattern">${p.subPattern}</div>
+            <div class="idea-row">
+              <span class="idea-icon" aria-hidden="true">💡</span>
+              <a href="${exploreUrl}" target="_blank" rel="noopener noreferrer" class="explore-link">Explore 🔍</a>
+            </div>
             <div class="core-idea">${p.coreIdea}</div>
         </div>`;
 
