@@ -97,80 +97,81 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 .sheet-footer { margin-top: 1.5rem; display: flex; gap: 0.75rem; }
 .save-btn { flex: 1; background: var(--brand); color: white; font-weight: 600; border: none; }
 
-/* --- RESPONSIVE MOBILE OVERRIDES --- */
-@media (max-width: 768px) {
+/* --- THE ULTIMATE MOBILE RESPONSIVENESS FIX --- */
+@media (max-width: 850px) {
+    /* 1. Force the grid into a single column stack */
     .dashboard-shell {
-        grid-template-columns: 1fr; /* Stack Sidebar on top of Main */
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: 1fr !important;
+        width: 100%;
+        overflow-x: hidden; /* Hard stop for horizontal page scroll */
     }
 
+    /* 2. Reset Sidebar for top-view */
     .sidebar {
+        width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--border);
         padding: 1rem;
+        box-sizing: border-box;
     }
 
-    .brand-row {
-        margin-bottom: 1rem;
+    /* 3. Constrain the Main Pane */
+    .main-pane {
+        width: 100%;
+        min-width: 0; /* CRITICAL: Allows flex children to shrink below content size */
+        flex: 1;
     }
 
-    /* Stack stats horizontally to save vertical space on mobile */
-    .difficulty-rings {
-        gap: 1rem;
-        justify-items: center;
-    }
-
-    .ring {
-        width: 50px;
-        height: 50px;
-        font-size: 0.65rem;
-    }
-
-    /* Stack Filter Bar elements */
+    /* 4. The Filter Bar Stack */
     .filter-bar {
         flex-direction: column;
-        align-items: stretch;
         padding: 1rem;
+        gap: 0.75rem;
     }
 
     .search-wrap {
-        min-width: unset;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .filter-bar select, .random-btn {
         width: 100%;
     }
 
-    /* Responsive Table Wrapper */
+    /* 5. THE TABLE CAGE (This fixes your screenshot issue) */
     .table-shell {
-        margin: 0; /* Remove margins to gain width */
-        border-radius: 0;
+        margin: 1rem 0; /* Remove side margins to use full screen width */
+        width: 100vw;
+        max-width: 100%;
+        overflow-x: auto; /* Allow the table to scroll, but keep the page still */
+        display: block; /* Forces the div to respect the overflow-x */
         border-left: none;
         border-right: none;
-        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+        border-radius: 0;
+        -webkit-overflow-scrolling: touch;
     }
 
     table {
-        min-width: 700px; /* Force internal scroll while keeping columns readable */
+        min-width: 850px; /* Keep table wide internally so data isn't squashed */
     }
 
-    /* Adjust the Notes Drawer for Mobile */
+    /* 6. Mobile Notes Drawer */
     .notes-sheet {
         width: 100%;
-        right: -100%; /* Hide off-screen completely */
+        right: -100%;
+        transition: right 0.3s ease-out;
     }
 
     .notes-sheet.open {
         right: 0;
     }
 
-    /* Make the notes container smaller on short mobile screens */
-    .notes-container {
-        height: 50%;
-    }
-}
-
-/* Extra small screens adjustment */
-@media (max-width: 480px) {
-    .brand-row h1 { font-size: 1rem; }
-    
-    .difficulty-rings {
-        grid-template-columns: 1fr 1fr 1fr;
+    /* 7. Hide non-essential columns on very small screens to save swipe distance */
+    @media (max-width: 500px) {
+        .complexity-cell, th:nth-child(5) {
+            display: none; /* Hide complexity on tiny screens */
+        }
     }
 }
