@@ -74,6 +74,7 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 .heat-bar-fill { height: 100%; background: var(--brand); }
 .concept-stack { display: flex; flex-direction: column; gap: 0.35rem; }
 .sub-pattern { font-size: 0.75rem; color: var(--muted); }
+.core-idea { font-size: 0.78rem; line-height: 1.35; color: var(--text); }
 .badge { padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 700; border: 1px solid transparent; width: fit-content; }
 .difficulty-easy { background: #d1fae5; color: #065f46; }
 .difficulty-medium { background: #fef3c7; color: #92400e; }

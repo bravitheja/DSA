@@ -135,6 +135,7 @@ function createProblemRow(p) {
         <div class="concept-stack">
             <div><span class="badge pattern-default">${p.pattern}</span></div>
             <div class="sub-pattern">${p.subPattern}</div>
+            <div class="core-idea">${p.coreIdea}</div>
         </div>`;
 
     row.querySelector(".complexity-cell").innerHTML = `<span>${p.complexity}</span>`;
@@ -225,6 +226,8 @@ window.openNotesSheet = (id) => {
 function closeNotesSheet() { elements.notesSheet.classList.remove("open"); activeNotesId = null; }
 function patchProblemState(id, partial) {
     trackerState[id] = { ...trackerState[id], ...partial };
+    const problem = allProblems.find((item) => item.id === id);
+    if (problem) Object.assign(problem, partial);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trackerState));
 }
 function populatePatternFilter(items) {
