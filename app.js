@@ -188,8 +188,30 @@ function updateSidebarStats(items) {
 window.pickRandom = () => {
     const todo = allProblems.filter(p => p.status !== "Mastered");
     if (todo.length === 0) return alert("Everything mastered! 🏆");
+    
     const r = todo[Math.floor(Math.random() * todo.length)];
-    window.open(r.link, '_blank');
+    
+    // --- SANITIZATION LOGIC ---
+    let cleanLink = r.link.trim();
+
+    // 1. Remove Markdown brackets if they exist: "[url](...)" -> "url"
+    if (cleanLink.startsWith('[') && cleanLink.includes(']')) {
+        cleanLink = cleanLink.match(/\[?([^\]\s]+)\]?/)[1]; 
+    }
+
+    // 2. Remove Google Redirect wrappers if present
+    if (cleanLink.includes('google.com/url')) {
+        const urlParams = new URLSearchParams(cleanLink.split('?')[1]);
+        cleanLink = urlParams.get('q') || cleanLink;
+    }
+
+    // 3. Ensure it starts with https (if it doesn't, browser treats it as relative)
+    if (!cleanLink.startsWith('http')) {
+        console.error("Malformed URL detected:", cleanLink);
+        return alert("The link for this problem is broken in data.json");
+    }
+
+    window.open(cleanLink, '_blank');
 };
 
 window.openNotesSheet = (id) => {
