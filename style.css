@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 :root {
   color-scheme: light;
   --bg: #f5f7fb;
@@ -34,7 +35,8 @@ body.dark {
 
 body {
   margin: 0;
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  /* font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif; */
+  font-family: 'Roboto', sans-serif;
   background: var(--bg);
   color: var(--text);
 }
@@ -179,7 +181,7 @@ h1 { margin: 0; font-size: clamp(1.35rem, 2.5vw, 2rem); }
   cursor: pointer;
 }
 
-input, select, textarea {
+/* input, select, textarea {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -187,6 +189,34 @@ input, select, textarea {
   font: inherit;
   color: inherit;
   background: var(--surface);
+} */
+input, textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.6rem 0.65rem;
+  font: inherit;
+  color: inherit;
+  background: var(--surface);
+}
+
+select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.6rem 2rem 0.6rem 0.65rem; /* 👈 extra right padding */
+  font: inherit;
+  color: inherit;
+  background: var(--surface);
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* custom arrow */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center; /* 👈 spacing from border */
 }
 
 .column-toggle {
@@ -324,7 +354,7 @@ tr.mastered-row {
   display: inline-flex;
   border-radius: 999px;
   border: 1px solid transparent;
-  padding: 0.26rem 0.65rem;
+  padding: 0.46rem 0.65rem;
   font-size: 0.76rem;
   font-weight: 600;
   white-space: nowrap;
@@ -427,7 +457,7 @@ body.dark .core-idea {
   .quick-pills {
     overflow-x: auto;
     flex-wrap: nowrap;
-    padding-bottom: 0.15rem;
+    padding-bottom: 0.75rem;
     scrollbar-width: thin;
   }
 
