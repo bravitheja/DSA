@@ -7,146 +7,89 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <div>
-          <h1>AlgoInsight</h1>
-          <p class="subtitle">Master patterns. Track progress. Crack interviews.</p>
-        </div>
-        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙 Dark</button>
-      </header>
-
-      <section class="summary-card">
-        <div class="summary-grid">
-          <div class="summary-item">
-            <span>Total Problems</span>
-            <strong id="totalCount">0</strong>
+    <div class="dashboard-shell">
+      <aside class="sidebar">
+        <div class="brand-row">
+          <div>
+            <h1>AlgoInsight</h1>
+            <p>DSA Tracker</p>
           </div>
-          <div class="summary-item">
-            <span>Mastered</span>
-            <strong id="completedCount">0</strong>
-          </div>
-          <div class="summary-item">
-            <span>Progress</span>
-            <strong id="progressPercent">0%</strong>
-          </div>
-        </div>
-        <div class="progress-track" aria-hidden="true">
-          <div id="progressBar" class="progress-bar"></div>
-        </div>
-      </section>
-
-      <section class="controls">
-        <label class="control-field">
-          <span>Search</span>
-          <input id="searchInput" type="text" placeholder="Search problem name" />
-        </label>
-
-        <div class="quick-pills" aria-label="Quick filters">
-          <div class="pill-group" role="group" aria-label="Difficulty quick filter">
-            <button type="button" class="filter-pill active" data-target="difficultyFilter" data-value="all">All</button>
-            <button type="button" class="filter-pill" data-target="difficultyFilter" data-value="Easy">Easy</button>
-            <button type="button" class="filter-pill" data-target="difficultyFilter" data-value="Medium">Medium</button>
-            <button type="button" class="filter-pill" data-target="difficultyFilter" data-value="Hard">Hard</button>
-          </div>
-          <div class="pill-group" role="group" aria-label="Frequency quick filter">
-            <button type="button" class="filter-pill active" data-target="frequencyFilter" data-value="all">Any frequency</button>
-            <button type="button" class="filter-pill" data-target="frequencyFilter" data-value="High">High</button>
-            <button type="button" class="filter-pill" data-target="frequencyFilter" data-value="Medium">Medium</button>
-            <button type="button" class="filter-pill" data-target="frequencyFilter" data-value="Low">Low</button>
-          </div>
+          <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
         </div>
 
-        <label class="control-field">
-          <span>Pattern</span>
-          <select id="patternFilter"></select>
-        </label>
+        <section class="sidebar-card">
+          <h2>Stats</h2>
+          <div class="stat-line">
+            <span>Total solved</span>
+            <strong id="solvedCount">0 / 0</strong>
+          </div>
+          <div class="difficulty-rings">
+            <div class="ring-wrap">
+              <div id="easyRing" class="ring ring-easy">0%</div>
+              <span>Easy</span>
+            </div>
+            <div class="ring-wrap">
+              <div id="mediumRing" class="ring ring-medium">0%</div>
+              <span>Medium</span>
+            </div>
+            <div class="ring-wrap">
+              <div id="hardRing" class="ring ring-hard">0%</div>
+              <span>Hard</span>
+            </div>
+          </div>
+        </section>
+      </aside>
 
-        <label class="control-field">
-          <span>Sub Pattern</span>
-          <select id="subPatternFilter"></select>
-        </label>
+      <main class="main-pane">
+        <header class="filter-bar" aria-label="Global filters">
+          <label class="search-wrap" for="searchInput">
+            <span>🔍</span>
+            <input id="searchInput" type="text" placeholder="Search problem by name..." />
+          </label>
 
-        <label class="control-field">
-          <span>Difficulty</span>
-          <select id="difficultyFilter"></select>
-        </label>
-
-        <label class="control-field">
-          <span>Frequency</span>
-          <select id="frequencyFilter"></select>
-        </label>
-
-        <label class="control-field">
-          <span>Sort</span>
-          <select id="sortSelect">
-            <option value="default">Default</option>
-            <option value="difficulty">Difficulty (Easy → Hard)</option>
-            <option value="frequency">Frequency (High → Low)</option>
-            <option value="alpha">Alphabetical (A-Z)</option>
+          <select id="patternFilter" aria-label="Filter by pattern"></select>
+          <select id="difficultyFilter" aria-label="Filter by difficulty">
+            <option value="all">Difficulty: All</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
           </select>
-        </label>
-      </section>
+        </header>
 
-      <section class="column-toggle-wrap">
-        <span>Column visibility:</span>
-        <label><input type="checkbox" class="column-toggle" data-column="frequency" checked /> Frequency</label>
-        <label><input type="checkbox" class="column-toggle" data-column="complexity" checked /> Complexity</label>
-      </section>
-
-      <section class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th data-col="problem">Problem</th>
-              <th data-col="concept">Concept</th>
-              <th data-col="difficulty">Difficulty</th>
-              <th data-col="frequency">Frequency</th>
-              <th data-col="complexity">Complexity</th>
-              <th data-col="status">Status</th>
-              <th data-col="notes">Notes</th>
-            </tr>
-          </thead>
-          <tbody id="problemsBody"></tbody>
-        </table>
-      </section>
-
-      <section class="pagination" aria-label="Table pagination">
-        <div class="pagination-meta">
-          <span id="paginationInfo">Showing 0-0 of 0</span>
-        </div>
-        <div class="pagination-controls">
-          <label for="pageSizeSelect">Rows per page</label>
-          <select id="pageSizeSelect" aria-label="Rows per page">
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-          <button id="prevPageBtn" type="button">← Prev</button>
-          <span id="pageIndicator" aria-live="polite">Page 1 of 1</span>
-          <button id="nextPageBtn" type="button">Next →</button>
-        </div>
-      </section>
+        <section class="table-shell">
+          <table>
+            <thead>
+              <tr>
+                <th>Problem</th>
+                <th>Pattern</th>
+                <th>Complexity</th>
+                <th>Difficulty</th>
+                <th class="actions-col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="problemsBody"></tbody>
+          </table>
+        </section>
+      </main>
     </div>
+
+    <aside id="notesSheet" class="notes-sheet" aria-hidden="true">
+      <div class="sheet-header">
+        <h3 id="sheetTitle">Notes</h3>
+        <button id="sheetCloseBtn" class="icon-btn" type="button" aria-label="Close notes">✕</button>
+      </div>
+      <p class="sheet-subtitle">Capture intuition, pitfalls, and revision reminders.</p>
+      <textarea id="sheetNotesInput" placeholder="Write notes..."></textarea>
+      <button id="sheetSaveBtn" class="save-btn" type="button">Save Notes</button>
+    </aside>
 
     <template id="problemRowTemplate">
       <tr>
-        <td data-col="problem" class="problem-cell" data-label="Problem"></td>
-        <td data-col="concept" class="concept-cell" data-label="Concept"></td>
-        <td data-col="difficulty" data-label="Difficulty"><span class="difficulty-badge"></span></td>
-        <td data-col="frequency" data-label="Frequency"><span class="frequency-badge"></span></td>
-        <td data-col="complexity" class="complexity-cell" data-label="Complexity"></td>
-        <td data-col="status" data-label="Status">
-          <select class="status-select" aria-label="Problem status">
-            <option value="Not Started">Not Started</option>
-            <option value="Revising">Revising</option>
-            <option value="Mastered">Mastered</option>
-          </select>
-        </td>
-        <td data-col="notes" data-label="Notes">
-          <textarea class="notes-input" rows="2" placeholder="Add notes..."></textarea>
-        </td>
+        <td class="problem-cell" data-label="Problem"></td>
+        <td class="pattern-cell" data-label="Pattern"></td>
+        <td class="complexity-cell" data-label="Complexity"></td>
+        <td class="difficulty-cell" data-label="Difficulty"></td>
+        <td class="actions-cell" data-label="Actions"></td>
       </tr>
     </template>
 

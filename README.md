@@ -73,13 +73,13 @@ Then open `http://localhost:8000`.
    - **Folder:** `/ (root)`
 4. Save and wait for deployment URL.
 
-## React + shadcn/ui SaaS Redesign Blueprint
+## Vanilla JS SaaS Redesign
 
-For a modern Next.js App Router implementation, see `components/dsa-dashboard.tsx`. It includes:
-- two-column SaaS layout (sidebar stats + main table)
-- unified search/filter bar (Command + Popover)
-- compact table row with tooltip-based core idea
-- notes side drawer using `Sheet`
+The tracker now uses a cleaner SaaS-like layout directly in vanilla HTML/CSS/JS:
+- two-column shell (sidebar stats + main table pane)
+- unified global filter bar for search, pattern, and difficulty
+- compact table rows with tooltip-backed core idea
+- notes side drawer (sheet-style panel) opened from an action icon
 
-The component uses this schema:
+Data schema:
 `{ problem, link, pattern, subPattern, difficulty, coreIdea, complexity, status, notes }`.
