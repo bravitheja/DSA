@@ -98,125 +98,138 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 .save-btn { flex: 1; background: var(--brand); color: white; font-weight: 600; border: none; }
 
 /* --- THE ULTIMATE MOBILE CARD-STACKING FIX --- */
-@media (max-width: 768px) {
-    /* 1. Reset the grid and shell */
+/* --- THE ULTIMATE MOBILE CARD FIX --- */
+@media (max-width: 850px) {
     .dashboard-shell {
-        display: block;
-        width: 100%;
+        display: block; /* Stack sidebar and main */
+        width: 100vw;
+        overflow-x: hidden;
     }
 
     .sidebar {
         width: 100%;
-        padding: 1rem;
+        border-right: none;
         border-bottom: 2px solid var(--border);
+        padding: 1rem;
+        box-sizing: border-box;
     }
 
-    .sidebar-card {
-        margin-top: 0.5rem;
+    .main-pane {
+        width: 100%;
+        padding: 0;
     }
 
-    /* 2. Fix the Filter Bar and Random Button */
     .filter-bar {
         padding: 1rem;
         flex-direction: column;
         gap: 0.8rem;
     }
 
-    .search-wrap {
-        width: 100%;
-    }
-
-    .random-btn {
-        width: 100%;
-        padding: 0.8rem;
-        font-size: 1rem;
-        justify-content: center;
-    }
-
-    /* 3. TRANSFORMATION: Table to Cards */
+    /* Convert Table to Cards */
     .table-shell {
         margin: 0;
         border: none;
         background: transparent;
+        overflow: visible;
     }
 
     table, thead, tbody, th, td, tr {
-        display: block; /* Break the table structure */
+        display: block;
+        width: 100%;
     }
 
-    thead {
-        display: none; /* Hide headers on mobile */
-    }
+    thead { display: none; } /* Hide the original headers */
 
     tr {
         background: var(--panel);
-        margin: 1rem;
+        margin: 1rem 0; /* Vertical spacing between cards */
         padding: 1rem;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         position: relative;
+        box-sizing: border-box;
+    }
+
+    /* Card Mastery State */
+    tr.is-mastered {
+        opacity: 0.6;
+        background: var(--panel-soft);
     }
 
     td {
-        border-bottom: none;
-        padding: 0.5rem 0;
-        display: flex;
+        display: flex; /* Key to label-content alignment */
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--panel-soft);
         text-align: right;
-        font-size: 0.9rem;
+        min-height: 40px;
     }
 
-    /* 4. Add labels for the data points */
+    /* This creates the labels on the left of the card */
     td::before {
-        content: attr(data-label); /* Uses the data-label we added in HTML */
-        font-weight: 700;
-        text-transform: uppercase;
+        content: attr(data-label);
+        font-weight: 800;
         font-size: 0.7rem;
+        text-transform: uppercase;
         color: var(--muted);
         text-align: left;
+        flex: 1; /* Pushes content to the right */
     }
 
-    /* 5. Special styling for specific cells in card mode */
-    .check-cell {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        width: auto;
+    /* Ensure card content behaves inside flex */
+    td > * {
+        flex: 2; /* Content takes more space than label */
+        display: flex;
+        justify-content: flex-end;
     }
+
+    /* Specific Cell Overrides */
+    .check-cell {
+        justify-content: flex-start;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .check-cell::before { flex: 1; }
 
     .problem-cell {
-        margin-top: 1.5rem; /* Space for the checkbox */
+        display: block; /* Title should take its own line */
         text-align: left;
-        display: block;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
 
-    .problem-cell::before { display: block; margin-bottom: 0.2rem; }
+    .problem-cell::before {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
 
     .problem-link {
         font-size: 1.1rem;
+        color: var(--brand);
         display: block;
     }
 
-    .concept-cell, .frequency-cell, .complexity-cell, .difficulty-cell {
-        border-top: 1px solid var(--panel-soft);
-        padding-top: 0.8rem;
-    }
-
+    /* Hide redundant labels for the note button */
     .actions-cell {
-        justify-content: center;
+        border-bottom: none;
         padding-top: 1rem;
     }
 
     .note-btn {
         width: 100%;
-        padding: 0.6rem;
+        justify-content: center;
+        padding: 0.75rem;
+        font-weight: 600;
     }
 
-    /* 6. Notes Sheet Fix */
+    /* Notes Drawer */
     .notes-sheet {
-        width: 100%;
-        right: -100%;
+        width: 100vw;
+        right: -100vw;
     }
 }
