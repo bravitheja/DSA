@@ -98,7 +98,7 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 .save-btn { flex: 1; background: var(--brand); color: white; font-weight: 600; border: none; }
 
 /* --- THE ULTIMATE MOBILE CARD-STACKING FIX --- */
-/* --- FINAL STABLE MOBILE CARD FIX --- */
+/* --- ULTIMATE STABLE MOBILE CARD FIX --- */
 @media (max-width: 850px) {
     .dashboard-shell {
         display: block;
@@ -110,7 +110,7 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
         width: 100%;
         border-right: none;
         border-bottom: 2px solid var(--border);
-        padding: 1rem;
+        padding: 1.5rem 1rem;
     }
 
     .main-pane {
@@ -118,7 +118,6 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
         overflow-x: hidden;
     }
 
-    /* Stack Filter Bar */
     .filter-bar {
         padding: 1rem;
         flex-direction: column;
@@ -146,52 +145,54 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 
     tr {
         background: var(--panel);
-        margin: 1rem auto;
-        width: calc(100% - 2rem); /* Gives 1rem margin on each side */
+        margin: 1.5rem auto;
+        width: calc(100% - 2rem); /* Centered card with 1rem gutters */
         padding: 1.25rem;
         border-radius: 12px;
         border: 1px solid var(--border);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         box-sizing: border-box;
     }
 
-    /* Rows inside the card */
+    /* Mastery Dimming for Mobile */
+    tr.is-mastered { opacity: 0.6; background: var(--panel-soft); }
+
+    /* The Rows Inside the Card */
     td {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.8rem 0;
+        padding: 0.75rem 0;
         border-bottom: 1px solid var(--panel-soft);
-        text-align: right;
-        min-width: 0; /* Prevents flex items from overflowing */
+        min-width: 0; /* Prevents text overflow */
     }
 
+    /* Labels on the Left */
     td::before {
         content: attr(data-label);
         font-weight: 800;
         font-size: 0.65rem;
         text-transform: uppercase;
         color: var(--muted);
-        text-align: left;
         flex-shrink: 0;
         margin-right: 1rem;
     }
 
-    /* Ensure content on the right stays contained */
-    td > div, td > span, td > button {
+    /* Content on the Right */
+    td > div, td > span {
         flex: 1;
         display: flex;
         justify-content: flex-end;
-        min-width: 0;
-        word-break: break-word;
+        text-align: right;
+        min-width: 0; 
+        word-break: break-word; /* Prevents long names from breaking layout */
     }
 
-    /* Special Layout for the Problem Name */
+    /* Specific Row: Problem Title (Gives it more space) */
     .problem-cell {
-        display: block !important; /* Stack label above title */
-        text-align: left;
-        border-bottom: 2px solid var(--border);
+        display: block; /* Stack title below the "PROBLEM" label */
         padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border);
         margin-bottom: 0.5rem;
     }
 
@@ -201,18 +202,20 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
     }
 
     .problem-link {
-        font-size: 1.2rem;
-        font-weight: 800;
+        font-size: 1.1rem;
+        font-weight: 700;
         color: var(--brand);
         display: block;
         text-align: left;
     }
 
-    /* Fix Badge/Icon Alignment */
+    /* Special alignment for Complex items */
     .concept-stack, .freq-container {
+        width: 100%;
         justify-content: flex-end;
     }
 
+    /* The Action Button (Notes) */
     .actions-cell {
         border-bottom: none;
         padding-top: 1rem;
@@ -222,6 +225,8 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
         width: 100%;
         background: var(--panel-soft);
         justify-content: center !important;
+        padding: 0.8rem;
         font-weight: 700;
+        border: 1px solid var(--border);
     }
 }
