@@ -618,5 +618,575 @@
     "coreIdea": "Place each value x at index x-1 when possible, then scan for mismatch.",
     "complexity": "O(n) | O(1)",
     "frequency": 156
+  },
+  {
+    "problem": "Find Peak Element",
+    "link": "[https://leetcode.com/problems/find-peak-element](https://leetcode.com/problems/find-peak-element)",
+    "pattern": "Binary Search",
+    "subPattern": "Local Maxima",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search to find an index where neighbors are smaller",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 156
+  },
+  {
+    "problem": "Integer to Roman",
+    "link": "[https://leetcode.com/problems/integer-to-roman](https://leetcode.com/problems/integer-to-roman)",
+    "pattern": "Math",
+    "subPattern": "Greedy subtraction",
+    "difficulty": "Medium",
+    "coreIdea": "Iteratively subtract largest possible Roman values",
+    "complexity": "O(1) | O(1)",
+    "frequency": 154
+  },
+  {
+    "problem": "Valid Sudoku",
+    "link": "[https://leetcode.com/problems/valid-sudoku](https://leetcode.com/problems/valid-sudoku)",
+    "pattern": "Hashing",
+    "subPattern": "Matrix validation",
+    "difficulty": "Medium",
+    "coreIdea": "Use hash sets to track seen digits in rows, columns, and boxes",
+    "complexity": "O(1) | O(1)",
+    "frequency": 150
+  },
+  {
+    "problem": "Best Time to Buy and Sell Stock II",
+    "link": "[https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii)",
+    "pattern": "Greedy",
+    "subPattern": "Peak-Valley",
+    "difficulty": "Medium",
+    "coreIdea": "Accumulate all positive price differences between consecutive days",
+    "complexity": "O(n) | O(1)",
+    "frequency": 150
+  },
+  {
+    "problem": "Longest Increasing Subsequence",
+    "link": "[https://leetcode.com/problems/longest-increasing-subsequence](https://leetcode.com/problems/longest-increasing-subsequence)",
+    "pattern": "DP",
+    "subPattern": "Patience Sorting",
+    "difficulty": "Medium",
+    "coreIdea": "Maintain smallest possible tail values for subsequences via binary search",
+    "complexity": "O(n log n) | O(n)",
+    "frequency": 148
+  },
+  {
+    "problem": "Largest Rectangle in Histogram",
+    "link": "[https://leetcode.com/problems/largest-rectangle-in-histogram](https://leetcode.com/problems/largest-rectangle-in-histogram)",
+    "pattern": "Stack",
+    "subPattern": "Monotonic Stack",
+    "difficulty": "Hard",
+    "coreIdea": "Find nearest smaller heights to the left and right using a stack",
+    "complexity": "O(n) | O(n)",
+    "frequency": 148
+  },
+  {
+    "problem": "Next Permutation",
+    "link": "[https://leetcode.com/problems/next-permutation](https://leetcode.com/problems/next-permutation)",
+    "pattern": "Two Pointers",
+    "subPattern": "Lexicographical order",
+    "difficulty": "Medium",
+    "coreIdea": "Find first decreasing element, swap with next larger, and reverse suffix",
+    "complexity": "O(n) | O(1)",
+    "frequency": 148
+  },
+  {
+    "problem": "Happy Number",
+    "link": "[https://leetcode.com/problems/happy-number](https://leetcode.com/problems/happy-number)",
+    "pattern": "Hashing",
+    "subPattern": "Cycle Detection",
+    "difficulty": "Easy",
+    "coreIdea": "Use a hash set to detect cycles in sum of squares of digits",
+    "complexity": "O(log n) | O(log n)",
+    "frequency": 148
+  },
+  {
+    "problem": "Rotate Array",
+    "link": "[https://leetcode.com/problems/rotate-array](https://leetcode.com/problems/rotate-array)",
+    "pattern": "Array",
+    "subPattern": "Reversal Strategy",
+    "difficulty": "Medium",
+    "coreIdea": "Reverse entire array, then reverse segments divided by k",
+    "complexity": "O(n) | O(1)",
+    "frequency": 146
+  },
+  {
+    "problem": "Reverse Words in a String",
+    "link": "[https://leetcode.com/problems/reverse-words-in-a-string](https://leetcode.com/problems/reverse-words-in-a-string)",
+    "pattern": "String",
+    "subPattern": "Two Pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Reverse the entire string and then reverse each individual word",
+    "complexity": "O(n) | O(n)",
+    "frequency": 144
+  },
+  {
+    "problem": "Edit Distance",
+    "link": "[https://leetcode.com/problems/edit-distance](https://leetcode.com/problems/edit-distance)",
+    "pattern": "DP",
+    "subPattern": "2D Grid DP",
+    "difficulty": "Hard",
+    "coreIdea": "Compute min operations to transform one string into another",
+    "complexity": "O(m*n) | O(m*n)",
+    "frequency": 140
+  },
+  {
+    "problem": "Longest Valid Parentheses",
+    "link": "[https://leetcode.com/problems/longest-valid-parentheses](https://leetcode.com/problems/longest-valid-parentheses)",
+    "pattern": "Stack",
+    "subPattern": "Index tracking",
+    "difficulty": "Hard",
+    "coreIdea": "Use stack to store indices and calculate gap between invalid points",
+    "complexity": "O(n) | O(n)",
+    "frequency": 140
+  },
+  {
+    "problem": "LFU Cache",
+    "link": "[https://leetcode.com/problems/lfu-cache](https://leetcode.com/problems/lfu-cache)",
+    "pattern": "Design",
+    "subPattern": "Frequency Doubly Linked List",
+    "difficulty": "Hard",
+    "coreIdea": "Use map for nodes and frequency lists to maintain access order",
+    "complexity": "O(1) | O(capacity)",
+    "frequency": 138
+  },
+  {
+    "problem": "Reverse Integer",
+    "link": "[https://leetcode.com/problems/reverse-integer](https://leetcode.com/problems/reverse-integer)",
+    "pattern": "Math",
+    "subPattern": "Digit manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Pop digits and push them back while checking for 32-bit overflow",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 138
+  },
+  {
+    "problem": "Remove Duplicates from Sorted Array",
+    "link": "[https://leetcode.com/problems/remove-duplicates-from-sorted-array](https://leetcode.com/problems/remove-duplicates-from-sorted-array)",
+    "pattern": "Two Pointers",
+    "subPattern": "In-place modification",
+    "difficulty": "Easy",
+    "coreIdea": "Overwrite duplicate indices using a slow/fast pointer approach",
+    "complexity": "O(n) | O(1)",
+    "frequency": 138
+  },
+  {
+    "problem": "Gas Station",
+    "link": "[https://leetcode.com/problems/gas-station](https://leetcode.com/problems/gas-station)",
+    "pattern": "Greedy",
+    "subPattern": "Running Sum",
+    "difficulty": "Medium",
+    "coreIdea": "Start from the point where the running gas total never drops below zero",
+    "complexity": "O(n) | O(1)",
+    "frequency": 136
+  },
+  {
+    "problem": "Task Scheduler",
+    "link": "[https://leetcode.com/problems/task-scheduler](https://leetcode.com/problems/task-scheduler)",
+    "pattern": "Greedy",
+    "subPattern": "Frequency Filling",
+    "difficulty": "Medium",
+    "coreIdea": "Arrange tasks with cooling time based on the most frequent task",
+    "complexity": "O(n) | O(1)",
+    "frequency": 134
+  },
+  {
+    "problem": "Combination Sum",
+    "link": "[https://leetcode.com/problems/combination-sum](https://leetcode.com/problems/combination-sum)",
+    "pattern": "Backtracking",
+    "subPattern": "DFS recursion",
+    "difficulty": "Medium",
+    "coreIdea": "Explore all inclusion/exclusion paths to reach target sum",
+    "complexity": "O(2^n) | O(target)",
+    "frequency": 134
+  },
+  {
+    "problem": "Random Pick with Weight",
+    "link": "[https://leetcode.com/problems/random-pick-with-weight](https://leetcode.com/problems/random-pick-with-weight)",
+    "pattern": "Binary Search",
+    "subPattern": "Prefix Sums",
+    "difficulty": "Medium",
+    "coreIdea": "Map weights to ranges using prefix sums and pick via binary search",
+    "complexity": "O(log n) | O(n)",
+    "frequency": 130
+  },
+  {
+    "problem": "Maximal Square",
+    "link": "[https://leetcode.com/problems/maximal-square](https://leetcode.com/problems/maximal-square)",
+    "pattern": "DP",
+    "subPattern": "2D Grid DP",
+    "difficulty": "Medium",
+    "coreIdea": "Size of square at (i,j) depends on min of neighbors + 1",
+    "complexity": "O(m*n) | O(m*n)",
+    "frequency": 130
+  },
+  {
+    "problem": "Regular Expression Matching",
+    "link": "[https://leetcode.com/problems/regular-expression-matching](https://leetcode.com/problems/regular-expression-matching)",
+    "pattern": "DP",
+    "subPattern": "String matching",
+    "difficulty": "Hard",
+    "coreIdea": "Handle '.' and '*' wildcards using recursion with memoization",
+    "complexity": "O(m*n) | O(m*n)",
+    "frequency": 126
+  },
+  {
+    "problem": "Permutations",
+    "link": "[https://leetcode.com/problems/permutations](https://leetcode.com/problems/permutations)",
+    "pattern": "Backtracking",
+    "subPattern": "Swap-based search",
+    "difficulty": "Medium",
+    "coreIdea": "Recursively swap elements to build all ordered arrangements",
+    "complexity": "O(n*n!) | O(n!)",
+    "frequency": 126
+  },
+  {
+    "problem": "Simplify Path",
+    "link": "[https://leetcode.com/problems/simplify-path](https://leetcode.com/problems/simplify-path)",
+    "pattern": "Stack",
+    "subPattern": "Directory Simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use a stack to process file parts and handle '..' and '.'",
+    "complexity": "O(n) | O(n)",
+    "frequency": 126
+  },
+  {
+    "problem": "Binary Tree Maximum Path Sum",
+    "link": "[https://leetcode.com/problems/binary-tree-maximum-path-sum](https://leetcode.com/problems/binary-tree-maximum-path-sum)",
+    "pattern": "Tree",
+    "subPattern": "Post-order DFS",
+    "difficulty": "Hard",
+    "coreIdea": "Compute max path through each node while tracking global max",
+    "complexity": "O(n) | O(h)",
+    "frequency": 124
+  },
+  {
+    "problem": "Reverse Nodes in k-Group",
+    "link": "[https://leetcode.com/problems/reverse-nodes-in-k-group](https://leetcode.com/problems/reverse-nodes-in-k-group)",
+    "pattern": "Linked List",
+    "subPattern": "Recursive Reversal",
+    "difficulty": "Hard",
+    "coreIdea": "Reverse k nodes and link with the result of recursive call on rest",
+    "complexity": "O(n) | O(1)",
+    "frequency": 124
+  },
+  {
+    "problem": "Design Hit Counter",
+    "link": "[https://leetcode.com/problems/design-hit-counter](https://leetcode.com/problems/design-hit-counter)",
+    "pattern": "Design",
+    "subPattern": "Circular Buffer",
+    "difficulty": "Medium",
+    "coreIdea": "Use a queue or bucket system to store hits in the last 300 seconds",
+    "complexity": "O(1) | O(300)",
+    "frequency": 124
+  },
+  {
+    "problem": "Jump Game II",
+    "link": "[https://leetcode.com/problems/jump-game-ii](https://leetcode.com/problems/jump-game-ii)",
+    "pattern": "Greedy",
+    "subPattern": "Range Expansion",
+    "difficulty": "Medium",
+    "coreIdea": "Count jumps needed to reach the end of the current furthest range",
+    "complexity": "O(n) | O(1)",
+    "frequency": 124
+  },
+  {
+    "problem": "Basic Calculator",
+    "link": "[https://leetcode.com/problems/basic-calculator](https://leetcode.com/problems/basic-calculator)",
+    "pattern": "Stack",
+    "subPattern": "Expression Parsing",
+    "difficulty": "Hard",
+    "coreIdea": "Use a stack to manage sign context and nested parentheses",
+    "complexity": "O(n) | O(n)",
+    "frequency": 122
+  },
+  {
+    "problem": "Lowest Common Ancestor of a Binary Tree",
+    "link": "[https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree)",
+    "pattern": "Tree",
+    "subPattern": "DFS Search",
+    "difficulty": "Medium",
+    "coreIdea": "Return current node if targets are found in both left and right subtrees",
+    "complexity": "O(n) | O(h)",
+    "frequency": 122
+  },
+  {
+    "problem": "Serialize and Deserialize Binary Tree",
+    "link": "[https://leetcode.com/problems/serialize-and-deserialize-binary-tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree)",
+    "pattern": "Tree",
+    "subPattern": "Level-order BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Encode tree to string with BFS and reconstruct using a queue",
+    "complexity": "O(n) | O(n)",
+    "frequency": 122
+  },
+  {
+    "problem": "First Unique Character in a String",
+    "link": "[https://leetcode.com/problems/first-unique-character-in-a-string](https://leetcode.com/problems/first-unique-character-in-a-string)",
+    "pattern": "Hashing",
+    "subPattern": "Character frequency",
+    "difficulty": "Easy",
+    "coreIdea": "Find the first character with a count of 1 in the frequency map",
+    "complexity": "O(n) | O(1)",
+    "frequency": 122
+  },
+  {
+    "problem": "Majority Element",
+    "link": "[https://leetcode.com/problems/majority-element](https://leetcode.com/problems/majority-element)",
+    "pattern": "Greedy",
+    "subPattern": "Boyer-Moore Voting",
+    "difficulty": "Easy",
+    "coreIdea": "Maintain a candidate and increment/decrement count based on matches",
+    "complexity": "O(n) | O(1)",
+    "frequency": 120
+  },
+  {
+    "problem": "Contains Duplicate",
+    "link": "[https://leetcode.com/problems/contains-duplicate](https://leetcode.com/problems/contains-duplicate)",
+    "pattern": "Hashing",
+    "subPattern": "Set Membership",
+    "difficulty": "Easy",
+    "coreIdea": "Check if an element already exists in a hash set",
+    "complexity": "O(n) | O(n)",
+    "frequency": 120
+  },
+  {
+    "problem": "Maximum Profit in Job Scheduling",
+    "link": "[https://leetcode.com/problems/maximum-profit-in-job-scheduling](https://leetcode.com/problems/maximum-profit-in-job-scheduling)",
+    "pattern": "DP",
+    "subPattern": "Binary Search + Sorting",
+    "difficulty": "Hard",
+    "coreIdea": "Sort by end time and use binary search to find previous non-overlapping job",
+    "complexity": "O(n log n) | O(n)",
+    "frequency": 120
+  },
+  {
+    "problem": "Integer to English Words",
+    "link": "[https://leetcode.com/problems/integer-to-english-words](https://leetcode.com/problems/integer-to-english-words)",
+    "pattern": "Math",
+    "subPattern": "Chunk processing",
+    "difficulty": "Hard",
+    "coreIdea": "Process digits in thousands-based groups and recursively build string",
+    "complexity": "O(1) | O(1)",
+    "frequency": 118
+  },
+  {
+    "problem": "Linked List Cycle",
+    "link": "[https://leetcode.com/problems/linked-list-cycle](https://leetcode.com/problems/linked-list-cycle)",
+    "pattern": "Two Pointers",
+    "subPattern": "Floyd's Cycle",
+    "difficulty": "Easy",
+    "coreIdea": "Fast and slow pointers will eventually meet if a cycle exists",
+    "complexity": "O(n) | O(1)",
+    "frequency": 118
+  },
+  {
+    "problem": "Copy List with Random Pointer",
+    "link": "[https://leetcode.com/problems/copy-list-with-random-pointer](https://leetcode.com/problems/copy-list-with-random-pointer)",
+    "pattern": "Hashing",
+    "subPattern": "Node Map",
+    "difficulty": "Medium",
+    "coreIdea": "Map original nodes to new nodes to replicate pointers",
+    "complexity": "O(n) | O(n)",
+    "frequency": 116
+  },
+  {
+    "problem": "Largest Number",
+    "link": "[https://leetcode.com/problems/largest-number](https://leetcode.com/problems/largest-number)",
+    "pattern": "Greedy",
+    "subPattern": "Custom Sort",
+    "difficulty": "Medium",
+    "coreIdea": "Sort based on string concatenation result (a+b vs b+a)",
+    "complexity": "O(n log n) | O(n)",
+    "frequency": 116
+  },
+  {
+    "problem": "Candy",
+    "link": "[https://leetcode.com/problems/candy](https://leetcode.com/problems/candy)",
+    "pattern": "Greedy",
+    "subPattern": "Two-pass constraints",
+    "difficulty": "Hard",
+    "coreIdea": "Satisfy constraints via left-to-right and right-to-left passes",
+    "complexity": "O(n) | O(n)",
+    "frequency": 114
+  },
+  {
+    "problem": "Reorganize String",
+    "link": "[https://leetcode.com/problems/reorganize-string](https://leetcode.com/problems/reorganize-string)",
+    "pattern": "Greedy",
+    "subPattern": "Heap + Frequency",
+    "difficulty": "Medium",
+    "coreIdea": "Place most frequent characters first at non-adjacent indices",
+    "complexity": "O(n log A) | O(A)",
+    "frequency": 114
+  },
+  {
+    "problem": "Palindromic Substrings",
+    "link": "[https://leetcode.com/problems/palindromic-substrings](https://leetcode.com/problems/palindromic-substrings)",
+    "pattern": "Two Pointers",
+    "subPattern": "Expand center",
+    "difficulty": "Medium",
+    "coreIdea": "Count palindromes by expanding outward from each character/pair",
+    "complexity": "O(n^2) | O(1)",
+    "frequency": 114
+  },
+  {
+    "problem": "Max Consecutive Ones III",
+    "link": "[https://leetcode.com/problems/max-consecutive-ones-iii](https://leetcode.com/problems/max-consecutive-ones-iii)",
+    "pattern": "Sliding Window",
+    "subPattern": "Two Pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand window until k zeros are used, then shrink",
+    "complexity": "O(n) | O(1)",
+    "frequency": 114
+  },
+  {
+    "problem": "Set Matrix Zeroes",
+    "link": "[https://leetcode.com/problems/set-matrix-zeroes](https://leetcode.com/problems/set-matrix-zeroes)",
+    "pattern": "Matrix",
+    "subPattern": "In-place markers",
+    "difficulty": "Medium",
+    "coreIdea": "Use first row and column as markers for zeroing remainder",
+    "complexity": "O(m*n) | O(1)",
+    "frequency": 114
+  },
+  {
+    "problem": "Implement Trie (Prefix Tree)",
+    "link": "[https://leetcode.com/problems/implement-trie-prefix-tree](https://leetcode.com/problems/implement-trie-prefix-tree)",
+    "pattern": "Design",
+    "subPattern": "Prefix Tree",
+    "difficulty": "Medium",
+    "coreIdea": "Store string paths in a tree structure for efficient lookup",
+    "complexity": "O(L) | O(N*L)",
+    "frequency": 112
+  },
+  {
+    "problem": "Evaluate Division",
+    "link": "[https://leetcode.com/problems/evaluate-division](https://leetcode.com/problems/evaluate-division)",
+    "pattern": "Graph",
+    "subPattern": "DFS / Union-Find",
+    "difficulty": "Medium",
+    "coreIdea": "Build a weighted directed graph and perform path finding",
+    "complexity": "O(Q * (V+E)) | O(V+E)",
+    "frequency": 112
+  },
+  {
+    "problem": "Isomorphic Strings",
+    "link": "[https://leetcode.com/problems/isomorphic-strings](https://leetcode.com/problems/isomorphic-strings)",
+    "pattern": "Hashing",
+    "subPattern": "Bijective Mapping",
+    "difficulty": "Easy",
+    "coreIdea": "Verify character mappings between strings are unique and consistent",
+    "complexity": "O(n) | O(1)",
+    "frequency": 110
+  },
+  {
+    "problem": "Pow(x, n)",
+    "link": "[https://leetcode.com/problems/powx-n](https://leetcode.com/problems/powx-n)",
+    "pattern": "Math",
+    "subPattern": "Binary Exponentiation",
+    "difficulty": "Medium",
+    "coreIdea": "Recursively square base to compute power in logarithmic steps",
+    "complexity": "O(log n) | O(log n)",
+    "frequency": 110
+  },
+  {
+    "problem": "Count Binary Substrings",
+    "link": "[https://leetcode.com/problems/count-binary-substrings](https://leetcode.com/problems/count-binary-substrings)",
+    "pattern": "String",
+    "subPattern": "Group counting",
+    "difficulty": "Easy",
+    "coreIdea": "Sum minimum of counts of consecutive zeros and ones",
+    "complexity": "O(n) | O(1)",
+    "frequency": 108
+  },
+  {
+    "problem": "Find the Duplicate Number",
+    "link": "[https://leetcode.com/problems/find-the-duplicate-number](https://leetcode.com/problems/find-the-duplicate-number)",
+    "pattern": "Two Pointers",
+    "subPattern": "Floyd's Cycle",
+    "difficulty": "Medium",
+    "coreIdea": "Treat array indices as pointers to detect the entry point of cycle",
+    "complexity": "O(n) | O(1)",
+    "frequency": 108
+  },
+  {
+    "problem": "Longest Repeating Character Replacement",
+    "link": "[https://leetcode.com/problems/longest-repeating-character-replacement](https://leetcode.com/problems/longest-repeating-character-replacement)",
+    "pattern": "Sliding Window",
+    "subPattern": "Two Pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand window while character swaps needed is within k",
+    "complexity": "O(n) | O(1)",
+    "frequency": 106
+  },
+  {
+    "problem": "Top K Frequent Words",
+    "link": "[https://leetcode.com/problems/top-k-frequent-words](https://leetcode.com/problems/top-k-frequent-words)",
+    "pattern": "Heap",
+    "subPattern": "Priority Queue",
+    "difficulty": "Medium",
+    "coreIdea": "Count frequencies and use a heap to extract top k words",
+    "complexity": "O(n log k) | O(n)",
+    "frequency": 106
+  },
+  {
+    "problem": "Subsets",
+    "link": "[https://leetcode.com/problems/subsets](https://leetcode.com/problems/subsets)",
+    "pattern": "Backtracking",
+    "subPattern": "Power Set",
+    "difficulty": "Medium",
+    "coreIdea": "Include or exclude each element to build all combinations",
+    "complexity": "O(n * 2^n) | O(n * 2^n)",
+    "frequency": 106
+  },
+  {
+    "problem": "Zigzag Conversion",
+    "link": "[https://leetcode.com/problems/zigzag-conversion](https://leetcode.com/problems/zigzag-conversion)",
+    "pattern": "String",
+    "subPattern": "Simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Append characters to rows using a direction-reversing pointer",
+    "complexity": "O(n) | O(n)",
+    "frequency": 106
+  },
+  {
+    "problem": "Decode Ways",
+    "link": "[https://leetcode.com/problems/decode-ways](https://leetcode.com/problems/decode-ways)",
+    "pattern": "DP",
+    "subPattern": "1D Linear DP",
+    "difficulty": "Medium",
+    "coreIdea": "Ways depend on validity of previous 1 and 2 character groups",
+    "complexity": "O(n) | O(n)",
+    "frequency": 106
+  },
+  {
+    "problem": "Capacity To Ship Packages Within D Days",
+    "link": "[https://leetcode.com/problems/capacity-to-ship-packages-within-d-days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days)",
+    "pattern": "Binary Search",
+    "subPattern": "Range Search",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search on possible capacities and validate via greedy",
+    "complexity": "O(n log S) | O(1)",
+    "frequency": 104
+  },
+  {
+    "problem": "Design Circular Queue",
+    "link": "[https://leetcode.com/problems/design-circular-queue](https://leetcode.com/problems/design-circular-queue)",
+    "pattern": "Design",
+    "subPattern": "Array Implementation",
+    "difficulty": "Medium",
+    "coreIdea": "Use a fixed array with head and tail pointers",
+    "complexity": "O(1) | O(k)",
+    "frequency": 104
+  },
+  {
+    "problem": "Fizz Buzz",
+    "link": "[https://leetcode.com/problems/fizz-buzz](https://leetcode.com/problems/fizz-buzz)",
+    "pattern": "Math",
+    "subPattern": "Simulation",
+    "difficulty": "Easy",
+    "coreIdea": "Map numbers to strings based on divisibility by 3 and 5",
+    "complexity": "O(n) | O(1)",
+    "frequency": 104
   }
 ]
