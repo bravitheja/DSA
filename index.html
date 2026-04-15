@@ -3,19 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DSA Tracker</title>
+    <title>Advanced DSA Tracker</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="app-shell">
       <header class="topbar">
         <div>
-          <h1>DSA Tracker</h1>
-          <p class="subtitle">A personal LeetCode-style problem tracker</p>
+          <h1>Advanced DSA Tracker</h1>
+          <p class="subtitle">LeetCode-style tracker with interview-focused metadata</p>
         </div>
-        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-          🌙 Dark
-        </button>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙 Dark</button>
       </header>
 
       <section class="summary-card">
@@ -25,7 +23,7 @@
             <strong id="totalCount">0</strong>
           </div>
           <div class="summary-item">
-            <span>Completed</span>
+            <span>Mastered</span>
             <strong id="completedCount">0</strong>
           </div>
           <div class="summary-item">
@@ -41,7 +39,7 @@
       <section class="controls">
         <label class="control-field">
           <span>Search</span>
-          <input type="text" id="searchInput" placeholder="Search by problem name" />
+          <input id="searchInput" type="text" placeholder="Search problem name" />
         </label>
 
         <label class="control-field">
@@ -50,29 +48,50 @@
         </label>
 
         <label class="control-field">
+          <span>Sub Pattern</span>
+          <select id="subPatternFilter"></select>
+        </label>
+
+        <label class="control-field">
           <span>Difficulty</span>
           <select id="difficultyFilter"></select>
         </label>
 
         <label class="control-field">
+          <span>Frequency</span>
+          <select id="frequencyFilter"></select>
+        </label>
+
+        <label class="control-field">
           <span>Sort</span>
-          <select id="sortDifficulty">
-            <option value="none">Default</option>
-            <option value="asc">Difficulty: Easy → Hard</option>
-            <option value="desc">Difficulty: Hard → Easy</option>
+          <select id="sortSelect">
+            <option value="default">Default</option>
+            <option value="difficulty">Difficulty (Easy → Hard)</option>
+            <option value="frequency">Frequency (High → Low)</option>
+            <option value="alpha">Alphabetical (A-Z)</option>
           </select>
         </label>
+      </section>
+
+      <section class="column-toggle-wrap">
+        <span>Column visibility:</span>
+        <label><input type="checkbox" class="column-toggle" data-column="subPattern" checked /> Sub Pattern</label>
+        <label><input type="checkbox" class="column-toggle" data-column="frequency" checked /> Frequency</label>
+        <label><input type="checkbox" class="column-toggle" data-column="complexity" checked /> Complexity</label>
       </section>
 
       <section class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>Problem</th>
-              <th>Pattern</th>
-              <th>Difficulty</th>
-              <th>Status</th>
-              <th>Notes</th>
+              <th data-col="problem">Problem</th>
+              <th data-col="pattern">Pattern</th>
+              <th data-col="subPattern">Sub Pattern</th>
+              <th data-col="difficulty">Difficulty</th>
+              <th data-col="frequency">Frequency</th>
+              <th data-col="complexity">Complexity</th>
+              <th data-col="status">Status</th>
+              <th data-col="notes">Notes</th>
             </tr>
           </thead>
           <tbody id="problemsBody"></tbody>
@@ -82,17 +101,20 @@
 
     <template id="problemRowTemplate">
       <tr>
-        <td class="problem-name"></td>
-        <td class="problem-pattern"></td>
-        <td><span class="difficulty-badge"></span></td>
-        <td>
+        <td data-col="problem" class="problem-cell"></td>
+        <td data-col="pattern" class="pattern-cell"></td>
+        <td data-col="subPattern" class="sub-pattern-cell"></td>
+        <td data-col="difficulty"><span class="difficulty-badge"></span></td>
+        <td data-col="frequency"><span class="frequency-badge"></span></td>
+        <td data-col="complexity" class="complexity-cell"></td>
+        <td data-col="status">
           <select class="status-select" aria-label="Problem status">
             <option value="Not Started">Not Started</option>
             <option value="Revising">Revising</option>
             <option value="Mastered">Mastered</option>
           </select>
         </td>
-        <td>
+        <td data-col="notes">
           <textarea class="notes-input" rows="2" placeholder="Add notes..."></textarea>
         </td>
       </tr>

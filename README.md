@@ -1,42 +1,61 @@
-# LeetCode-Style DSA Tracker
+# Advanced LeetCode-Style DSA Tracker
 
-A clean, responsive, GitHub Pages-friendly web app to track Data Structures & Algorithms practice problems. It provides searchable/filterable problem lists, progress tracking, local status persistence, and personal notes.
+A static GitHub Pages-ready web app to track DSA preparation with richer interview metadata per problem.
 
 ## Features
 
-- Pure **HTML + CSS + JavaScript** (no frameworks)
-- Uses `data.json` for problem metadata (30+ problems included)
-- Table view with columns for:
-  - Problem
+- Pure **HTML/CSS/JavaScript** (no framework, no build step)
+- Problem table with:
+  - Problem (clickable LeetCode link)
   - Pattern
-  - Difficulty
-  - Status (`Not Started`, `Revising`, `Mastered`)
+  - Sub Pattern
+  - Difficulty badge
+  - Frequency badge
+  - Complexity
+  - Status
   - Notes
-- Search by problem name
-- Filter by pattern and difficulty
-- Sort by difficulty (Easy → Hard or Hard → Easy)
-- Progress summary:
-  - Total problems
-  - Completed count
-  - Completion percentage
-  - Visual progress bar
+- Tooltip with core idea/intuition when hovering problem name
+- Search + filters for pattern, sub pattern, difficulty, frequency
+- Sort modes: default, difficulty, frequency, alphabetical
+- Progress dashboard with completion bar
 - Dark mode toggle
-- Status + notes persisted with `localStorage`
-- Responsive layout for desktop and mobile
+- Column visibility toggles (show/hide selected columns)
+- Local persistence using `localStorage` for:
+  - status
+  - notes
+  - theme
+  - column visibility
 
 ## Project Structure
 
-- `index.html` – app layout and UI structure
-- `style.css` – styles, theming, responsiveness
-- `app.js` – rendering, filtering, sorting, state management
-- `data.json` – DSA problem list data
-- `README.md` – project documentation
+- `index.html` – layout + controls + table template
+- `style.css` – theme, responsiveness, badges, tooltip, table styles
+- `app.js` – data loading, rendering, filters, sort, persistence
+- `data.json` – editable problem dataset
+- `README.md` – docs
+
+## Data Format
+
+Each problem in `data.json` supports:
+
+```json
+{
+  "problem": "Two Sum",
+  "pattern": "Hashing",
+  "subPattern": "Complement lookup",
+  "difficulty": "Easy",
+  "frequency": "High",
+  "complexity": "O(n) time | O(n) space",
+  "coreIdea": "Use hashmap to find complement",
+  "link": "https://leetcode.com/problems/two-sum"
+}
+```
+
+Backward compatibility is built in: if any field is missing, defaults are used.
 
 ## Run Locally
 
-Because this app fetches `data.json`, run it with a local web server instead of opening `index.html` directly as a file.
-
-### Option 1: Python
+Use a local server (required for `fetch("data.json")`):
 
 ```bash
 python -m http.server 8000
@@ -44,31 +63,12 @@ python -m http.server 8000
 
 Then open `http://localhost:8000`.
 
-### Option 2: VS Code Live Server
+## Deploy on GitHub Pages
 
-Use the **Live Server** extension and open the project root.
-
-## Deploy to GitHub Pages
-
-1. Push this project to a GitHub repository.
-2. On GitHub, go to **Settings → Pages**.
-3. Under **Build and deployment**, choose:
+1. Push this repo to GitHub.
+2. Go to **Settings → Pages**.
+3. Choose:
    - **Source:** Deploy from a branch
-   - **Branch:** `main` (or your default branch)
+   - **Branch:** `main`
    - **Folder:** `/ (root)`
-4. Save and wait for deployment.
-5. GitHub will provide the live URL in the Pages settings.
-
-## Data Customization
-
-Edit `data.json` and add/remove objects in this format:
-
-```json
-{
-  "problem": "Two Sum",
-  "pattern": "Array + Hashing",
-  "difficulty": "Easy"
-}
-```
-
-Status and notes are user-specific and stored in browser `localStorage`, so they are not committed to the repository.
+4. Save and wait for deployment URL.
