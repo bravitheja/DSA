@@ -115,7 +115,8 @@ function normalizeProblemData(items) {
       pattern: item.pattern || "General",
       subPattern: item.subPattern || "-",
       difficulty: normalizeDifficulty(item.difficulty),
-      frequency: normalizeFrequency(item.frequency || "Medium"),
+      frequencyValue: normalizeFrequencyValue(item.frequency),
+      frequencyBand: normalizeFrequencyBand(item.frequency),
       complexity: item.complexity || "-",
       coreIdea: item.coreIdea || "No core idea available yet.",
       link: item.link || "#",
@@ -133,16 +134,22 @@ function normalizeDifficulty(value) {
   return "Medium";
 }
 
-function normalizeFrequency(value) {
-  const cleaned = String(value).trim().toLowerCase();
+function normalizeFrequencyValue(value) {
+  const numeric = Number(value);
+  if (!Number.isNaN(numeric) && numeric > 0) return numeric;
+  return null;
+}
+
+function normalizeFrequencyBand(value) {
+  const cleaned = String(value ?? "").trim().toLowerCase();
   if (cleaned === "high") return "High";
   if (cleaned === "medium") return "Medium";
   if (cleaned === "low") return "Low";
 
-  const numeric = Number(cleaned);
+  const numeric = Number(value);
   if (!Number.isNaN(numeric)) {
-    if (numeric >= 7) return "High";
-    if (numeric >= 4) return "Medium";
+    if (numeric >= 200) return "High";
+    if (numeric >= 100) return "Medium";
     return "Low";
   }
 
@@ -205,8 +212,9 @@ function fillRow(row, problem) {
   diffBadge.classList.add(`difficulty-${problem.difficulty.toLowerCase()}`);
 
   const freqBadge = row.querySelector(".frequency-badge");
-  freqBadge.textContent = problem.frequency;
-  freqBadge.classList.add(`freq-${problem.frequency.toLowerCase()}`);
+  freqBadge.textContent = problem.frequencyValue ?? problem.frequencyBand;
+  freqBadge.title = `Frequency tier: ${problem.frequencyBand}`;
+  freqBadge.classList.add(`freq-${problem.frequencyBand.toLowerCase()}`);
 
   row.querySelector(".complexity-cell").textContent = problem.complexity;
 
@@ -288,7 +296,7 @@ function applyFilters(items) {
     const matchesPattern = pattern === "all" || item.pattern === pattern;
     const matchesSubPattern = subPattern === "all" || item.subPattern === subPattern;
     const matchesDifficulty = difficulty === "all" || item.difficulty === difficulty;
-    const matchesFrequency = frequency === "all" || item.frequency === frequency;
+    const matchesFrequency = frequency === "all" || item.frequencyBand === frequency;
 
     return matchesSearch && matchesPattern && matchesSubPattern && matchesDifficulty && matchesFrequency;
   });
@@ -310,7 +318,9 @@ function applySort(items) {
 
   if (mode === "frequency") {
     return [...items].sort((a, b) => {
-      const rankDiff = FREQUENCY_RANK[b.frequency] - FREQUENCY_RANK[a.frequency];
+      const valueDiff = (b.frequencyValue ?? -1) - (a.frequencyValue ?? -1);
+      if (valueDiff !== 0) return valueDiff;
+      const rankDiff = FREQUENCY_RANK[b.frequencyBand] - FREQUENCY_RANK[a.frequencyBand];
       return rankDiff || a.problem.localeCompare(b.problem);
     });
   }
