@@ -22,6 +22,7 @@ const elements = {
   progressBar: document.getElementById("progressBar"),
   themeToggle: document.getElementById("themeToggle"),
   columnToggles: document.querySelectorAll(".column-toggle"),
+  filterPills: document.querySelectorAll(".filter-pill"),
 };
 
 let allProblems = [];
@@ -41,6 +42,7 @@ async function init() {
   filteredProblems = allProblems;
 
   setupFilters(allProblems);
+  syncFilterPills();
   renderTable(filteredProblems);
   updateStats(allProblems);
 }
@@ -101,6 +103,15 @@ function bindControls() {
   });
 
   elements.body.addEventListener("change", handleTableChange);
+  elements.filterPills.forEach((pill) => {
+    pill.addEventListener("click", () => {
+      const target = elements[pill.dataset.target];
+      if (!target) return;
+      target.value = pill.dataset.value;
+      syncFilterPills();
+      applyAndRender();
+    });
+  });
 }
 
 function normalizeProblemData(items) {
@@ -168,6 +179,7 @@ function applyAndRender() {
   const sorted = applySort(filteredProblems);
   renderTable(sorted);
   updateStats(allProblems);
+  syncFilterPills();
 }
 
 function renderTable(items) {
@@ -358,6 +370,13 @@ function uniqueValues(items, key) {
   return [...new Set(items.map((item) => item[key]).filter(Boolean))].sort((a, b) =>
     a.localeCompare(b)
   );
+}
+
+function syncFilterPills() {
+  elements.filterPills.forEach((pill) => {
+    const target = elements[pill.dataset.target];
+    pill.classList.toggle("active", Boolean(target) && target.value === pill.dataset.value);
+  });
 }
 
 function populateSelect(selectElement, values, allLabel) {

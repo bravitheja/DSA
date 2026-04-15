@@ -111,10 +111,45 @@ h1 { margin: 0; font-size: clamp(1.35rem, 2.5vw, 2rem); }
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 0.8rem;
   margin-bottom: 0.8rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 0.9rem;
 }
 
 .control-field { display: flex; flex-direction: column; gap: 0.35rem; }
 .control-field span { font-size: 0.84rem; color: var(--subtle); }
+
+.quick-pills {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.pill-group {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.filter-pill {
+  border: 1px solid var(--border);
+  background: var(--surface-muted);
+  color: var(--subtle);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.filter-pill.active {
+  color: #fff;
+  border-color: color-mix(in srgb, var(--accent-2) 70%, var(--accent));
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+}
 
 .column-toggle-wrap {
   display: flex;
@@ -238,20 +273,20 @@ tr.mastered-row {
 .frequency-badge {
   display: inline-flex;
   border-radius: 999px;
-  border: 1px solid currentColor;
-  padding: 0.2rem 0.55rem;
+  border: 1px solid transparent;
+  padding: 0.26rem 0.65rem;
   font-size: 0.76rem;
   font-weight: 600;
   white-space: nowrap;
 }
 
-.difficulty-easy { color: var(--success); }
-.difficulty-medium { color: var(--warning); }
-.difficulty-hard { color: var(--danger); }
+.difficulty-easy { color: #166534; background: color-mix(in srgb, var(--success) 20%, transparent); border-color: color-mix(in srgb, var(--success) 65%, var(--border)); }
+.difficulty-medium { color: #9a3412; background: color-mix(in srgb, var(--warning) 20%, transparent); border-color: color-mix(in srgb, var(--warning) 65%, var(--border)); }
+.difficulty-hard { color: #991b1b; background: color-mix(in srgb, var(--danger) 20%, transparent); border-color: color-mix(in srgb, var(--danger) 65%, var(--border)); }
 
-.freq-high { color: var(--danger); }
-.freq-medium { color: var(--warning); }
-.freq-low { color: var(--subtle); }
+.freq-high { color: #fff; background: color-mix(in srgb, var(--danger) 88%, black 4%); }
+.freq-medium { color: #111827; background: color-mix(in srgb, var(--warning) 65%, #fff); }
+.freq-low { color: #334155; background: color-mix(in srgb, var(--subtle) 20%, #fff); border-color: color-mix(in srgb, var(--subtle) 45%, var(--border)); }
 
 
 .concept {
@@ -323,10 +358,31 @@ body.dark .core-idea {
   .controls {
     grid-template-columns: 1fr;
     gap: 0.65rem;
+    position: sticky;
+    top: 0.45rem;
+    z-index: 15;
   }
 
   .column-toggle-wrap {
     gap: 0.5rem;
+  }
+
+  .control-field:nth-of-type(2),
+  .control-field:nth-of-type(3),
+  .control-field:nth-of-type(4),
+  .control-field:nth-of-type(5) {
+    display: none;
+  }
+
+  .quick-pills {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.15rem;
+    scrollbar-width: thin;
+  }
+
+  .pill-group {
+    flex-wrap: nowrap;
   }
 
   .table-wrapper {
@@ -382,6 +438,11 @@ body.dark .core-idea {
 
   .problem-cell .problem-link {
     font-size: 1.05rem;
+  }
+
+  tbody td[data-col="complexity"],
+  tbody td[data-col="notes"] {
+    display: none;
   }
 
   .concept {

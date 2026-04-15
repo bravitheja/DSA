@@ -42,6 +42,21 @@
           <input id="searchInput" type="text" placeholder="Search problem name" />
         </label>
 
+        <div class="quick-pills" aria-label="Quick filters">
+          <div class="pill-group" role="group" aria-label="Difficulty quick filter">
+            <button type="button" class="filter-pill active" data-target="difficultyFilter" data-value="all">All</button>
+            <button type="button" class="filter-pill" data-target="difficultyFilter" data-value="Easy">Easy</button>
+            <button type="button" class="filter-pill" data-target="difficultyFilter" data-value="Medium">Medium</button>
+            <button type="button" class="filter-pill" data-target="difficultyFilter" data-value="Hard">Hard</button>
+          </div>
+          <div class="pill-group" role="group" aria-label="Frequency quick filter">
+            <button type="button" class="filter-pill active" data-target="frequencyFilter" data-value="all">Any frequency</button>
+            <button type="button" class="filter-pill" data-target="frequencyFilter" data-value="High">High</button>
+            <button type="button" class="filter-pill" data-target="frequencyFilter" data-value="Medium">Medium</button>
+            <button type="button" class="filter-pill" data-target="frequencyFilter" data-value="Low">Low</button>
+          </div>
+        </div>
+
         <label class="control-field">
           <span>Pattern</span>
           <select id="patternFilter"></select>
