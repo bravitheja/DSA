@@ -1196,7 +1196,7 @@
     "subPattern": "Trie-optimized search",
     "difficulty": "Hard",
     "coreIdea": "Use a Trie to prune DFS paths that cannot form valid words",
-    "complexity": "O(M \* 4^L) | O(N \* L)",
+    "complexity": "O(M * 4^L) | O(N * L)",
     "frequency": 104
   },
   {
@@ -1375,7 +1375,7 @@
     "pattern": "Sliding Window",
     "subPattern": "Two Pointers",
     "difficulty": "Medium",
-    "coreIdea": "Maintain window product \< k and count window size at each expansion",
+    "coreIdea": "Maintain window product < k and count window size at each expansion",
     "complexity": "O(n) | O(1)",
     "frequency": 98
   },
@@ -1385,7 +1385,7 @@
     "pattern": "Binary Search",
     "subPattern": "Range Search",
     "difficulty": "Easy",
-    "coreIdea": "Binary search between 0 and x to find highest square \<= x",
+    "coreIdea": "Binary search between 0 and x to find highest square <= x",
     "complexity": "O(log n) | O(1)",
     "frequency": 98
   },
@@ -1646,7 +1646,7 @@
     "subPattern": "Matrix Pruning",
     "difficulty": "Hard",
     "coreIdea": "Place queens row by row while checking row, col, and diagonal constraints",
-    "complexity": "O(n\!) | O(n^2)",
+    "complexity": "O(n!) | O(n^2)",
     "frequency": 88
   },
   {
@@ -1886,7 +1886,7 @@
     "subPattern": "0/1 Knapsack",
     "difficulty": "Medium",
     "coreIdea": "Determine if a subset exists that sums to exactly half of the total sum",
-    "complexity": "O(n \* sum) | O(sum)",
+    "complexity": "O(n * sum) | O(sum)",
     "frequency": 80
   },
   {
@@ -2036,7 +2036,7 @@
     "subPattern": "Word Building Hashing",
     "difficulty": "Medium",
     "coreIdea": "Sort words and use a map to build chains by removing one char at a time",
-    "complexity": "O(n log n + n \* L^2) | O(n \* L)",
+    "complexity": "O(n log n + n * L^2) | O(n * L)",
     "frequency": 76
   },
   {
@@ -2105,7 +2105,7 @@
     "pattern": "Sliding Window",
     "subPattern": "Variable Window",
     "difficulty": "Medium",
-    "coreIdea": "Expand window until sum \>= target, then shrink to find minimum size",
+    "coreIdea": "Expand window until sum >= target, then shrink to find minimum size",
     "complexity": "O(n) | O(1)",
     "frequency": 76
   },
