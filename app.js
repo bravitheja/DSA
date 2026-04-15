@@ -138,14 +138,10 @@ function createProblemRow(p) {
 
     // Add labels for mobile cards
     const cells = row.querySelectorAll('td');
-    cells[0].setAttribute('data-label', 'Done');
-    cells[1].setAttribute('data-label', 'Problem');
-    cells[2].setAttribute('data-label', 'Frequency');
-    cells[3].setAttribute('data-label', 'Concept');
-    cells[4].setAttribute('data-label', 'Complexity');
-    cells[5].setAttribute('data-label', 'Difficulty');
-    cells[6].setAttribute('data-label', 'Notes');
+    const labels = ['Done', 'Problem', 'Frequency', 'Concept', 'Complexity', 'Difficulty', 'Actions'];
+    cells.forEach((cell, i) => cell.setAttribute('data-label', labels[i]));
 
+    // Checkbox
     const check = row.querySelector(".mastered-check");
     check.checked = p.status === "Mastered";
     check.addEventListener("change", (e) => {
@@ -153,8 +149,10 @@ function createProblemRow(p) {
         applyAndRender();
     });
 
-    row.querySelector(".problem-cell").innerHTML = `<a href="${p.link}" target="_blank" class="problem-link">${p.problem}</a>`;
+    // Problem Title
+    row.querySelector(".problem-cell").innerHTML = `<div><a href="${p.link}" target="_blank" class="problem-link">${p.problem}</a></div>`;
 
+    // Frequency (Wrapped in a div for flex control)
     const heat = Math.min((p.frequency / 650) * 100, 100);
     row.querySelector(".frequency-cell").innerHTML = `
         <div class="freq-container">
@@ -162,6 +160,7 @@ function createProblemRow(p) {
             <div class="heat-bar-bg"><div class="heat-bar-fill" style="width: ${heat}%"></div></div>
         </div>`;
 
+    // Concept (Wrapped in a div for flex control)
     const pClass = `pattern-${p.pattern.toLowerCase().replace(/\s+/g, '-')}`;
     row.querySelector(".concept-cell").innerHTML = `
         <div class="concept-stack">
@@ -172,12 +171,12 @@ function createProblemRow(p) {
             <span class="sub-pattern">${p.subPattern}</span>
         </div>`;
 
-    row.querySelector(".complexity-cell").textContent = p.complexity;
-    row.querySelector(".difficulty-cell").innerHTML = `<span class="badge difficulty-${p.difficulty.toLowerCase()}">${p.difficulty}</span>`;
+    // Complexity & Difficulty
+    row.querySelector(".complexity-cell").innerHTML = `<span>${p.complexity}</span>`;
+    row.querySelector(".difficulty-cell").innerHTML = `<div><span class="badge difficulty-${p.difficulty.toLowerCase()}">${p.difficulty}</span></div>`;
     
-    // Standardize the notes button
-    const actionCell = row.querySelector(".actions-cell");
-    actionCell.innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="note-btn">📝 Notes</button>`;
+    // Notes Button
+    row.querySelector(".actions-cell").innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="note-btn">📝 Open Notes</button>`;
 
     return row;
 }
