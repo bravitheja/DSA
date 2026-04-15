@@ -43,14 +43,13 @@
       </aside>
 
       <main class="main-pane">
-        <header class="filter-bar" aria-label="Global filters">
+        <header class="filter-bar">
           <label class="search-wrap" for="searchInput">
             <span>🔍</span>
-            <input id="searchInput" type="text" placeholder="Search by name or logic..." />
+            <input id="searchInput" type="text" placeholder="Search by name, pattern, or logic..." />
           </label>
-
-          <select id="patternFilter" aria-label="Filter by pattern"></select>
-          <select id="difficultyFilter" aria-label="Filter by difficulty">
+          <select id="patternFilter"></select>
+          <select id="difficultyFilter">
             <option value="all">Difficulty: All</option>
             <option value="Easy">Easy</option>
             <option value="Medium">Medium</option>
@@ -71,7 +70,9 @@
                 <th class="actions-col">Notes</th>
               </tr>
             </thead>
-            <tbody id="problemsBody"></tbody>
+            <tbody id="problemsBody">
+              <tr><td colspan="7" class="loading-state">Loading problems...</td></tr>
+            </tbody>
           </table>
         </section>
       </main>
@@ -80,21 +81,18 @@
     <aside id="notesSheet" class="notes-sheet" aria-hidden="true">
       <div class="sheet-header">
         <h3 id="sheetTitle">Notes</h3>
-        <button id="sheetCloseBtn" class="icon-btn" type="button" aria-label="Close notes">✕</button>
+        <button id="sheetCloseBtn" class="icon-btn">✕</button>
       </div>
       <div class="sheet-meta">
-        <p class="sheet-subtitle">Supports Markdown (**bold**, `code`).</p>
         <span id="autoSaveStatus" class="autosave-tag">Saved</span>
       </div>
-      
       <div class="notes-container">
-        <textarea id="sheetNotesInput" placeholder="Capture intuition, pitfalls..."></textarea>
+        <textarea id="sheetNotesInput" placeholder="Write intuition, pitfalls, or snippets..."></textarea>
         <div id="notesPreview" class="notes-preview hidden"></div>
       </div>
-
       <div class="sheet-footer">
         <button id="togglePreviewBtn" class="secondary-btn">Preview</button>
-        <button id="sheetSaveBtn" class="save-btn" type="button">Close & Save</button>
+        <button id="sheetSaveBtn" class="save-btn">Close & Save</button>
       </div>
     </aside>
 
@@ -106,10 +104,10 @@
         <td class="concept-cell"></td>
         <td class="complexity-cell"></td>
         <td class="difficulty-cell"></td>
-        <td class="actions-cell"></td>
+        <td class="actions-cell"><button class="note-btn">📝</button></td>
       </tr>
     </template>
 
-    <script src="app.js" defer></script>
+    <script src="app.js"></script>
   </body>
 </html>
