@@ -99,83 +99,104 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 
 /* --- THE ULTIMATE MOBILE CARD-STACKING FIX --- */
 
-/* --- MOBILE ACCORDION VIEW --- */
+/* --- MOBILE ACCORDION STACKED VIEW --- */
 @media (max-width: 850px) {
-    .dashboard-shell { display: block; width: 100vw; overflow-x: hidden; }
-    .sidebar { width: 100%; border-bottom: 1px solid var(--border); padding: 1rem; }
-    .main-pane { width: 100%; }
+    .dashboard-shell { display: block; width: 100%; overflow-x: hidden; }
+    .sidebar { width: 100%; border-bottom: 1px solid var(--border); padding: 1.5rem 1rem; }
+    .main-pane { width: 100%; overflow-x: hidden; }
     .filter-bar { padding: 1rem; flex-direction: column; gap: 0.8rem; }
     .search-wrap, select, .random-btn { width: 100% !important; }
 
     /* Table Reset */
-    .table-shell { margin: 0; border: none; }
-    table, tbody, tr, td { display: block; width: 100%; }
+    .table-shell { margin: 0; border: none; width: 100%; overflow: hidden; }
+    table, tbody, tr, td { display: block; width: 100%; box-sizing: border-box; }
     thead { display: none; }
 
     tr {
         background: var(--panel);
         border-bottom: 1px solid var(--border);
-        padding: 0.75rem 1rem;
-        transition: background 0.2s;
+        padding: 1rem;
         cursor: pointer;
         position: relative;
+        overflow: hidden;
     }
 
-    /* Keep Done and Problem on the same line */
+    /* Fixed Header Line: Checkbox + Title */
     .check-cell {
         display: inline-block !important;
         width: 40px !important;
         padding: 0 !important;
         border: none !important;
-        vertical-align: middle;
     }
 
     .problem-cell {
         display: inline-block !important;
-        width: calc(100% - 80px) !important;
+        width: calc(100% - 70px) !important;
         padding: 0 !important;
         border: none !important;
         vertical-align: middle;
     }
 
-    .problem-link { font-size: 1rem; font-weight: 700; }
+    .problem-link { font-size: 1rem; font-weight: 700; color: var(--brand); }
 
-    /* Add a Chevron/Arrow to indicate expandability */
+    /* Chevron Indicator */
     tr::after {
         content: '▼';
         position: absolute;
-        right: 1.5rem;
-        top: 1rem;
+        right: 1rem;
+        top: 1.2rem;
         font-size: 0.6rem;
         color: var(--muted);
         transition: transform 0.3s;
     }
-
     tr.is-expanded::after { transform: rotate(180deg); }
 
-    /* HIDE the details by default */
+    /* THE STACKED DETAILS (Hidden by default) */
     td:not(.check-cell):not(.problem-cell) {
-        display: none !important;
-        padding: 0.6rem 0;
+        display: none !important; /* Managed by JS toggle */
+        flex-direction: column;   /* STACKED: Label on top */
+        align-items: flex-start;  /* Align to the left */
+        padding: 0.8rem 0;
         border-top: 1px solid var(--panel-soft);
-        justify-content: space-between;
-        align-items: center;
     }
 
-    /* SHOW details when row is expanded */
+    /* Reveal and Stack when Expanded */
     tr.is-expanded td:not(.check-cell):not(.problem-cell) {
         display: flex !important;
     }
 
+    /* Label Styling (Top Row) */
     td::before {
         content: attr(data-label);
         font-weight: 800;
         font-size: 0.65rem;
         text-transform: uppercase;
         color: var(--muted);
+        margin-bottom: 0.4rem; /* Gap between label and value */
     }
 
-    /* Actions button full width in the dropdown */
-    .actions-cell { border-top: 1px solid var(--border) !important; margin-top: 0.5rem; }
-    .note-btn { width: 100%; justify-content: center !important; background: var(--panel-soft); padding: 0.75rem; }
+    /* Value Styling (Bottom Row) */
+    td > div, td > span {
+        width: 100%;
+        text-align: left; /* Align values to the left for better reading */
+        display: block;
+    }
+
+    /* Fix Internal Flex Containers (Badges/Bars) */
+    .freq-container, .concept-stack {
+        justify-content: flex-start !important; /* Force left alignment */
+        width: 100%;
+    }
+
+    /* Full-width button at the bottom */
+    .actions-cell { border-top: 2px solid var(--border) !important; margin-top: 0.5rem; }
+    .note-btn { 
+        width: 100%; 
+        justify-content: center !important; 
+        background: var(--brand); 
+        color: white; 
+        padding: 0.8rem;
+        font-weight: 700;
+        border: none;
+    }
 }
