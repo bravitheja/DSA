@@ -108,11 +108,22 @@ function createProblemRow(p) {
     const labels = ['Done', 'Problem', 'Frequency', 'Concept', 'Complexity', 'Difficulty', 'Actions'];
     cells.forEach((cell, i) => cell.setAttribute('data-label', labels[i]));
 
-    // Accordion Toggle
-    row.addEventListener("click", (e) => {
-        if (window.innerWidth > 850) return;
-        if (e.target.closest('a') || e.target.closest('input') || e.target.closest('button')) return;
+    // Accordion Toggle (double click / double tap only on mobile)
+    let lastTouchTime = 0;
+    row.addEventListener("dblclick", (e) => {
+        if (!canToggleAccordion(e)) return;
         row.classList.toggle("is-expanded");
+    });
+
+    row.addEventListener("touchend", (e) => {
+        if (window.innerWidth > 850 || !canToggleAccordion(e)) return;
+        const now = Date.now();
+        if (now - lastTouchTime < 320) {
+            row.classList.toggle("is-expanded");
+            lastTouchTime = 0;
+            return;
+        }
+        lastTouchTime = now;
     });
 
     const check = row.querySelector(".mastered-check");
@@ -160,6 +171,11 @@ function applyAndRender() {
     renderProblems();
     renderPagination(getTotalPages(filteredProblems.length));
     updateSidebarStats(allProblems);
+}
+
+function canToggleAccordion(e) {
+    if (window.innerWidth > 850) return false;
+    return !e.target.closest('a') && !e.target.closest('input') && !e.target.closest('button');
 }
 
 function renderProblems() {
