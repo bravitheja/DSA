@@ -99,19 +99,19 @@
 
     <template id="problemRowTemplate">
       <tr>
-        <td data-col="problem" class="problem-cell"></td>
-        <td data-col="concept" class="concept-cell"></td>
-        <td data-col="difficulty"><span class="difficulty-badge"></span></td>
-        <td data-col="frequency"><span class="frequency-badge"></span></td>
-        <td data-col="complexity" class="complexity-cell"></td>
-        <td data-col="status">
+        <td data-col="problem" class="problem-cell" data-label="Problem"></td>
+        <td data-col="concept" class="concept-cell" data-label="Concept"></td>
+        <td data-col="difficulty" data-label="Difficulty"><span class="difficulty-badge"></span></td>
+        <td data-col="frequency" data-label="Frequency"><span class="frequency-badge"></span></td>
+        <td data-col="complexity" class="complexity-cell" data-label="Complexity"></td>
+        <td data-col="status" data-label="Status">
           <select class="status-select" aria-label="Problem status">
             <option value="Not Started">Not Started</option>
             <option value="Revising">Revising</option>
             <option value="Mastered">Mastered</option>
           </select>
         </td>
-        <td data-col="notes">
+        <td data-col="notes" data-label="Notes">
           <textarea class="notes-input" rows="2" placeholder="Add notes..."></textarea>
         </td>
       </tr>

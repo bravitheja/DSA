@@ -317,8 +317,89 @@ body.dark .core-idea {
   padding: 1rem;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .app-shell { padding: 0.75rem; }
-  th,
-  td { padding: 0.55rem; }
+
+  .controls {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .column-toggle-wrap {
+    gap: 0.5rem;
+  }
+
+  .table-wrapper {
+    overflow: visible;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  table {
+    min-width: 0;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  tbody tr {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 0.4rem 0.65rem;
+  }
+
+  tbody td {
+    display: grid;
+    grid-template-columns: 98px 1fr;
+    align-items: start;
+    gap: 0.55rem;
+    border-bottom: none;
+    padding: 0.45rem 0;
+  }
+
+  tbody td::before {
+    content: attr(data-label);
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding-top: 0.18rem;
+  }
+
+  .problem-cell .problem-link {
+    font-size: 1.05rem;
+  }
+
+  .concept {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .core-idea {
+    max-width: none;
+  }
+
+  .notes-input,
+  .status-select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .hidden-column {
+    display: none !important;
+  }
 }
