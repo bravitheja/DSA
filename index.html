@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSA Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>DSA Tracker</h1>
+          <p class="subtitle">A personal LeetCode-style problem tracker</p>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+          🌙 Dark
+        </button>
+      </header>
+
+      <section class="summary-card">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span>Total Problems</span>
+            <strong id="totalCount">0</strong>
+          </div>
+          <div class="summary-item">
+            <span>Completed</span>
+            <strong id="completedCount">0</strong>
+          </div>
+          <div class="summary-item">
+            <span>Progress</span>
+            <strong id="progressPercent">0%</strong>
+          </div>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+      </section>
+
+      <section class="controls">
+        <label class="control-field">
+          <span>Search</span>
+          <input type="text" id="searchInput" placeholder="Search by problem name" />
+        </label>
+
+        <label class="control-field">
+          <span>Pattern</span>
+          <select id="patternFilter"></select>
+        </label>
+
+        <label class="control-field">
+          <span>Difficulty</span>
+          <select id="difficultyFilter"></select>
+        </label>
+
+        <label class="control-field">
+          <span>Sort</span>
+          <select id="sortDifficulty">
+            <option value="none">Default</option>
+            <option value="asc">Difficulty: Easy → Hard</option>
+            <option value="desc">Difficulty: Hard → Easy</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Problem</th>
+              <th>Pattern</th>
+              <th>Difficulty</th>
+              <th>Status</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="problemsBody"></tbody>
+        </table>
+      </section>
+    </div>
+
+    <template id="problemRowTemplate">
+      <tr>
+        <td class="problem-name"></td>
+        <td class="problem-pattern"></td>
+        <td><span class="difficulty-badge"></span></td>
+        <td>
+          <select class="status-select" aria-label="Problem status">
+            <option value="Not Started">Not Started</option>
+            <option value="Revising">Revising</option>
+            <option value="Mastered">Mastered</option>
+          </select>
+        </td>
+        <td>
+          <textarea class="notes-input" rows="2" placeholder="Add notes..."></textarea>
+        </td>
+      </tr>
+    </template>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
