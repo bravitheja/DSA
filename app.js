@@ -110,20 +110,30 @@ function createProblemRow(p) {
 
     // Accordion Toggle (double click / double tap only on mobile)
     let lastTouchTime = 0;
+    let lastTouchX = 0;
+    let lastTouchY = 0;
     row.addEventListener("dblclick", (e) => {
         if (!canToggleAccordion(e)) return;
         row.classList.toggle("is-expanded");
     });
 
-    row.addEventListener("touchend", (e) => {
-        if (window.innerWidth > 850 || !canToggleAccordion(e)) return;
-        const now = Date.now();
-        if (now - lastTouchTime < 320) {
+    row.addEventListener("pointerup", (e) => {
+        if (e.pointerType !== "touch" || !canToggleAccordion(e)) return;
+        e.preventDefault();
+
+        const now = e.timeStamp;
+        const tapDistance = Math.hypot(e.clientX - lastTouchX, e.clientY - lastTouchY);
+        if (now - lastTouchTime < 500 && tapDistance < 28) {
             row.classList.toggle("is-expanded");
             lastTouchTime = 0;
+            lastTouchX = 0;
+            lastTouchY = 0;
             return;
         }
+
         lastTouchTime = now;
+        lastTouchX = e.clientX;
+        lastTouchY = e.clientY;
     });
 
     const check = row.querySelector(".mastered-check");
@@ -175,7 +185,7 @@ function applyAndRender() {
 
 function canToggleAccordion(e) {
     if (window.innerWidth > 850) return false;
-    return !e.target.closest('a') && !e.target.closest('input') && !e.target.closest('button');
+    return !e.target.closest('input') && !e.target.closest('button');
 }
 
 function renderProblems() {
