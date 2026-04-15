@@ -108,33 +108,20 @@ function createProblemRow(p) {
     const labels = ['Done', 'Problem', 'Frequency', 'Concept', 'Complexity', 'Difficulty', 'Actions'];
     cells.forEach((cell, i) => cell.setAttribute('data-label', labels[i]));
 
-    // Accordion Toggle (double click / double tap only on mobile)
-    let lastTouchTime = 0;
-    let lastTouchX = 0;
-    let lastTouchY = 0;
-    row.addEventListener("dblclick", (e) => {
-        if (!canToggleAccordion(e)) return;
-        row.classList.toggle("is-expanded");
+    // Accordion toggle button (single tap, explicit target)
+    const toggleBtn = document.createElement("button");
+    toggleBtn.type = "button";
+    toggleBtn.className = "accordion-toggle";
+    toggleBtn.setAttribute("aria-label", "Toggle problem details");
+    toggleBtn.setAttribute("aria-expanded", "false");
+    toggleBtn.textContent = "▼";
+    toggleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (window.innerWidth > 850) return;
+        const expanded = row.classList.toggle("is-expanded");
+        toggleBtn.setAttribute("aria-expanded", expanded ? "true" : "false");
     });
-
-    row.addEventListener("pointerup", (e) => {
-        if (e.pointerType !== "touch" || !canToggleAccordion(e)) return;
-        e.preventDefault();
-
-        const now = e.timeStamp;
-        const tapDistance = Math.hypot(e.clientX - lastTouchX, e.clientY - lastTouchY);
-        if (now - lastTouchTime < 500 && tapDistance < 28) {
-            row.classList.toggle("is-expanded");
-            lastTouchTime = 0;
-            lastTouchX = 0;
-            lastTouchY = 0;
-            return;
-        }
-
-        lastTouchTime = now;
-        lastTouchX = e.clientX;
-        lastTouchY = e.clientY;
-    });
+    row.appendChild(toggleBtn);
 
     const check = row.querySelector(".mastered-check");
     check.checked = p.status === "Mastered";
@@ -181,11 +168,6 @@ function applyAndRender() {
     renderProblems();
     renderPagination(getTotalPages(filteredProblems.length));
     updateSidebarStats(allProblems);
-}
-
-function canToggleAccordion(e) {
-    if (window.innerWidth > 850) return false;
-    return !e.target.closest('input') && !e.target.closest('button');
 }
 
 function renderProblems() {

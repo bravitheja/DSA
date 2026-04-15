@@ -80,6 +80,7 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 .difficulty-medium { background: #fef3c7; color: #92400e; }
 .difficulty-hard { background: #fee2e2; color: #991b1b; }
 .complexity-cell { font-family: monospace; color: var(--brand); font-weight: 600; }
+.accordion-toggle { display: none; }
 
 /* Notes Drawer */
 .notes-sheet { position: fixed; right: -420px; width: 400px; height: 100vh; background: var(--panel); border-left: 1px solid var(--border); padding: 1.5rem; transition: right 0.3s; z-index: 100; box-shadow: -10px 0 30px rgba(0,0,0,0.05); }
@@ -132,9 +133,27 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
     .actions-cell { border-bottom: none !important; padding-top: 1rem !important; }
     .note-btn { width: 100%; justify-content: center !important; background: var(--brand); color: white; padding: 0.8rem; border: none; font-weight: 700; }
 
-    /* Chevron */
-    tr::after { content: '▼'; position: absolute; right: 0.7rem; top: 1.2rem; font-size: 0.6rem; color: var(--muted); transition: transform 0.2s; }
-    tr.is-expanded::after { transform: rotate(180deg); }
+    /* Explicit accordion button */
+    .accordion-toggle {
+      display: grid;
+      place-items: center;
+      position: absolute;
+      right: 0.65rem;
+      top: 0.95rem;
+      width: 1.35rem;
+      height: 1.35rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 0.6rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      padding: 0;
+    }
+
+    tr.is-expanded .accordion-toggle { transform: rotate(180deg); }
 
     .pagination-bar {
       margin: 1rem;
