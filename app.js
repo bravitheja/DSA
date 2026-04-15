@@ -6,6 +6,7 @@ const STATUS_MASTERED = "Mastered";
 const DEFAULT_STATUS = "Not Started";
 const DIFFICULTY_RANK = { Easy: 1, Medium: 2, Hard: 3 };
 const FREQUENCY_RANK = { High: 3, Medium: 2, Low: 1 };
+const DEFAULT_PAGE_SIZE = 10;
 
 const elements = {
   body: document.getElementById("problemsBody"),
@@ -23,12 +24,19 @@ const elements = {
   themeToggle: document.getElementById("themeToggle"),
   columnToggles: document.querySelectorAll(".column-toggle"),
   filterPills: document.querySelectorAll(".filter-pill"),
+  pageSizeSelect: document.getElementById("pageSizeSelect"),
+  prevPageBtn: document.getElementById("prevPageBtn"),
+  nextPageBtn: document.getElementById("nextPageBtn"),
+  pageIndicator: document.getElementById("pageIndicator"),
+  paginationInfo: document.getElementById("paginationInfo"),
 };
 
 let allProblems = [];
 let filteredProblems = [];
 let trackerState = loadState();
 let hiddenColumns = loadHiddenColumns();
+let currentPage = 1;
+let pageSize = DEFAULT_PAGE_SIZE;
 
 init();
 
@@ -43,8 +51,7 @@ async function init() {
 
   setupFilters(allProblems);
   syncFilterPills();
-  renderTable(filteredProblems);
-  updateStats(allProblems);
+  applyAndRender();
 }
 
 async function loadData() {
@@ -81,8 +88,35 @@ function bindControls() {
     elements.frequencyFilter,
     elements.sortSelect,
   ].forEach((control) => {
-    control.addEventListener("input", applyAndRender);
-    control.addEventListener("change", applyAndRender);
+    control.addEventListener("input", () => {
+      currentPage = 1;
+      applyAndRender();
+    });
+    control.addEventListener("change", () => {
+      currentPage = 1;
+      applyAndRender();
+    });
+  });
+
+  elements.pageSizeSelect.value = String(DEFAULT_PAGE_SIZE);
+  elements.pageSizeSelect.addEventListener("change", () => {
+    const nextSize = Number(elements.pageSizeSelect.value);
+    pageSize = Number.isFinite(nextSize) && nextSize > 0 ? nextSize : DEFAULT_PAGE_SIZE;
+    currentPage = 1;
+    applyAndRender();
+  });
+
+  elements.prevPageBtn.addEventListener("click", () => {
+    if (currentPage <= 1) return;
+    currentPage -= 1;
+    applyAndRender();
+  });
+
+  elements.nextPageBtn.addEventListener("click", () => {
+    const totalPages = getTotalPages(filteredProblems.length);
+    if (currentPage >= totalPages) return;
+    currentPage += 1;
+    applyAndRender();
   });
 
   elements.themeToggle.addEventListener("click", () => {
@@ -109,6 +143,7 @@ function bindControls() {
       if (!target) return;
       target.value = pill.dataset.value;
       syncFilterPills();
+      currentPage = 1;
       applyAndRender();
     });
   });
@@ -177,9 +212,23 @@ function setupFilters(items) {
 function applyAndRender() {
   filteredProblems = applyFilters(allProblems);
   const sorted = applySort(filteredProblems);
-  renderTable(sorted);
+  const totalPages = getTotalPages(sorted.length);
+  currentPage = Math.min(currentPage, totalPages);
+  const paginated = paginate(sorted);
+  renderTable(paginated);
+  updatePagination(sorted.length);
   updateStats(allProblems);
   syncFilterPills();
+}
+
+function getTotalPages(totalItems) {
+  return Math.max(1, Math.ceil(totalItems / pageSize));
+}
+
+function paginate(items) {
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+  return items.slice(start, end);
 }
 
 function renderTable(items) {
@@ -353,6 +402,17 @@ function updateStats(items) {
 
 function showErrorRow(message) {
   elements.body.innerHTML = `<tr><td colspan="7" class="empty-state">${message}</td></tr>`;
+}
+
+function updatePagination(totalItems) {
+  const totalPages = getTotalPages(totalItems);
+  const start = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const end = totalItems === 0 ? 0 : Math.min(currentPage * pageSize, totalItems);
+
+  elements.paginationInfo.textContent = `Showing ${start}-${end} of ${totalItems}`;
+  elements.pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+  elements.prevPageBtn.disabled = currentPage <= 1;
+  elements.nextPageBtn.disabled = currentPage >= totalPages;
 }
 
 function applyColumnVisibility() {
