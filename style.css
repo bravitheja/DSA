@@ -98,10 +98,10 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 .save-btn { flex: 1; background: var(--brand); color: white; font-weight: 600; border: none; }
 
 /* --- THE ULTIMATE MOBILE CARD-STACKING FIX --- */
-/* --- THE ULTIMATE MOBILE CARD FIX --- */
+/* --- FINAL STABLE MOBILE CARD FIX --- */
 @media (max-width: 850px) {
     .dashboard-shell {
-        display: block; /* Stack sidebar and main */
+        display: block;
         width: 100vw;
         overflow-x: hidden;
     }
@@ -111,26 +111,30 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
         border-right: none;
         border-bottom: 2px solid var(--border);
         padding: 1rem;
-        box-sizing: border-box;
     }
 
     .main-pane {
         width: 100%;
-        padding: 0;
+        overflow-x: hidden;
     }
 
+    /* Stack Filter Bar */
     .filter-bar {
         padding: 1rem;
         flex-direction: column;
         gap: 0.8rem;
     }
 
-    /* Convert Table to Cards */
+    .search-wrap, select, .random-btn {
+        width: 100% !important;
+    }
+
+    /* Transform Table to Cards */
     .table-shell {
         margin: 0;
         border: none;
         background: transparent;
-        overflow: visible;
+        width: 100%;
     }
 
     table, thead, tbody, th, td, tr {
@@ -138,65 +142,53 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
         width: 100%;
     }
 
-    thead { display: none; } /* Hide the original headers */
+    thead { display: none; }
 
     tr {
         background: var(--panel);
-        margin: 1rem 0; /* Vertical spacing between cards */
-        padding: 1rem;
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
+        margin: 1rem auto;
+        width: calc(100% - 2rem); /* Gives 1rem margin on each side */
+        padding: 1.25rem;
+        border-radius: 12px;
+        border: 1px solid var(--border);
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        position: relative;
         box-sizing: border-box;
     }
 
-    /* Card Mastery State */
-    tr.is-mastered {
-        opacity: 0.6;
-        background: var(--panel-soft);
-    }
-
+    /* Rows inside the card */
     td {
-        display: flex; /* Key to label-content alignment */
+        display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.75rem 0;
+        padding: 0.8rem 0;
         border-bottom: 1px solid var(--panel-soft);
         text-align: right;
-        min-height: 40px;
+        min-width: 0; /* Prevents flex items from overflowing */
     }
 
-    /* This creates the labels on the left of the card */
     td::before {
         content: attr(data-label);
         font-weight: 800;
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         text-transform: uppercase;
         color: var(--muted);
         text-align: left;
-        flex: 1; /* Pushes content to the right */
+        flex-shrink: 0;
+        margin-right: 1rem;
     }
 
-    /* Ensure card content behaves inside flex */
-    td > * {
-        flex: 2; /* Content takes more space than label */
+    /* Ensure content on the right stays contained */
+    td > div, td > span, td > button {
+        flex: 1;
         display: flex;
         justify-content: flex-end;
+        min-width: 0;
+        word-break: break-word;
     }
 
-    /* Specific Cell Overrides */
-    .check-cell {
-        justify-content: flex-start;
-        border-bottom: 2px solid var(--border);
-        padding-bottom: 1rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .check-cell::before { flex: 1; }
-
+    /* Special Layout for the Problem Name */
     .problem-cell {
-        display: block; /* Title should take its own line */
+        display: block !important; /* Stack label above title */
         text-align: left;
         border-bottom: 2px solid var(--border);
         padding-bottom: 1rem;
@@ -205,16 +197,22 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 
     .problem-cell::before {
         display: block;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.4rem;
     }
 
     .problem-link {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+        font-weight: 800;
         color: var(--brand);
         display: block;
+        text-align: left;
     }
 
-    /* Hide redundant labels for the note button */
+    /* Fix Badge/Icon Alignment */
+    .concept-stack, .freq-container {
+        justify-content: flex-end;
+    }
+
     .actions-cell {
         border-bottom: none;
         padding-top: 1rem;
@@ -222,14 +220,8 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 
     .note-btn {
         width: 100%;
-        justify-content: center;
-        padding: 0.75rem;
-        font-weight: 600;
-    }
-
-    /* Notes Drawer */
-    .notes-sheet {
-        width: 100vw;
-        right: -100vw;
+        background: var(--panel-soft);
+        justify-content: center !important;
+        font-weight: 700;
     }
 }
