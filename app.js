@@ -1,6 +1,5 @@
 const STORAGE_KEY = "dsa-tracker-state-v4";
 const THEME_KEY = "dsa-tracker-theme";
-const DIFFICULTY_ORDER = { Easy: 1, Medium: 2, Hard: 3 };
 
 const elements = {
   body: document.getElementById("problemsBody"),
@@ -35,9 +34,22 @@ async function init() {
   applyTheme(loadTheme());
   bindControls();
   const raw = await loadData();
+  if (raw.length === 0) return;
+  
   allProblems = normalizeProblemData(raw);
   populatePatternFilter(allProblems);
   applyAndRender();
+}
+
+async function loadData() {
+  try {
+    const res = await fetch("data.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("Could not find data.json");
+    return await res.json();
+  } catch (err) {
+    elements.body.innerHTML = `<tr><td colspan="7" style="padding: 2rem; text-align: center; color: red;">Error: ${err.message}. Make sure data.json is in the same folder.</td></tr>`;
+    return [];
+  }
 }
 
 function bindControls() {
@@ -45,17 +57,19 @@ function bindControls() {
   elements.patternFilter.addEventListener("change", applyAndRender);
   elements.difficultyFilter.addEventListener("change", applyAndRender);
 
-  // Auto-save logic for notes
   elements.sheetNotesInput.addEventListener("input", () => {
-    showAutoSaveStatus();
+    elements.autoSaveStatus.classList.add("show");
     clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(saveActiveNotes, 1000);
+    saveTimeout = setTimeout(() => {
+      saveActiveNotes();
+      elements.autoSaveStatus.classList.remove("show");
+    }, 1000);
   });
 
   elements.togglePreviewBtn.addEventListener("click", () => {
-    const isShowingPreview = !elements.notesPreview.classList.contains("hidden");
-    if (!isShowingPreview) {
-      elements.notesPreview.innerHTML = marked.parse(elements.sheetNotesInput.value);
+    const isHidden = elements.notesPreview.classList.contains("hidden");
+    if (isHidden) {
+      elements.notesPreview.innerHTML = marked.parse(elements.sheetNotesInput.value || "*No notes yet*");
       elements.togglePreviewBtn.textContent = "Edit";
     } else {
       elements.togglePreviewBtn.textContent = "Preview";
@@ -68,15 +82,15 @@ function bindControls() {
   elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
   
   elements.themeToggle.addEventListener("click", () => {
-    const nextTheme = document.body.classList.contains("dark") ? "light" : "dark";
-    applyTheme(nextTheme);
-    localStorage.setItem(THEME_KEY, nextTheme);
+    const next = document.body.classList.contains("dark") ? "light" : "dark";
+    applyTheme(next);
+    localStorage.setItem(THEME_KEY, next);
   });
 }
 
 function normalizeProblemData(items) {
-  return items.map((item, index) => {
-    const id = item.problem || `problem-${index}`;
+  return items.map((item, idx) => {
+    const id = item.problem || `p-${idx}`;
     const stored = trackerState[id] || {};
     return {
       id,
@@ -84,8 +98,8 @@ function normalizeProblemData(items) {
       link: item.link || "#",
       pattern: item.pattern || "General",
       subPattern: item.subPattern || "",
-      difficulty: normalizeDifficulty(item.difficulty),
-      coreIdea: item.coreIdea || "No intuition added.",
+      difficulty: item.difficulty || "Medium",
+      coreIdea: item.coreIdea || "No core logic added.",
       complexity: item.complexity || "-",
       frequency: parseInt(item.frequency) || 0,
       status: stored.status || "Not Started",
@@ -98,120 +112,38 @@ function createProblemRow(p) {
   const row = elements.rowTemplate.content.firstElementChild.cloneNode(true);
   if (p.status === "Mastered") row.classList.add("is-mastered");
 
-  // Checkbox
   const check = row.querySelector(".mastered-check");
   check.checked = p.status === "Mastered";
   check.addEventListener("change", (e) => {
-    const status = e.target.checked ? "Mastered" : "Not Started";
-    patchProblemState(p.id, { status });
+    patchProblemState(p.id, { status: e.target.checked ? "Mastered" : "Not Started" });
     applyAndRender();
   });
 
-  // Problem Link
-  const problemCell = row.querySelector(".problem-cell");
-  problemCell.innerHTML = `<a href="${p.link}" target="_blank" class="problem-link">${p.problem}</a>`;
+  row.querySelector(".problem-cell").innerHTML = `<a href="${p.link}" target="_blank" class="problem-link">${p.problem}</a>`;
 
-  // Frequency + Heat Bar
-  const freqCell = row.querySelector(".frequency-cell");
-  const heatWidth = Math.min((p.frequency / 650) * 100, 100);
-  freqCell.innerHTML = `
+  const heat = Math.min((p.frequency / 650) * 100, 100);
+  row.querySelector(".frequency-cell").innerHTML = `
     <div class="freq-container">
       <span class="freq-num">${p.frequency}</span>
-      <div class="heat-bar-bg"><div class="heat-bar-fill" style="width: ${heatWidth}%"></div></div>
-    </div>
-  `;
+      <div class="heat-bar-bg"><div class="heat-bar-fill" style="width: ${heat}%"></div></div>
+    </div>`;
 
-  // Concept Column (Pattern + Sub + Idea)
-  const conceptCell = row.querySelector(".concept-cell");
-  conceptCell.innerHTML = `
+  const pClass = `pattern-${p.pattern.toLowerCase().replace(/\s+/g, '-')}`;
+  row.querySelector(".concept-cell").innerHTML = `
     <div class="concept-stack">
       <div class="tooltip-wrap" data-tooltip="${p.coreIdea}">
-        <span class="badge ${getPatternClass(p.pattern)}">${p.pattern}</span>
+        <span class="badge ${pClass}">${p.pattern}</span>
         <span class="idea-bulb">💡</span>
       </div>
       <span class="sub-pattern">${p.subPattern}</span>
-    </div>
-  `;
+    </div>`;
 
   row.querySelector(".complexity-cell").textContent = p.complexity;
+  row.querySelector(".difficulty-cell").innerHTML = `<span class="badge difficulty-${p.difficulty.toLowerCase()}">${p.difficulty}</span>`;
   
-  const diffBadge = row.querySelector(".difficulty-cell");
-  diffBadge.innerHTML = `<span class="badge difficulty-${p.difficulty.toLowerCase()}">${p.difficulty}</span>`;
-
-  const actionCell = row.querySelector(".actions-cell");
-  actionCell.innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="note-btn">📝</button>`;
+  row.querySelector(".note-btn").addEventListener("click", () => openNotesSheet(p.id));
 
   return row;
-}
-
-function updateSidebarStats(items) {
-  const total = items.length;
-  const solved = items.filter(i => i.status === "Mastered").length;
-  elements.solvedCount.textContent = `${solved} / ${total}`;
-
-  const difficulties = ["Easy", "Medium", "Hard"];
-  elements.breakdown.innerHTML = "";
-
-  difficulties.forEach(diff => {
-    const diffItems = items.filter(i => i.difficulty === diff);
-    const diffSolved = diffItems.filter(i => i.status === "Mastered").length;
-    const ring = elements[`${diff.toLowerCase()}Ring`];
-    
-    // Update Rings
-    const pct = diffItems.length ? Math.round((diffSolved / diffItems.length) * 100) : 0;
-    ring.textContent = `${pct}%`;
-    ring.style.background = `conic-gradient(var(--ring-color) ${pct}%, var(--panel-soft) ${pct}% 100%)`;
-
-    // Update Text Breakdown
-    const item = document.createElement("div");
-    item.className = `breakdown-item ${diff.toLowerCase()}`;
-    item.innerHTML = `<span>${diff}</span> <span>${diffSolved} / ${diffItems.length}</span>`;
-    elements.breakdown.appendChild(item);
-  });
-}
-
-function getPatternClass(p) {
-  const n = p.toLowerCase();
-  if (n.includes("dp")) return "pattern-dp";
-  if (n.includes("graph") || n.includes("tree")) return "pattern-graph";
-  if (n.includes("pointer")) return "pattern-two-pointers";
-  if (n.includes("hash")) return "pattern-hashing";
-  return "pattern-default";
-}
-
-// Global logic helpers (Reuse from original with small tweaks)
-function openNotesSheet(id) {
-  const p = allProblems.find(i => i.id === id);
-  activeNotesId = id;
-  elements.sheetTitle.textContent = p.problem;
-  elements.sheetNotesInput.value = p.notes;
-  elements.notesPreview.classList.add("hidden");
-  elements.sheetNotesInput.classList.remove("hidden");
-  elements.notesSheet.classList.add("open");
-}
-
-function closeNotesSheet() {
-  elements.notesSheet.classList.remove("open");
-  activeNotesId = null;
-}
-
-function showAutoSaveStatus() {
-  elements.autoSaveStatus.classList.add("show");
-  setTimeout(() => elements.autoSaveStatus.classList.remove("show"), 2000);
-}
-
-function saveActiveNotes() {
-  if (!activeNotesId) return;
-  const notes = elements.sheetNotesInput.value;
-  patchProblemState(activeNotesId, { notes });
-}
-
-// Standard Utility functions
-function patchProblemState(id, partial) {
-  trackerState[id] = { ...trackerState[id], ...partial };
-  saveState(trackerState);
-  const idx = allProblems.findIndex(p => p.id === id);
-  if (idx !== -1) allProblems[idx] = { ...allProblems[idx], ...partial };
 }
 
 function applyAndRender() {
@@ -220,9 +152,10 @@ function applyAndRender() {
   const diff = elements.difficultyFilter.value;
 
   const filtered = allProblems.filter(p => {
-    return (p.problem.toLowerCase().includes(query) || p.coreIdea.toLowerCase().includes(query)) &&
-           (pattern === "all" || p.pattern === pattern) &&
-           (diff === "all" || p.difficulty === diff);
+    const matchSearch = p.problem.toLowerCase().includes(query) || p.pattern.toLowerCase().includes(query);
+    const matchPattern = pattern === "all" || p.pattern === pattern;
+    const matchDiff = diff === "all" || p.difficulty === diff;
+    return matchSearch && matchPattern && matchDiff;
   });
 
   elements.body.innerHTML = "";
@@ -230,26 +163,49 @@ function applyAndRender() {
   updateSidebarStats(allProblems);
 }
 
-async function loadData() {
-  const res = await fetch("data.json");
-  return await res.json();
-}
+function updateSidebarStats(items) {
+  const solved = items.filter(i => i.status === "Mastered").length;
+  elements.solvedCount.textContent = `${solved} / ${items.length}`;
 
-function normalizeDifficulty(v) {
-  const n = String(v).toLowerCase();
-  return n === "easy" ? "Easy" : n === "hard" ? "Hard" : "Medium";
-}
+  const diffs = ["Easy", "Medium", "Hard"];
+  elements.breakdown.innerHTML = "";
 
-function populatePatternFilter(items) {
-  const patterns = [...new Set(items.map(i => i.pattern))].sort();
-  elements.patternFilter.innerHTML = '<option value="all">Pattern: All</option>';
-  patterns.forEach(p => {
-    const opt = document.createElement("option");
-    opt.value = opt.textContent = p;
-    elements.patternFilter.appendChild(opt);
+  diffs.forEach(d => {
+    const dItems = items.filter(i => i.difficulty === d);
+    const dSolved = dItems.filter(i => i.status === "Mastered").length;
+    const pct = dItems.length ? Math.round((dSolved / dItems.length) * 100) : 0;
+    
+    const ring = elements[`${d.toLowerCase()}Ring`];
+    ring.textContent = `${pct}%`;
+    ring.style.background = `conic-gradient(var(--ring-color) ${pct}%, var(--panel-soft) ${pct}% 100%)`;
+
+    elements.breakdown.innerHTML += `<div class="breakdown-item ${d.toLowerCase()}"><span>${d}</span> <span>${dSolved}/${dItems.length}</span></div>`;
   });
 }
 
+function openNotesSheet(id) {
+  const p = allProblems.find(i => i.id === id);
+  activeNotesId = id;
+  elements.sheetTitle.textContent = p.problem;
+  elements.sheetNotesInput.value = p.notes;
+  elements.notesPreview.classList.add("hidden");
+  elements.sheetNotesInput.classList.remove("hidden");
+  elements.togglePreviewBtn.textContent = "Preview";
+  elements.notesSheet.classList.add("open");
+}
+
+function closeNotesSheet() { elements.notesSheet.classList.remove("open"); activeNotesId = null; }
+function saveActiveNotes() { if (activeNotesId) patchProblemState(activeNotesId, { notes: elements.sheetNotesInput.value }); }
+function patchProblemState(id, partial) {
+  trackerState[id] = { ...trackerState[id], ...partial };
+  saveState(trackerState);
+  const idx = allProblems.findIndex(p => p.id === id);
+  if (idx !== -1) allProblems[idx] = { ...allProblems[idx], ...partial };
+}
+function populatePatternFilter(items) {
+  const ps = [...new Set(items.map(i => i.pattern))].sort();
+  elements.patternFilter.innerHTML = `<option value="all">Pattern: All</option>` + ps.map(p => `<option value="${p}">${p}</option>`).join("");
+}
 function loadState() { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
 function saveState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
 function loadTheme() { return localStorage.getItem(THEME_KEY) || "light"; }
