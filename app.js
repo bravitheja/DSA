@@ -1,7 +1,6 @@
 const STORAGE_KEY = "dsa-tracker-state-v4";
 const THEME_KEY = "dsa-tracker-theme";
 
-// Helper to safely get elements
 const getEl = (id) => document.getElementById(id);
 
 const elements = {
@@ -31,82 +30,62 @@ let trackerState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 let activeNotesId = null;
 let saveTimeout;
 
-// Start the app
 init();
 
 async function init() {
     applyTheme(localStorage.getItem(THEME_KEY) || "light");
-    
     try {
         bindControls();
         const raw = await loadData();
-        
-        if (!raw || raw.length === 0) {
-            throw new Error("Data.json is empty or could not be reached.");
-        }
-
         allProblems = normalizeProblemData(raw);
         populatePatternFilter(allProblems);
         applyAndRender();
-        
     } catch (err) {
-        console.error("Init Error:", err);
-        if (elements.body) {
-            elements.body.innerHTML = `<tr><td colspan="7" style="color: #ef4444; padding: 2rem; text-align: center; font-weight: bold;">
-                ❌ System Error: ${err.message}<br>
-                <small style="display:block; margin-top:0.5rem; opacity:0.7;">Check console for details.</small>
-            </td></tr>`;
-        }
+        console.error("Initialization failed:", err);
+        elements.body.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center; padding:2rem;">Failed to load data.json. Check console for details.</td></tr>`;
     }
 }
 
 async function loadData() {
-    // Relative path for GitHub Pages
-    const response = await fetch("./data.json", { cache: "no-cache" });
-    if (!response.ok) throw new Error(`HTTP Error ${response.status}: Failed to fetch data.json`);
-    return await response.json();
+    const res = await fetch("./data.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("Could not find data.json");
+    return await res.json();
 }
 
 function bindControls() {
-    if (elements.searchInput) elements.searchInput.addEventListener("input", applyAndRender);
-    if (elements.patternFilter) elements.patternFilter.addEventListener("change", applyAndRender);
-    if (elements.difficultyFilter) elements.difficultyFilter.addEventListener("change", applyAndRender);
+    elements.searchInput.addEventListener("input", applyAndRender);
+    elements.patternFilter.addEventListener("change", applyAndRender);
+    elements.difficultyFilter.addEventListener("change", applyAndRender);
 
-    if (elements.sheetNotesInput) {
-        elements.sheetNotesInput.addEventListener("input", () => {
-            if (elements.autoSaveStatus) elements.autoSaveStatus.classList.add("show");
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => {
-                saveActiveNotes();
-                if (elements.autoSaveStatus) elements.autoSaveStatus.classList.remove("show");
-            }, 800);
-        });
-    }
+    elements.sheetNotesInput.addEventListener("input", () => {
+        elements.autoSaveStatus.classList.add("show");
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+            saveActiveNotes();
+            elements.autoSaveStatus.classList.remove("show");
+        }, 1000);
+    });
 
-    if (elements.togglePreviewBtn) {
-        elements.togglePreviewBtn.addEventListener("click", () => {
-            const isHidden = elements.notesPreview.classList.contains("hidden");
-            if (isHidden && window.marked) {
-                elements.notesPreview.innerHTML = marked.parse(elements.sheetNotesInput.value || "_No notes yet_");
-                elements.togglePreviewBtn.textContent = "Edit";
-            } else {
-                elements.togglePreviewBtn.textContent = "Preview";
-            }
-            elements.notesPreview.classList.toggle("hidden");
-            elements.sheetNotesInput.classList.toggle("hidden");
-        });
-    }
+    elements.togglePreviewBtn.addEventListener("click", () => {
+        const isHidden = elements.notesPreview.classList.contains("hidden");
+        if (isHidden) {
+            elements.notesPreview.innerHTML = window.marked ? marked.parse(elements.sheetNotesInput.value || "*No notes available.*") : elements.sheetNotesInput.value;
+            elements.togglePreviewBtn.textContent = "Edit";
+        } else {
+            elements.togglePreviewBtn.textContent = "Preview";
+        }
+        elements.notesPreview.classList.toggle("hidden");
+        elements.sheetNotesInput.classList.toggle("hidden");
+    });
 
-    if (elements.sheetCloseBtn) elements.sheetCloseBtn.addEventListener("click", closeNotesSheet);
-    if (elements.sheetSaveBtn) elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
+    elements.sheetCloseBtn.addEventListener("click", closeNotesSheet);
+    elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
     
-    if (elements.themeToggle) {
-        elements.themeToggle.addEventListener("click", () => {
-            const next = document.body.classList.contains("dark") ? "light" : "dark";
-            applyTheme(next);
-            localStorage.setItem(THEME_KEY, next);
-        });
-    }
+    elements.themeToggle.addEventListener("click", () => {
+        const next = document.body.classList.contains("dark") ? "light" : "dark";
+        applyTheme(next);
+        localStorage.setItem(THEME_KEY, next);
+    });
 }
 
 function normalizeProblemData(items) {
@@ -120,7 +99,7 @@ function normalizeProblemData(items) {
             pattern: item.pattern || "General",
             subPattern: item.subPattern || "",
             difficulty: item.difficulty || "Medium",
-            coreIdea: item.coreIdea || "No core logic available.",
+            coreIdea: item.coreIdea || "No core logic added.",
             complexity: item.complexity || "-",
             frequency: parseInt(item.frequency) || 0,
             status: stored.status || "Not Started",
@@ -162,8 +141,8 @@ function createProblemRow(p) {
     row.querySelector(".complexity-cell").textContent = p.complexity;
     row.querySelector(".difficulty-cell").innerHTML = `<span class="badge difficulty-${p.difficulty.toLowerCase()}">${p.difficulty}</span>`;
     
-    const noteBtn = row.querySelector(".note-btn");
-    noteBtn.addEventListener("click", () => openNotesSheet(p.id));
+    const actions = row.querySelector(".actions-cell");
+    actions.innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="secondary-btn">📝 Notes</button>`;
 
     return row;
 }
@@ -180,19 +159,17 @@ function applyAndRender() {
         return matchSearch && matchPattern && matchDiff;
     });
 
-    if (elements.body) {
-        elements.body.innerHTML = "";
-        filtered.forEach(p => elements.body.appendChild(createProblemRow(p)));
-    }
+    elements.body.innerHTML = "";
+    filtered.forEach(p => elements.body.appendChild(createProblemRow(p)));
     updateSidebarStats(allProblems);
 }
 
 function updateSidebarStats(items) {
     const solved = items.filter(i => i.status === "Mastered").length;
-    if (elements.solvedCount) elements.solvedCount.textContent = `${solved} / ${items.length}`;
+    elements.solvedCount.textContent = `${solved} / ${items.length}`;
 
     const diffs = ["Easy", "Medium", "Hard"];
-    if (elements.breakdown) elements.breakdown.innerHTML = "";
+    elements.breakdown.innerHTML = "";
 
     diffs.forEach(d => {
         const dItems = items.filter(i => i.difficulty === d);
@@ -200,18 +177,21 @@ function updateSidebarStats(items) {
         const pct = dItems.length ? Math.round((dSolved / dItems.length) * 100) : 0;
         
         const ring = elements[`${d.toLowerCase()}Ring`];
-        if (ring) {
-            ring.textContent = `${pct}%`;
-            ring.style.background = `conic-gradient(var(--ring-color) ${pct}%, var(--panel-soft) ${pct}% 100%)`;
-        }
+        ring.textContent = `${pct}%`;
+        ring.style.background = `conic-gradient(var(--ring-color) ${pct}%, var(--panel-soft) ${pct}% 100%)`;
 
-        if (elements.breakdown) {
-            elements.breakdown.innerHTML += `<div class="breakdown-item ${d.toLowerCase()}"><span>${d}</span> <span>${dSolved}/${dItems.length}</span></div>`;
-        }
+        elements.breakdown.innerHTML += `<div class="breakdown-item ${d.toLowerCase()}"><span>${d}</span> <span>${dSolved}/${dItems.length}</span></div>`;
     });
 }
 
-// Global functions for inline access
+// Randomizer
+window.pickRandom = () => {
+    const todo = allProblems.filter(p => p.status !== "Mastered");
+    if (todo.length === 0) return alert("Everything mastered! 🏆");
+    const r = todo[Math.floor(Math.random() * todo.length)];
+    window.open(r.link, '_blank');
+};
+
 window.openNotesSheet = (id) => {
     const p = allProblems.find(i => i.id === id);
     activeNotesId = id;
@@ -223,14 +203,8 @@ window.openNotesSheet = (id) => {
     elements.notesSheet.classList.add("open");
 };
 
-function closeNotesSheet() { 
-    if (elements.notesSheet) elements.notesSheet.classList.remove("open"); 
-    activeNotesId = null; 
-}
-
-function saveActiveNotes() { 
-    if (activeNotesId) patchProblemState(activeNotesId, { notes: elements.sheetNotesInput.value }); 
-}
+function closeNotesSheet() { elements.notesSheet.classList.remove("open"); activeNotesId = null; }
+function saveActiveNotes() { if (activeNotesId) patchProblemState(activeNotesId, { notes: elements.sheetNotesInput.value }); }
 
 function patchProblemState(id, partial) {
     trackerState[id] = { ...trackerState[id], ...partial };
@@ -241,12 +215,7 @@ function patchProblemState(id, partial) {
 
 function populatePatternFilter(items) {
     const ps = [...new Set(items.map(i => i.pattern))].sort();
-    if (elements.patternFilter) {
-        elements.patternFilter.innerHTML = `<option value="all">Pattern: All</option>` + ps.map(p => `<option value="${p}">${p}</option>`).join("");
-    }
+    elements.patternFilter.innerHTML = `<option value="all">Pattern: All</option>` + ps.map(p => `<option value="${p}">${p}</option>`).join("");
 }
 
-function applyTheme(t) { 
-    document.body.classList.toggle("dark", t === "dark"); 
-    if (elements.themeToggle) elements.themeToggle.textContent = t === "dark" ? "☀️" : "🌙"; 
-}
+function applyTheme(t) { document.body.classList.toggle("dark", t === "dark"); elements.themeToggle.textContent = t === "dark" ? "☀️" : "🌙"; }
