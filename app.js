@@ -136,12 +136,12 @@ function createProblemRow(p) {
     const row = elements.rowTemplate.content.firstElementChild.cloneNode(true);
     if (p.status === "Mastered") row.classList.add("is-mastered");
 
-    // Map labels to cells for mobile
+    // Set labels for Mobile Cards
     const cells = row.querySelectorAll('td');
     const labels = ['Done', 'Problem', 'Frequency', 'Concept', 'Complexity', 'Difficulty', 'Actions'];
     cells.forEach((cell, i) => cell.setAttribute('data-label', labels[i]));
 
-    // 1. Checkbox
+    // 1. Done (Checkbox)
     const check = row.querySelector(".mastered-check");
     check.checked = p.status === "Mastered";
     check.addEventListener("change", (e) => {
@@ -149,11 +149,10 @@ function createProblemRow(p) {
         applyAndRender();
     });
 
-    // 2. Problem Title (Clean the link again just in case)
-    const cleanLink = p.link.startsWith('http') ? p.link : p.link.split('](')[1]?.replace(')', '') || p.link;
-    row.querySelector(".problem-cell").innerHTML = `<div><a href="${cleanLink}" target="_blank" class="problem-link">${p.problem}</a></div>`;
+    // 2. Problem Title
+    row.querySelector(".problem-cell").innerHTML = `<div><a href="${p.link}" target="_blank" class="problem-link">${p.problem}</a></div>`;
 
-    // 3. Frequency
+    // 3. Frequency Heat Bar
     const heat = Math.min((p.frequency / 650) * 100, 100);
     row.querySelector(".frequency-cell").innerHTML = `
         <div class="freq-container">
@@ -161,7 +160,7 @@ function createProblemRow(p) {
             <div class="heat-bar-bg"><div class="heat-bar-fill" style="width: ${heat}%"></div></div>
         </div>`;
 
-    // 4. Concept
+    // 4. Concept Stack
     const pClass = `pattern-${p.pattern.toLowerCase().replace(/\s+/g, '-')}`;
     row.querySelector(".concept-cell").innerHTML = `
         <div class="concept-stack">
@@ -169,14 +168,14 @@ function createProblemRow(p) {
                 <span class="badge ${pClass}">${p.pattern}</span>
                 <span class="idea-bulb">💡</span>
             </div>
-            <span class="sub-pattern" style="margin-top: 2px;">${p.subPattern}</span>
+            <small class="sub-pattern" style="margin-top: 4px; display: block;">${p.subPattern}</small>
         </div>`;
 
     // 5. Complexity & Difficulty
     row.querySelector(".complexity-cell").innerHTML = `<span>${p.complexity}</span>`;
     row.querySelector(".difficulty-cell").innerHTML = `<div><span class="badge difficulty-${p.difficulty.toLowerCase()}">${p.difficulty}</span></div>`;
     
-    // 6. Actions
+    // 6. Actions (Notes Button)
     row.querySelector(".actions-cell").innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="note-btn">📝 Open Notes</button>`;
 
     return row;
