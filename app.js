@@ -1,4 +1,4 @@
-const STORAGE_KEY = "dsa-tracker-state-v2";
+const STORAGE_KEY = "dsa-tracker-state-v3";
 const THEME_KEY = "dsa-tracker-theme";
 const COLUMN_PREF_KEY = "dsa-tracker-columns";
 
@@ -24,7 +24,8 @@ const elements = {
   columnToggles: document.querySelectorAll(".column-toggle"),
 };
 
-let baseProblems = [];
+let allProblems = [];
+let filteredProblems = [];
 let trackerState = loadState();
 let hiddenColumns = loadHiddenColumns();
 
@@ -35,17 +36,37 @@ async function init() {
   bindControls();
   applyColumnVisibility();
 
+  const data = await loadData();
+  allProblems = normalizeProblemData(data);
+  filteredProblems = allProblems;
+
+  setupFilters(allProblems);
+  renderTable(filteredProblems);
+  updateStats(allProblems);
+}
+
+async function loadData() {
   try {
-    const response = await fetch("data.json");
-    if (!response.ok) throw new Error("Failed to load data.json");
+    const response = await fetch("data.json", { cache: "no-cache" });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
 
-    const data = await response.json();
-    baseProblems = normalizeProblemData(data);
+    const payload = await response.json();
 
-    setupFilters(baseProblems);
-    renderTable();
+    if (Array.isArray(payload)) {
+      return payload;
+    }
+
+    if (Array.isArray(payload?.problems)) {
+      return payload.problems;
+    }
+
+    throw new Error("data.json must be an array or { problems: [] }");
   } catch (error) {
-    elements.body.innerHTML = `<tr><td colspan="8">Unable to load problems. ${error.message}</td></tr>`;
+    console.error("Failed to load data.json", error);
+    showErrorRow(`Unable to load problems. ${error.message}`);
+    return [];
   }
 }
 
@@ -58,8 +79,8 @@ function bindControls() {
     elements.frequencyFilter,
     elements.sortSelect,
   ].forEach((control) => {
-    control.addEventListener("input", renderTable);
-    control.addEventListener("change", renderTable);
+    control.addEventListener("input", applyAndRender);
+    control.addEventListener("change", applyAndRender);
   });
 
   elements.themeToggle.addEventListener("click", () => {
@@ -78,23 +99,25 @@ function bindControls() {
       applyColumnVisibility();
     });
   });
+
+  elements.body.addEventListener("change", handleTableChange);
 }
 
 function normalizeProblemData(items) {
   return items.map((item, index) => {
-    const id = item.problem;
+    const id = item.problem || `problem-${index}`;
     const stored = trackerState[id] || {};
 
     return {
       id,
       order: index,
-      problem: item.problem,
+      problem: item.problem || "Untitled Problem",
       pattern: item.pattern || "General",
       subPattern: item.subPattern || "-",
-      difficulty: item.difficulty || "Medium",
-      frequency: normalizeFrequency(item.frequency),
-      complexity: item.complexity || "N/A",
-      coreIdea: item.coreIdea || "No core idea added yet.",
+      difficulty: normalizeDifficulty(item.difficulty),
+      frequency: normalizeFrequency(item.frequency || "Medium"),
+      complexity: item.complexity || "-",
+      coreIdea: item.coreIdea || "No core idea available yet.",
       link: item.link || "#",
       status: stored.status || DEFAULT_STATUS,
       notes: stored.notes || "",
@@ -102,8 +125,15 @@ function normalizeProblemData(items) {
   });
 }
 
+function normalizeDifficulty(value) {
+  if (!value) return "Medium";
+  const text = String(value).trim().toLowerCase();
+  if (text === "easy") return "Easy";
+  if (text === "hard") return "Hard";
+  return "Medium";
+}
+
 function normalizeFrequency(value) {
-  if (!value) return "Low";
   const cleaned = String(value).trim().toLowerCase();
   if (cleaned === "high") return "High";
   if (cleaned === "medium") return "Medium";
@@ -116,7 +146,7 @@ function normalizeFrequency(value) {
     return "Low";
   }
 
-  return "Low";
+  return "Medium";
 }
 
 function setupFilters(items) {
@@ -126,28 +156,31 @@ function setupFilters(items) {
   populateSelect(elements.frequencyFilter, ["High", "Medium", "Low"], "All Frequencies");
 }
 
-function renderTable() {
-  const filtered = applyFilters(baseProblems);
-  const sorted = applySort(filtered);
+function applyAndRender() {
+  filteredProblems = applyFilters(allProblems);
+  const sorted = applySort(filteredProblems);
+  renderTable(sorted);
+  updateStats(allProblems);
+}
 
-  if (!sorted.length) {
-    elements.body.innerHTML = '<tr><td colspan="8">No problems match current filters.</td></tr>';
-    updateStats(baseProblems);
+function renderTable(items) {
+  if (!items.length) {
+    showErrorRow("No problems match current filters.");
     return;
   }
 
   const fragment = document.createDocumentFragment();
 
-  sorted.forEach((problem) => {
+  for (const problem of items) {
     const row = elements.rowTemplate.content.firstElementChild.cloneNode(true);
+    row.dataset.problemId = problem.id;
     fillRow(row, problem);
     fragment.appendChild(row);
-  });
+  }
 
   elements.body.innerHTML = "";
   elements.body.appendChild(fragment);
   applyColumnVisibility();
-  updateStats(baseProblems);
 }
 
 function fillRow(row, problem) {
@@ -180,18 +213,47 @@ function fillRow(row, problem) {
 
   const statusSelect = row.querySelector(".status-select");
   statusSelect.value = problem.status;
-  statusSelect.addEventListener("change", (event) => {
-    updateProblemState(problem.id, { status: event.target.value });
-  });
+  statusSelect.dataset.problemId = problem.id;
 
   const notesInput = row.querySelector(".notes-input");
   notesInput.value = problem.notes;
-  notesInput.addEventListener("change", (event) => {
-    updateProblemState(problem.id, { notes: event.target.value.trim() });
-  });
+  notesInput.dataset.problemId = problem.id;
 
   if (problem.status === STATUS_MASTERED) {
     row.classList.add("mastered-row");
+  }
+}
+
+function handleTableChange(event) {
+  const target = event.target;
+  const problemId = target.dataset.problemId;
+  if (!problemId) return;
+
+  if (target.classList.contains("status-select")) {
+    patchProblemState(problemId, { status: target.value });
+    const row = target.closest("tr");
+    if (row) row.classList.toggle("mastered-row", target.value === STATUS_MASTERED);
+    updateStats(allProblems);
+    return;
+  }
+
+  if (target.classList.contains("notes-input")) {
+    patchProblemState(problemId, { notes: target.value.trim() });
+  }
+}
+
+function patchProblemState(problemId, partial) {
+  trackerState[problemId] = {
+    status: trackerState[problemId]?.status || DEFAULT_STATUS,
+    notes: trackerState[problemId]?.notes || "",
+    ...partial,
+  };
+
+  saveState(trackerState);
+
+  const index = allProblems.findIndex((problem) => problem.id === problemId);
+  if (index !== -1) {
+    allProblems[index] = { ...allProblems[index], ...trackerState[problemId] };
   }
 }
 
@@ -209,13 +271,7 @@ function applyFilters(items) {
     const matchesDifficulty = difficulty === "all" || item.difficulty === difficulty;
     const matchesFrequency = frequency === "all" || item.frequency === frequency;
 
-    return (
-      matchesSearch &&
-      matchesPattern &&
-      matchesSubPattern &&
-      matchesDifficulty &&
-      matchesFrequency
-    );
+    return matchesSearch && matchesPattern && matchesSubPattern && matchesDifficulty && matchesFrequency;
   });
 }
 
@@ -254,19 +310,8 @@ function updateStats(items) {
   elements.progressBar.style.width = `${progress}%`;
 }
 
-function updateProblemState(problemId, partial) {
-  trackerState[problemId] = {
-    status: trackerState[problemId]?.status || DEFAULT_STATUS,
-    notes: trackerState[problemId]?.notes || "",
-    ...partial,
-  };
-
-  saveState(trackerState);
-  baseProblems = baseProblems.map((problem) =>
-    problem.id === problemId ? { ...problem, ...trackerState[problemId] } : problem
-  );
-
-  renderTable();
+function showErrorRow(message) {
+  elements.body.innerHTML = `<tr><td colspan="8" class="empty-state">${message}</td></tr>`;
 }
 
 function applyColumnVisibility() {
@@ -293,12 +338,12 @@ function populateSelect(selectElement, values, allLabel) {
   allOption.textContent = allLabel;
   selectElement.appendChild(allOption);
 
-  values.forEach((value) => {
+  for (const value of values) {
     const option = document.createElement("option");
     option.value = value;
     option.textContent = value;
     selectElement.appendChild(option);
-  });
+  }
 }
 
 function loadState() {
