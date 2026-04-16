@@ -2,8 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>AlgoInsight | Senior DSA Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
@@ -40,6 +46,41 @@
           </div>
           <div id="sidebarBreakdown" class="sidebar-breakdown"></div>
         </section>
+
+        <div id="timerDock" class="timer-dock">
+          <section class="sidebar-card timer-panel" id="timerPanel" aria-label="Timer">
+            <button
+              type="button"
+              id="timerDragHandle"
+              class="timer-drag-handle"
+              aria-label="Drag timer"
+            >
+              ⠿
+            </button>
+            <div class="timer-compact-top">
+              <div class="timer-display-wrap">
+                <input
+                  id="timerTimeInput"
+                  class="timer-time-input"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  spellcheck="false"
+                  aria-label="Time MM:SS or H:MM:SS"
+                  title="e.g. 20:00 or 1:30:00"
+                  value="20:00"
+                />
+                <div class="timer-progress-track" aria-hidden="true">
+                  <div id="timerProgressFill" class="timer-progress-fill"></div>
+                </div>
+              </div>
+              <div class="timer-inline-actions">
+                <button type="button" id="timerPrimaryBtn" class="timer-primary-icon" aria-label="Start timer">▶</button>
+                <button type="button" id="timerResetBtn" class="timer-reset-icon" title="Reset" aria-label="Reset timer">↻</button>
+              </div>
+            </div>
+          </section>
+        </div>
       </aside>
 
       <main class="main-pane">
@@ -57,7 +98,19 @@
             <option value="Hard">Hard</option>
           </select>
           
-          <button onclick="pickRandom()" class="random-btn" title="Pick a random unmastered problem">🎲 Random</button>
+          <div class="filter-bar-split">
+            <button onclick="pickRandom()" class="random-btn" title="Pick a random unmastered problem">🎲 Random</button>
+            <button
+              type="button"
+              id="timerMobileToggle"
+              class="timer-mobile-toggle"
+              aria-controls="timerDock"
+              aria-expanded="false"
+              aria-label="Show timer"
+            >
+              ⏱
+            </button>
+          </div>
         </header>
 
         <section class="table-shell">
@@ -89,7 +142,7 @@
     <aside id="notesSheet" class="notes-sheet" aria-hidden="true">
       <div class="sheet-header">
         <h3 id="sheetTitle">Problem Notes</h3>
-        <button id="sheetCloseBtn" class="icon-btn">✕</button>
+        <button type="button" id="sheetCloseBtn" class="icon-btn">✕</button>
       </div>
       <div class="sheet-meta">
         <span id="autoSaveStatus" class="autosave-tag">Saved</span>
@@ -101,8 +154,8 @@
       </div>
 
       <div class="sheet-footer">
-        <button id="togglePreviewBtn" class="secondary-btn">Preview</button>
-        <button id="sheetSaveBtn" class="save-btn">Close & Save</button>
+        <button type="button" id="togglePreviewBtn" class="secondary-btn">Preview</button>
+        <button type="button" id="sheetSaveBtn" class="save-btn">Close & Save</button>
       </div>
     </aside>
 
@@ -118,6 +171,8 @@
       </tr>
     </template>
 
+    <!-- data.js: same data as data.json, for file:// (fetch cannot load local files). Regenerate: node scripts/build-data-js.mjs -->
+    <script src="data.js" defer></script>
     <script src="app.js" defer></script>
   </body>
 </html>

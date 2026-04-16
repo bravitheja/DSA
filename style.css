@@ -6,6 +6,7 @@
   --muted: #64748b;
   --border: #e2e8f0;
   --brand: #6366f1;
+  --timer-run: #ea580c;
 }
 
 body.dark {
@@ -15,6 +16,7 @@ body.dark {
   --text: #e4e4e7;
   --muted: #a1a1aa;
   --border: #27272a;
+  --timer-run: #fb923c;
 }
 
 body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
@@ -36,8 +38,154 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color
 .sidebar-breakdown { font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 1rem; }
 .breakdown-item { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-weight: 500; }
 
+/* Minimal countdown timer — type MM:SS or H:MM:SS */
+.timer-dock { display: block; }
+.timer-drag-handle {
+  display: none;
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  margin: 0 0 0.4rem;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: var(--panel-soft);
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.timer-drag-handle:active { cursor: grabbing; }
+.timer-compact-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.timer-display-wrap { flex: 1; min-width: 0; }
+.timer-time-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-align: left;
+  padding: 0.15rem 0.25rem;
+  line-height: 1.25;
+  color: var(--text);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.timer-time-input:focus {
+  outline: none;
+  border-color: var(--border);
+  background: var(--panel-soft);
+}
+.timer-time-input:read-only {
+  cursor: default;
+  border-color: transparent;
+  background: transparent;
+}
+.timer-time-input.timer-expired { color: #ef4444; animation: timer-pulse 1s ease-in-out infinite; }
+@keyframes timer-pulse {
+  50% { opacity: 0.65; }
+}
+.timer-progress-track {
+  height: 3px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+  margin-top: 0.35rem;
+}
+.timer-progress-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--timer-run), #fb923c);
+  transition: width 0.35s linear;
+}
+.session-timer-running .timer-time-input { color: var(--timer-run); }
+.timer-inline-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+.timer-primary-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: var(--brand);
+  color: white;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.timer-primary-icon:disabled { opacity: 0.45; cursor: not-allowed; }
+.timer-primary-icon:not(:disabled):hover { filter: brightness(1.06); }
+.timer-reset-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-soft);
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.timer-reset-icon:hover { color: var(--text); border-color: var(--muted); }
+.timer-panel.sidebar-card { padding: 0.75rem 0.85rem; }
+
+@media (min-width: 851px) {
+  .timer-drag-handle { display: none !important; }
+}
+
+.timer-mobile-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.timer-mobile-toggle[aria-expanded="true"] {
+  border-color: var(--brand);
+  background: var(--panel-soft);
+}
+
 /* Filter Bar */
-.filter-bar { padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; background: var(--panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 30; }
+.filter-bar { padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; background: var(--panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 30; flex-wrap: wrap; }
+.filter-bar-split {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  flex: 1 1 auto;
+  min-width: 140px;
+}
+.filter-bar-split .random-btn { flex: 1; min-width: 0; }
+.filter-bar-split .timer-mobile-toggle { flex: 0 0 2.75rem; }
 .search-wrap { flex: 1; border: 1px solid var(--border); background: var(--panel-soft); padding: 0.5rem 0.75rem; border-radius: 8px; display: flex; align-items: center; gap: 0.5rem; }
 .search-wrap input { border: none; background: transparent; width: 100%; outline: none; }
 select, .random-btn, .secondary-btn, .save-btn { border: 1px solid var(--border); background: var(--panel); padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer; }
@@ -67,6 +215,11 @@ td { padding: 1rem; border-bottom: 1px solid var(--border); }
 tr.is-mastered { opacity: 0.5; background: var(--panel-soft); }
 tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted); }
 
+.problem-link {
+  font-family: "Poppins", system-ui, -apple-system, sans-serif;
+  text-decoration: none;
+}
+
 /* Elements */
 .freq-container { display: flex; align-items: center; gap: 0.75rem; }
 .freq-num { font-size: 0.85rem; font-weight: 600; min-width: 30px; }
@@ -92,9 +245,49 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 .complexity-cell { font-family: monospace; color: var(--brand); font-weight: 600; }
 .accordion-toggle { display: none; }
 
+.note-btn {
+  cursor: pointer;
+  font: inherit;
+  border: 1px solid var(--border);
+  background: var(--panel-soft);
+  color: var(--text);
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 2;
+}
+
+.icon-btn { border: none; background: transparent; cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 0.35rem; color: var(--muted); border-radius: 8px; }
+.icon-btn:hover { color: var(--text); background: var(--panel-soft); }
+
 /* Notes Drawer */
-.notes-sheet { position: fixed; right: -420px; width: 400px; height: 100vh; background: var(--panel); border-left: 1px solid var(--border); padding: 1.5rem; transition: right 0.3s; z-index: 100; box-shadow: -10px 0 30px rgba(0,0,0,0.05); }
-.notes-sheet.open { right: 0; }
+.notes-sheet {
+  position: fixed;
+  top: 0;
+  right: -420px;
+  width: 400px;
+  height: 100vh;
+  max-height: 100dvh;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  padding: 1.5rem;
+  box-sizing: border-box;
+  transition: right 0.3s ease;
+  z-index: 100000;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* Closed drawer must not intercept taps meant for the page (helps touch browsers) */
+.notes-sheet:not(.open) { pointer-events: none; }
+.notes-sheet.open {
+  right: 0;
+  pointer-events: auto;
+  touch-action: pan-y;
+}
+body.notes-sheet-open { overflow: hidden; }
 .notes-container { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.75rem; }
 #sheetNotesInput { min-height: 58vh; resize: vertical; border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem; background: var(--panel-soft); color: var(--text); }
 .notes-preview { min-height: 58vh; border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem; overflow-y: auto; background: var(--panel-soft); }
@@ -105,25 +298,114 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 
 /* --- MOBILE STACKED ACCORDION --- */
 @media (max-width: 850px) {
+    /* Timer hidden until ⏱ — opens as top floating panel (draggable) */
+    .timer-dock:not(.timer-dock--open) {
+        display: none !important;
+    }
+    .timer-dock.timer-dock--open {
+        display: block !important;
+        position: fixed;
+        left: max(8px, env(safe-area-inset-left));
+        top: max(10px, env(safe-area-inset-top));
+        right: auto;
+        bottom: auto;
+        width: min(300px, calc(100vw - 16px));
+        z-index: 50000;
+        padding: 0;
+    }
+    .timer-dock.timer-dock--open .timer-panel {
+        margin-top: 0;
+        padding: 0;
+        border-radius: 14px;
+        /* Opaque card so timer text doesn’t blend with the page behind */
+        background: var(--panel);
+        background-color: var(--panel);
+        border: 1px solid var(--border);
+        box-shadow:
+            0 4px 6px rgba(15, 23, 42, 0.06),
+            0 16px 40px rgba(15, 23, 42, 0.14),
+            0 0 0 1px rgba(15, 23, 42, 0.04);
+        isolation: isolate;
+        overflow: hidden;
+    }
+    body.dark .timer-dock.timer-dock--open .timer-panel {
+        box-shadow:
+            0 4px 6px rgba(0, 0, 0, 0.35),
+            0 16px 48px rgba(0, 0, 0, 0.45),
+            0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+    .timer-dock.timer-dock--open .timer-drag-handle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: var(--panel-soft);
+        border-bottom: 1px solid var(--border);
+    }
+    .timer-dock.timer-dock--open .timer-time-input {
+        background: var(--panel-soft) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 8px;
+        padding: 0.35rem 0.45rem;
+    }
+    .timer-dock.timer-dock--open .timer-time-input:read-only {
+        background: var(--panel-soft) !important;
+        border-color: var(--border) !important;
+    }
+    .timer-dock.timer-dock--open .timer-time-input:focus {
+        background: var(--panel) !important;
+        border-color: var(--brand) !important;
+    }
+    .timer-dock.timer-dock--open .timer-progress-track {
+        background: var(--border);
+    }
+    .timer-dock.timer-dock--open .timer-compact-top {
+        padding: 0.5rem 0.65rem 0.65rem;
+    }
+    .timer-mobile-toggle {
+        display: inline-flex !important;
+    }
+
     .dashboard-shell { display: flex; flex-direction: column; height: auto; min-height: 100vh; overflow-y: auto; }
     .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); position: relative; }
     .main-pane { flex: 1; height: auto; overflow: visible; }
     .filter-bar { flex-direction: column; align-items: stretch; position: static; }
     .table-shell { height: auto; margin: 0; border: none; border-radius: 0; overflow: visible; }
     table { min-width: 0; }
-    .search-wrap, select, .random-btn { width: 100%; box-sizing: border-box; }
+    .search-wrap, select, .filter-bar-split { width: 100%; box-sizing: border-box; }
     
     table, tbody, tr, td { display: block; width: 100%; box-sizing: border-box; }
     thead { display: none; }
 
-    tr { border-bottom: 1px solid var(--border); padding: 1rem; cursor: pointer; position: relative; overflow: hidden; }
+    /* overflow: visible so expanded controls (e.g. Notes) are not clipped; ::before labels must not steal taps */
+    tr { border-bottom: 1px solid var(--border); padding: 1rem; position: relative; overflow: visible; cursor: default; }
     
     /* Header Line: Checkbox + Problem Title */
     .check-cell { display: inline-block !important; width: 32px !important; border: none !important; padding: 0 !important; vertical-align: top; }
-    .problem-cell { display: inline-block !important; width: calc(100% - 56px) !important; border: none !important; padding: 0 !important; padding-right: 1.5rem !important; vertical-align: top; }
-    .problem-link { font-size: 1.05rem; font-weight: 700; color: var(--brand); text-decoration: underline; overflow-wrap: anywhere; }
+    .problem-cell { display: inline-block !important; width: calc(100% - 56px) !important; border: none !important; padding: 0 !important; padding-right: 1.5rem !important; vertical-align: top; position: relative; }
+    /* Checkbox + title are self-explanatory — hide repeating column labels */
+    .check-cell::before,
+    .problem-cell::before {
+        content: none !important;
+        display: none !important;
+        margin: 0 !important;
+    }
+    .problem-link {
+        font-size: 1.06rem;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        line-height: 1.35;
+        color: var(--brand);
+        text-decoration: none;
+        overflow-wrap: anywhere;
+    }
+    .problem-link:active { opacity: 0.85; }
+    .problem-link:focus-visible {
+        outline: 2px solid var(--brand);
+        outline-offset: 3px;
+        border-radius: 4px;
+    }
 
-    /* The Details (Stacked) */
+    /* The Details (Stacked) — hidden until .is-expanded (includes Notes / Actions) */
     td:not(.check-cell):not(.problem-cell) {
         display: none !important; /* Managed by .is-expanded */
         flex-direction: column;
@@ -142,13 +424,14 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
         text-transform: uppercase;
         color: var(--muted);
         margin-bottom: 0.4rem;
+        pointer-events: none;
     }
 
     td > div, td > span { width: 100%; text-align: left; }
     .freq-container, .concept-stack { justify-content: flex-start !important; }
     
-    .actions-cell { border-bottom: none !important; padding-top: 1rem !important; }
-    .note-btn { width: 100%; justify-content: center !important; background: var(--brand); color: white; padding: 0.8rem; border: none; font-weight: 700; }
+    .actions-cell { border-bottom: none !important; padding-top: 1rem !important; position: relative; z-index: 5; isolation: isolate; }
+    .note-btn { width: 100%; justify-content: center !important; background: var(--brand); color: white; padding: 0.8rem; border: none; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
     /* Explicit accordion button */
     .accordion-toggle {
@@ -157,6 +440,7 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
       position: absolute;
       right: 0.65rem;
       top: 0.95rem;
+      z-index: 2;
       width: 1.35rem;
       height: 1.35rem;
       border: 1px solid var(--border);
@@ -181,5 +465,30 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 
     .page-info { min-width: auto; font-size: 0.8rem; }
 
-    .notes-sheet { width: 100vw; right: -100vw; }
+    /*
+     * Mobile / iOS / in-app WebViews: negative viewport widths (e.g. right: -100vw) often break
+     * position:fixed. Use a full-viewport layer + translate3d slide instead of animating "right".
+     */
+    .notes-sheet {
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+      min-height: 100dvh !important;
+      max-height: none !important;
+      border-left: none;
+      border-top: 1px solid var(--border);
+      padding: max(0.75rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      transition: transform 0.3s ease;
+      transform: translate3d(100%, 0, 0);
+      box-shadow: none;
+    }
+    .notes-sheet.open {
+      transform: translate3d(0, 0, 0) !important;
+    }
 }
