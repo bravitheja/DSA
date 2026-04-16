@@ -1,0 +1,10004 @@
+/* Auto-generated from data.json — run: node scripts/build-data-js.mjs */
+window.__DSA_DATA = [
+  {
+    "problem": "LRU Cache",
+    "link": "https://leetcode.com/problems/lru-cache",
+    "pattern": "Design",
+    "subPattern": "HashMap + Doubly Linked List",
+    "difficulty": "Medium",
+    "coreIdea": "Combine hashmap for O(1) lookup with doubly linked list for O(1) eviction/order updates.",
+    "complexity": "O(1) | O(capacity)",
+    "frequency": 616
+  },
+  {
+    "problem": "Two Sum",
+    "link": "https://leetcode.com/problems/two-sum",
+    "pattern": "Hashing",
+    "subPattern": "Complement lookup",
+    "difficulty": "Easy",
+    "coreIdea": "Store visited numbers and check whether complement already exists.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 616
+  },
+  {
+    "problem": "Longest Substring Without Repeating Characters",
+    "link": "https://leetcode.com/problems/longest-substring-without-repeating-characters",
+    "pattern": "Sliding Window",
+    "subPattern": "Variable window with last seen index",
+    "difficulty": "Medium",
+    "coreIdea": "Expand right pointer and move left pointer past duplicates using last-seen positions.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 544
+  },
+  {
+    "problem": "Valid Parentheses",
+    "link": "https://leetcode.com/problems/valid-parentheses",
+    "pattern": "Stack",
+    "subPattern": "Bracket matching",
+    "difficulty": "Easy",
+    "coreIdea": "Push opening brackets and ensure each closing bracket matches stack top.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 542
+  },
+  {
+    "problem": "Merge Intervals",
+    "link": "https://leetcode.com/problems/merge-intervals",
+    "pattern": "Intervals",
+    "subPattern": "Sort and sweep",
+    "difficulty": "Medium",
+    "coreIdea": "Sort by start time and merge overlapping intervals while scanning once.",
+    "complexity": "O(n log n) | O(n)",
+    "frequency": 488
+  },
+  {
+    "problem": "Best Time to Buy and Sell Stock",
+    "link": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock",
+    "pattern": "Greedy",
+    "subPattern": "Track running minimum",
+    "difficulty": "Easy",
+    "coreIdea": "Track lowest price so far and update max profit at each day.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 480
+  },
+  {
+    "problem": "Number of Islands",
+    "link": "https://leetcode.com/problems/number-of-islands",
+    "pattern": "Graph",
+    "subPattern": "Grid DFS/BFS flood fill",
+    "difficulty": "Medium",
+    "coreIdea": "Count connected components by flooding each unvisited land cell.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 436
+  },
+  {
+    "problem": "Group Anagrams",
+    "link": "https://leetcode.com/problems/group-anagrams",
+    "pattern": "Hashing",
+    "subPattern": "Canonical key grouping",
+    "difficulty": "Medium",
+    "coreIdea": "Map each string by sorted key or frequency signature to group anagrams.",
+    "complexity": "O(nk log k) | O(nk)",
+    "frequency": 408
+  },
+  {
+    "problem": "Longest Palindromic Substring",
+    "link": "https://leetcode.com/problems/longest-palindromic-substring",
+    "pattern": "Two Pointers",
+    "subPattern": "Expand around center",
+    "difficulty": "Medium",
+    "coreIdea": "Expand from each center (odd/even) and keep the longest palindrome.",
+    "complexity": "O(n^2) | O(1)",
+    "frequency": 372
+  },
+  {
+    "problem": "Trapping Rain Water",
+    "link": "https://leetcode.com/problems/trapping-rain-water",
+    "pattern": "Two Pointers",
+    "subPattern": "Left-right max boundaries",
+    "difficulty": "Hard",
+    "coreIdea": "Move pointer on smaller side while tracking leftMax/rightMax to accumulate trapped water.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 368
+  },
+  {
+    "problem": "Maximum Subarray",
+    "link": "https://leetcode.com/problems/maximum-subarray",
+    "pattern": "Dynamic Programming",
+    "subPattern": "Kadane's algorithm",
+    "difficulty": "Medium",
+    "coreIdea": "Either extend current subarray or restart at current number to maximize sum.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 312
+  },
+  {
+    "problem": "3Sum",
+    "link": "https://leetcode.com/problems/3sum",
+    "pattern": "Two Pointers",
+    "subPattern": "Sort with fixed anchor",
+    "difficulty": "Medium",
+    "coreIdea": "Sort array, fix one element, and use two pointers to find complementary pair.",
+    "complexity": "O(n^2) | O(1)",
+    "frequency": 286
+  },
+  {
+    "problem": "Container With Most Water",
+    "link": "https://leetcode.com/problems/container-with-most-water",
+    "pattern": "Two Pointers",
+    "subPattern": "Shrink from shorter side",
+    "difficulty": "Medium",
+    "coreIdea": "Start with widest container and move shorter wall inward to seek larger area.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 278
+  },
+  {
+    "problem": "Longest Common Prefix",
+    "link": "https://leetcode.com/problems/longest-common-prefix",
+    "pattern": "String",
+    "subPattern": "Vertical scanning",
+    "difficulty": "Easy",
+    "coreIdea": "Compare characters column-wise across all strings until mismatch.",
+    "complexity": "O(nm) | O(1)",
+    "frequency": 264
+  },
+  {
+    "problem": "Search in Rotated Sorted Array",
+    "link": "https://leetcode.com/problems/search-in-rotated-sorted-array",
+    "pattern": "Binary Search",
+    "subPattern": "Sorted half detection",
+    "difficulty": "Medium",
+    "coreIdea": "At each step identify sorted half and decide if target lies inside it.",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 260
+  },
+  {
+    "problem": "Merge k Sorted Lists",
+    "link": "https://leetcode.com/problems/merge-k-sorted-lists",
+    "pattern": "Heap",
+    "subPattern": "Min-heap of list heads",
+    "difficulty": "Hard",
+    "coreIdea": "Push each list head into min-heap and repeatedly extract/push next nodes.",
+    "complexity": "O(N log k) | O(k)",
+    "frequency": 254
+  },
+  {
+    "problem": "Top K Frequent Elements",
+    "link": "https://leetcode.com/problems/top-k-frequent-elements",
+    "pattern": "Heap",
+    "subPattern": "Frequency map + heap",
+    "difficulty": "Medium",
+    "coreIdea": "Count frequencies and keep top-k using heap or bucket sort.",
+    "complexity": "O(n log k) | O(n)",
+    "frequency": 254
+  },
+  {
+    "problem": "Rotting Oranges",
+    "link": "https://leetcode.com/problems/rotting-oranges",
+    "pattern": "Graph",
+    "subPattern": "Multi-source BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Run BFS from all rotten oranges simultaneously and track elapsed minutes by levels.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 252
+  },
+  {
+    "problem": "Spiral Matrix",
+    "link": "https://leetcode.com/problems/spiral-matrix",
+    "pattern": "Matrix",
+    "subPattern": "Boundary traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Traverse matrix in layers using top, bottom, left, and right boundaries.",
+    "complexity": "O(mn) | O(1)",
+    "frequency": 246
+  },
+  {
+    "problem": "Move Zeroes",
+    "link": "https://leetcode.com/problems/move-zeroes",
+    "pattern": "Two Pointers",
+    "subPattern": "Stable compaction",
+    "difficulty": "Easy",
+    "coreIdea": "Compact non-zero values forward and fill remaining positions with zeros.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 238
+  },
+  {
+    "problem": "Sliding Window Maximum",
+    "link": "https://leetcode.com/problems/sliding-window-maximum",
+    "pattern": "Deque",
+    "subPattern": "Monotonic decreasing queue",
+    "difficulty": "Hard",
+    "coreIdea": "Maintain deque of candidate indices in decreasing order for O(1) max access.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 236
+  },
+  {
+    "problem": "Median of Two Sorted Arrays",
+    "link": "https://leetcode.com/problems/median-of-two-sorted-arrays",
+    "pattern": "Binary Search",
+    "subPattern": "Partition on smaller array",
+    "difficulty": "Hard",
+    "coreIdea": "Binary search partition so left halves contain exactly half the elements with valid ordering.",
+    "complexity": "O(log(min(m,n))) | O(1)",
+    "frequency": 230
+  },
+  {
+    "problem": "Subarray Sum Equals K",
+    "link": "https://leetcode.com/problems/subarray-sum-equals-k",
+    "pattern": "Prefix Sum",
+    "subPattern": "Prefix frequency hashmap",
+    "difficulty": "Medium",
+    "coreIdea": "For each prefix sum, count how many previous prefixes equal current-k.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 228
+  },
+  {
+    "problem": "Course Schedule",
+    "link": "https://leetcode.com/problems/course-schedule",
+    "pattern": "Graph",
+    "subPattern": "Topological cycle detection",
+    "difficulty": "Medium",
+    "coreIdea": "Detect cycle with indegree BFS or DFS states to verify DAG feasibility.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 224
+  },
+  {
+    "problem": "Meeting Rooms II",
+    "link": "https://leetcode.com/problems/meeting-rooms-ii",
+    "pattern": "Heap",
+    "subPattern": "Min-heap of end times",
+    "difficulty": "Medium",
+    "coreIdea": "Sort by start time and reuse room if earliest ending meeting has finished.",
+    "complexity": "O(n log n) | O(n)",
+    "frequency": 218
+  },
+  {
+    "problem": "Insert Delete GetRandom O(1)",
+    "link": "https://leetcode.com/problems/insert-delete-getrandom-o1",
+    "pattern": "Design",
+    "subPattern": "Array + hashmap index swap",
+    "difficulty": "Medium",
+    "coreIdea": "Store values in array and map value->index for O(1) insert/remove/random.",
+    "complexity": "O(1) | O(n)",
+    "frequency": 214
+  },
+  {
+    "problem": "Product of Array Except Self",
+    "link": "https://leetcode.com/problems/product-of-array-except-self",
+    "pattern": "Prefix Sum",
+    "subPattern": "Prefix and suffix products",
+    "difficulty": "Medium",
+    "coreIdea": "Use left products then multiply by running right products without division.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 214
+  },
+  {
+    "problem": "Decode String",
+    "link": "https://leetcode.com/problems/decode-string",
+    "pattern": "Stack",
+    "subPattern": "Nested repetition parsing",
+    "difficulty": "Medium",
+    "coreIdea": "Use stacks to decode bracketed substrings with repeat counts.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 212
+  },
+  {
+    "problem": "Kth Largest Element in an Array",
+    "link": "https://leetcode.com/problems/kth-largest-element-in-an-array",
+    "pattern": "Heap",
+    "subPattern": "Min-heap of size k",
+    "difficulty": "Medium",
+    "coreIdea": "Maintain min-heap of k largest seen values so root is kth largest.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 212
+  },
+  {
+    "problem": "Valid Palindrome",
+    "link": "https://leetcode.com/problems/valid-palindrome",
+    "pattern": "Two Pointers",
+    "subPattern": "Skip non-alphanumeric",
+    "difficulty": "Easy",
+    "coreIdea": "Move inward from both ends comparing normalized alphanumeric characters.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 210
+  },
+  {
+    "problem": "Text Justification",
+    "link": "https://leetcode.com/problems/text-justification",
+    "pattern": "Greedy",
+    "subPattern": "Line packing with space distribution",
+    "difficulty": "Hard",
+    "coreIdea": "Greedily fill each line then distribute spaces evenly, left-biased remainder.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 204
+  },
+  {
+    "problem": "Merge Sorted Array",
+    "link": "https://leetcode.com/problems/merge-sorted-array",
+    "pattern": "Two Pointers",
+    "subPattern": "Reverse merge from tail",
+    "difficulty": "Easy",
+    "coreIdea": "Fill nums1 from the end using largest of nums1 tail and nums2 tail.",
+    "complexity": "O(m+n) | O(1)",
+    "frequency": 204
+  },
+  {
+    "problem": "Roman to Integer",
+    "link": "https://leetcode.com/problems/roman-to-integer",
+    "pattern": "String",
+    "subPattern": "Subtractive pair parsing",
+    "difficulty": "Easy",
+    "coreIdea": "Add symbol values, subtract when a smaller symbol appears before a larger one.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 204
+  },
+  {
+    "problem": "Coin Change",
+    "link": "https://leetcode.com/problems/coin-change",
+    "pattern": "Dynamic Programming",
+    "subPattern": "Unbounded knapsack minimum coins",
+    "difficulty": "Medium",
+    "coreIdea": "Build dp[amount] from smaller amounts using each coin choice.",
+    "complexity": "O(amount*n) | O(amount)",
+    "frequency": 202
+  },
+  {
+    "problem": "Word Search",
+    "link": "https://leetcode.com/problems/word-search",
+    "pattern": "Backtracking",
+    "subPattern": "Grid DFS with visited marking",
+    "difficulty": "Medium",
+    "coreIdea": "Try DFS from each cell while marking used cells along current path.",
+    "complexity": "O(mn*4^L) | O(L)",
+    "frequency": 196
+  },
+  {
+    "problem": "Valid Anagram",
+    "link": "https://leetcode.com/problems/valid-anagram",
+    "pattern": "Hashing",
+    "subPattern": "Character frequency counting",
+    "difficulty": "Easy",
+    "coreIdea": "Count character frequencies and compare both strings' counts.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 196
+  },
+  {
+    "problem": "String Compression",
+    "link": "https://leetcode.com/problems/string-compression",
+    "pattern": "Two Pointers",
+    "subPattern": "Read-write pointer compaction",
+    "difficulty": "Medium",
+    "coreIdea": "Scan runs and write character plus count digits in-place.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 196
+  },
+  {
+    "problem": "Climbing Stairs",
+    "link": "https://leetcode.com/problems/climbing-stairs",
+    "pattern": "Dynamic Programming",
+    "subPattern": "Fibonacci transition",
+    "difficulty": "Easy",
+    "coreIdea": "Ways to reach step i equals ways(i-1)+ways(i-2).",
+    "complexity": "O(n) | O(1)",
+    "frequency": 190
+  },
+  {
+    "problem": "Koko Eating Bananas",
+    "link": "https://leetcode.com/problems/koko-eating-bananas",
+    "pattern": "Binary Search",
+    "subPattern": "Search answer space",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search minimal eating speed that finishes all piles within h hours.",
+    "complexity": "O(n log m) | O(1)",
+    "frequency": 190
+  },
+  {
+    "problem": "Course Schedule II",
+    "link": "https://leetcode.com/problems/course-schedule-ii",
+    "pattern": "Graph",
+    "subPattern": "Topological ordering",
+    "difficulty": "Medium",
+    "coreIdea": "Run Kahn’s algorithm to output valid topological order if no cycle exists.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 188
+  },
+  {
+    "problem": "Word Ladder",
+    "link": "https://leetcode.com/problems/word-ladder",
+    "pattern": "Graph",
+    "subPattern": "BFS shortest transformation",
+    "difficulty": "Hard",
+    "coreIdea": "Use BFS over word transformations to find minimum number of steps.",
+    "complexity": "O(N*L*26) | O(N)",
+    "frequency": 188
+  },
+  {
+    "problem": "Generate Parentheses",
+    "link": "https://leetcode.com/problems/generate-parentheses",
+    "pattern": "Backtracking",
+    "subPattern": "Balanced parenthesis generation",
+    "difficulty": "Medium",
+    "coreIdea": "Build strings recursively while never allowing closing count to exceed opening count.",
+    "complexity": "O(4^n/sqrt(n)) | O(n)",
+    "frequency": 186
+  },
+  {
+    "problem": "Merge Two Sorted Lists",
+    "link": "https://leetcode.com/problems/merge-two-sorted-lists",
+    "pattern": "Linked List",
+    "subPattern": "Dummy-head merge",
+    "difficulty": "Easy",
+    "coreIdea": "Use dummy node and repeatedly append smaller current list node.",
+    "complexity": "O(m+n) | O(1)",
+    "frequency": 186
+  },
+  {
+    "problem": "Minimum Window Substring",
+    "link": "https://leetcode.com/problems/minimum-window-substring",
+    "pattern": "Sliding Window",
+    "subPattern": "Need/have frequency window",
+    "difficulty": "Hard",
+    "coreIdea": "Expand to satisfy required counts, then contract to minimize valid window.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 184
+  },
+  {
+    "problem": "Find Median from Data Stream",
+    "link": "https://leetcode.com/problems/find-median-from-data-stream",
+    "pattern": "Heap",
+    "subPattern": "Two-heaps balancing",
+    "difficulty": "Hard",
+    "coreIdea": "Maintain max-heap for lower half and min-heap for upper half balanced by size.",
+    "complexity": "O(log n) | O(n)",
+    "frequency": 184
+  },
+  {
+    "problem": "House Robber",
+    "link": "https://leetcode.com/problems/house-robber",
+    "pattern": "Dynamic Programming",
+    "subPattern": "Take-or-skip linear DP",
+    "difficulty": "Medium",
+    "coreIdea": "At each house choose max of robbing it plus i-2 or skipping it with i-1.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 182
+  },
+  {
+    "problem": "Rotate Image",
+    "link": "https://leetcode.com/problems/rotate-image",
+    "pattern": "Matrix",
+    "subPattern": "Transpose + reverse rows",
+    "difficulty": "Medium",
+    "coreIdea": "Rotate 90° clockwise by transposing matrix then reversing each row.",
+    "complexity": "O(n^2) | O(1)",
+    "frequency": 182
+  },
+  {
+    "problem": "Letter Combinations of a Phone Number",
+    "link": "https://leetcode.com/problems/letter-combinations-of-a-phone-number",
+    "pattern": "Backtracking",
+    "subPattern": "Cartesian product DFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursively append each possible letter for current digit.",
+    "complexity": "O(4^n) | O(n)",
+    "frequency": 180
+  },
+  {
+    "problem": "Palindrome Number",
+    "link": "https://leetcode.com/problems/palindrome-number",
+    "pattern": "Math",
+    "subPattern": "Reverse half integer",
+    "difficulty": "Easy",
+    "coreIdea": "Reverse half of the number and compare with remaining half.",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 178
+  },
+  {
+    "problem": "Longest Consecutive Sequence",
+    "link": "https://leetcode.com/problems/longest-consecutive-sequence",
+    "pattern": "Hashing",
+    "subPattern": "Sequence start detection",
+    "difficulty": "Medium",
+    "coreIdea": "Only start counting from numbers whose predecessor is absent.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 178
+  },
+  {
+    "problem": "Min Stack",
+    "link": "https://leetcode.com/problems/min-stack",
+    "pattern": "Stack",
+    "subPattern": "Stack with running minimum",
+    "difficulty": "Medium",
+    "coreIdea": "Store value with current minimum at each push for O(1) min queries.",
+    "complexity": "O(1) | O(n)",
+    "frequency": 178
+  },
+  {
+    "problem": "Add Two Numbers",
+    "link": "https://leetcode.com/problems/add-two-numbers",
+    "pattern": "Linked List",
+    "subPattern": "Digit-wise carry simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Traverse both lists adding digits and carry into a new result list.",
+    "complexity": "O(max(m,n)) | O(max(m,n))",
+    "frequency": 178
+  },
+  {
+    "problem": "Time Based Key-Value Store",
+    "link": "https://leetcode.com/problems/time-based-key-value-store",
+    "pattern": "Binary Search",
+    "subPattern": "Timestamped map lookup",
+    "difficulty": "Medium",
+    "coreIdea": "Store sorted timestamp-value pairs per key and binary search latest <= query timestamp.",
+    "complexity": "O(log n) | O(n)",
+    "frequency": 174
+  },
+  {
+    "problem": "Reverse Linked List",
+    "link": "https://leetcode.com/problems/reverse-linked-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer reversal",
+    "difficulty": "Easy",
+    "coreIdea": "Iteratively reverse next pointers while moving through list.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 170
+  },
+  {
+    "problem": "Jump Game",
+    "link": "https://leetcode.com/problems/jump-game",
+    "pattern": "Greedy",
+    "subPattern": "Farthest reachable index",
+    "difficulty": "Medium",
+    "coreIdea": "Track farthest reachable position and fail if current index exceeds it.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 170
+  },
+  {
+    "problem": "Asteroid Collision",
+    "link": "https://leetcode.com/problems/asteroid-collision",
+    "pattern": "Stack",
+    "subPattern": "Collision simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use stack to resolve collisions between right-moving and left-moving asteroids.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 166
+  },
+  {
+    "problem": "Word Break",
+    "link": "https://leetcode.com/problems/word-break",
+    "pattern": "Dynamic Programming",
+    "subPattern": "Prefix segmentation DP",
+    "difficulty": "Medium",
+    "coreIdea": "dp[i] is true if some j<i has dp[j] true and s[j:i] in dictionary.",
+    "complexity": "O(n^2) | O(n)",
+    "frequency": 164
+  },
+  {
+    "problem": "Basic Calculator II",
+    "link": "https://leetcode.com/problems/basic-calculator-ii",
+    "pattern": "Stack",
+    "subPattern": "Operator precedence parsing",
+    "difficulty": "Medium",
+    "coreIdea": "Process numbers/operators left to right, applying * and / immediately via stack.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 164
+  },
+  {
+    "problem": "Find First and Last Position of Element in Sorted Array",
+    "link": "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array",
+    "pattern": "Binary Search",
+    "subPattern": "Lower and upper bound search",
+    "difficulty": "Medium",
+    "coreIdea": "Run binary search twice to find first and last index of target.",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 162
+  },
+  {
+    "problem": "Daily Temperatures",
+    "link": "https://leetcode.com/problems/daily-temperatures",
+    "pattern": "Stack",
+    "subPattern": "Monotonic decreasing stack",
+    "difficulty": "Medium",
+    "coreIdea": "Maintain stack of unresolved indices; pop when warmer day appears.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 160
+  },
+  {
+    "problem": "Sort Colors",
+    "link": "https://leetcode.com/problems/sort-colors",
+    "pattern": "Two Pointers",
+    "subPattern": "Dutch national flag partition",
+    "difficulty": "Medium",
+    "coreIdea": "Partition array into 0s,1s,2s using low/mid/high pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 158
+  },
+  {
+    "problem": "First Missing Positive",
+    "link": "https://leetcode.com/problems/first-missing-positive",
+    "pattern": "Array",
+    "subPattern": "Index placement hashing",
+    "difficulty": "Hard",
+    "coreIdea": "Place each value x at index x-1 when possible, then scan for mismatch.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 156
+  },
+  {
+    "problem": "Find Peak Element",
+    "link": "[https://leetcode.com/problems/find-peak-element](https://leetcode.com/problems/find-peak-element)",
+    "pattern": "Binary Search",
+    "subPattern": "Local Maxima",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search to find an index where neighbors are smaller",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 156
+  },
+  {
+    "problem": "Integer to Roman",
+    "link": "[https://leetcode.com/problems/integer-to-roman](https://leetcode.com/problems/integer-to-roman)",
+    "pattern": "Math",
+    "subPattern": "Greedy subtraction",
+    "difficulty": "Medium",
+    "coreIdea": "Iteratively subtract largest possible Roman values",
+    "complexity": "O(1) | O(1)",
+    "frequency": 154
+  },
+  {
+    "problem": "Valid Sudoku",
+    "link": "[https://leetcode.com/problems/valid-sudoku](https://leetcode.com/problems/valid-sudoku)",
+    "pattern": "Hashing",
+    "subPattern": "Matrix validation",
+    "difficulty": "Medium",
+    "coreIdea": "Use hash sets to track seen digits in rows, columns, and boxes",
+    "complexity": "O(1) | O(1)",
+    "frequency": 150
+  },
+  {
+    "problem": "Best Time to Buy and Sell Stock II",
+    "link": "[https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii)",
+    "pattern": "Greedy",
+    "subPattern": "Peak-Valley",
+    "difficulty": "Medium",
+    "coreIdea": "Accumulate all positive price differences between consecutive days",
+    "complexity": "O(n) | O(1)",
+    "frequency": 150
+  },
+  {
+    "problem": "Longest Increasing Subsequence",
+    "link": "[https://leetcode.com/problems/longest-increasing-subsequence](https://leetcode.com/problems/longest-increasing-subsequence)",
+    "pattern": "DP",
+    "subPattern": "Patience Sorting",
+    "difficulty": "Medium",
+    "coreIdea": "Maintain smallest possible tail values for subsequences via binary search",
+    "complexity": "O(n log n) | O(n)",
+    "frequency": 148
+  },
+  {
+    "problem": "Largest Rectangle in Histogram",
+    "link": "[https://leetcode.com/problems/largest-rectangle-in-histogram](https://leetcode.com/problems/largest-rectangle-in-histogram)",
+    "pattern": "Stack",
+    "subPattern": "Monotonic Stack",
+    "difficulty": "Hard",
+    "coreIdea": "Find nearest smaller heights to the left and right using a stack",
+    "complexity": "O(n) | O(n)",
+    "frequency": 148
+  },
+  {
+    "problem": "Next Permutation",
+    "link": "[https://leetcode.com/problems/next-permutation](https://leetcode.com/problems/next-permutation)",
+    "pattern": "Two Pointers",
+    "subPattern": "Lexicographical order",
+    "difficulty": "Medium",
+    "coreIdea": "Find first decreasing element, swap with next larger, and reverse suffix",
+    "complexity": "O(n) | O(1)",
+    "frequency": 148
+  },
+  {
+    "problem": "Happy Number",
+    "link": "[https://leetcode.com/problems/happy-number](https://leetcode.com/problems/happy-number)",
+    "pattern": "Hashing",
+    "subPattern": "Cycle Detection",
+    "difficulty": "Easy",
+    "coreIdea": "Use a hash set to detect cycles in sum of squares of digits",
+    "complexity": "O(log n) | O(log n)",
+    "frequency": 148
+  },
+  {
+    "problem": "Rotate Array",
+    "link": "[https://leetcode.com/problems/rotate-array](https://leetcode.com/problems/rotate-array)",
+    "pattern": "Array",
+    "subPattern": "Reversal Strategy",
+    "difficulty": "Medium",
+    "coreIdea": "Reverse entire array, then reverse segments divided by k",
+    "complexity": "O(n) | O(1)",
+    "frequency": 146
+  },
+  {
+    "problem": "Reverse Words in a String",
+    "link": "[https://leetcode.com/problems/reverse-words-in-a-string](https://leetcode.com/problems/reverse-words-in-a-string)",
+    "pattern": "String",
+    "subPattern": "Two Pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Reverse the entire string and then reverse each individual word",
+    "complexity": "O(n) | O(n)",
+    "frequency": 144
+  },
+  {
+    "problem": "Edit Distance",
+    "link": "[https://leetcode.com/problems/edit-distance](https://leetcode.com/problems/edit-distance)",
+    "pattern": "DP",
+    "subPattern": "2D Grid DP",
+    "difficulty": "Hard",
+    "coreIdea": "Compute min operations to transform one string into another",
+    "complexity": "O(m*n) | O(m*n)",
+    "frequency": 140
+  },
+  {
+    "problem": "Longest Valid Parentheses",
+    "link": "[https://leetcode.com/problems/longest-valid-parentheses](https://leetcode.com/problems/longest-valid-parentheses)",
+    "pattern": "Stack",
+    "subPattern": "Index tracking",
+    "difficulty": "Hard",
+    "coreIdea": "Use stack to store indices and calculate gap between invalid points",
+    "complexity": "O(n) | O(n)",
+    "frequency": 140
+  },
+  {
+    "problem": "LFU Cache",
+    "link": "[https://leetcode.com/problems/lfu-cache](https://leetcode.com/problems/lfu-cache)",
+    "pattern": "Design",
+    "subPattern": "Frequency Doubly Linked List",
+    "difficulty": "Hard",
+    "coreIdea": "Use map for nodes and frequency lists to maintain access order",
+    "complexity": "O(1) | O(capacity)",
+    "frequency": 138
+  },
+  {
+    "problem": "Reverse Integer",
+    "link": "[https://leetcode.com/problems/reverse-integer](https://leetcode.com/problems/reverse-integer)",
+    "pattern": "Math",
+    "subPattern": "Digit manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Pop digits and push them back while checking for 32-bit overflow",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 138
+  },
+  {
+    "problem": "Remove Duplicates from Sorted Array",
+    "link": "[https://leetcode.com/problems/remove-duplicates-from-sorted-array](https://leetcode.com/problems/remove-duplicates-from-sorted-array)",
+    "pattern": "Two Pointers",
+    "subPattern": "In-place modification",
+    "difficulty": "Easy",
+    "coreIdea": "Overwrite duplicate indices using a slow/fast pointer approach",
+    "complexity": "O(n) | O(1)",
+    "frequency": 138
+  },
+  {
+    "problem": "Gas Station",
+    "link": "[https://leetcode.com/problems/gas-station](https://leetcode.com/problems/gas-station)",
+    "pattern": "Greedy",
+    "subPattern": "Running Sum",
+    "difficulty": "Medium",
+    "coreIdea": "Start from the point where the running gas total never drops below zero",
+    "complexity": "O(n) | O(1)",
+    "frequency": 136
+  },
+  {
+    "problem": "Task Scheduler",
+    "link": "[https://leetcode.com/problems/task-scheduler](https://leetcode.com/problems/task-scheduler)",
+    "pattern": "Greedy",
+    "subPattern": "Frequency Filling",
+    "difficulty": "Medium",
+    "coreIdea": "Arrange tasks with cooling time based on the most frequent task",
+    "complexity": "O(n) | O(1)",
+    "frequency": 134
+  },
+  {
+    "problem": "Combination Sum",
+    "link": "[https://leetcode.com/problems/combination-sum](https://leetcode.com/problems/combination-sum)",
+    "pattern": "Backtracking",
+    "subPattern": "DFS recursion",
+    "difficulty": "Medium",
+    "coreIdea": "Explore all inclusion/exclusion paths to reach target sum",
+    "complexity": "O(2^n) | O(target)",
+    "frequency": 134
+  },
+  {
+    "problem": "Random Pick with Weight",
+    "link": "[https://leetcode.com/problems/random-pick-with-weight](https://leetcode.com/problems/random-pick-with-weight)",
+    "pattern": "Binary Search",
+    "subPattern": "Prefix Sums",
+    "difficulty": "Medium",
+    "coreIdea": "Map weights to ranges using prefix sums and pick via binary search",
+    "complexity": "O(log n) | O(n)",
+    "frequency": 130
+  },
+  {
+    "problem": "Maximal Square",
+    "link": "[https://leetcode.com/problems/maximal-square](https://leetcode.com/problems/maximal-square)",
+    "pattern": "DP",
+    "subPattern": "2D Grid DP",
+    "difficulty": "Medium",
+    "coreIdea": "Size of square at (i,j) depends on min of neighbors + 1",
+    "complexity": "O(m*n) | O(m*n)",
+    "frequency": 130
+  },
+  {
+    "problem": "Regular Expression Matching",
+    "link": "[https://leetcode.com/problems/regular-expression-matching](https://leetcode.com/problems/regular-expression-matching)",
+    "pattern": "DP",
+    "subPattern": "String matching",
+    "difficulty": "Hard",
+    "coreIdea": "Handle '.' and '*' wildcards using recursion with memoization",
+    "complexity": "O(m*n) | O(m*n)",
+    "frequency": 126
+  },
+  {
+    "problem": "Permutations",
+    "link": "[https://leetcode.com/problems/permutations](https://leetcode.com/problems/permutations)",
+    "pattern": "Backtracking",
+    "subPattern": "Swap-based search",
+    "difficulty": "Medium",
+    "coreIdea": "Recursively swap elements to build all ordered arrangements",
+    "complexity": "O(n*n!) | O(n!)",
+    "frequency": 126
+  },
+  {
+    "problem": "Simplify Path",
+    "link": "[https://leetcode.com/problems/simplify-path](https://leetcode.com/problems/simplify-path)",
+    "pattern": "Stack",
+    "subPattern": "Directory Simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use a stack to process file parts and handle '..' and '.'",
+    "complexity": "O(n) | O(n)",
+    "frequency": 126
+  },
+  {
+    "problem": "Binary Tree Maximum Path Sum",
+    "link": "[https://leetcode.com/problems/binary-tree-maximum-path-sum](https://leetcode.com/problems/binary-tree-maximum-path-sum)",
+    "pattern": "Tree",
+    "subPattern": "Post-order DFS",
+    "difficulty": "Hard",
+    "coreIdea": "Compute max path through each node while tracking global max",
+    "complexity": "O(n) | O(h)",
+    "frequency": 124
+  },
+  {
+    "problem": "Reverse Nodes in k-Group",
+    "link": "[https://leetcode.com/problems/reverse-nodes-in-k-group](https://leetcode.com/problems/reverse-nodes-in-k-group)",
+    "pattern": "Linked List",
+    "subPattern": "Recursive Reversal",
+    "difficulty": "Hard",
+    "coreIdea": "Reverse k nodes and link with the result of recursive call on rest",
+    "complexity": "O(n) | O(1)",
+    "frequency": 124
+  },
+  {
+    "problem": "Design Hit Counter",
+    "link": "[https://leetcode.com/problems/design-hit-counter](https://leetcode.com/problems/design-hit-counter)",
+    "pattern": "Design",
+    "subPattern": "Circular Buffer",
+    "difficulty": "Medium",
+    "coreIdea": "Use a queue or bucket system to store hits in the last 300 seconds",
+    "complexity": "O(1) | O(300)",
+    "frequency": 124
+  },
+  {
+    "problem": "Jump Game II",
+    "link": "[https://leetcode.com/problems/jump-game-ii](https://leetcode.com/problems/jump-game-ii)",
+    "pattern": "Greedy",
+    "subPattern": "Range Expansion",
+    "difficulty": "Medium",
+    "coreIdea": "Count jumps needed to reach the end of the current furthest range",
+    "complexity": "O(n) | O(1)",
+    "frequency": 124
+  },
+  {
+    "problem": "Basic Calculator",
+    "link": "[https://leetcode.com/problems/basic-calculator](https://leetcode.com/problems/basic-calculator)",
+    "pattern": "Stack",
+    "subPattern": "Expression Parsing",
+    "difficulty": "Hard",
+    "coreIdea": "Use a stack to manage sign context and nested parentheses",
+    "complexity": "O(n) | O(n)",
+    "frequency": 122
+  },
+  {
+    "problem": "Lowest Common Ancestor of a Binary Tree",
+    "link": "[https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree)",
+    "pattern": "Tree",
+    "subPattern": "DFS Search",
+    "difficulty": "Medium",
+    "coreIdea": "Return current node if targets are found in both left and right subtrees",
+    "complexity": "O(n) | O(h)",
+    "frequency": 122
+  },
+  {
+    "problem": "Serialize and Deserialize Binary Tree",
+    "link": "[https://leetcode.com/problems/serialize-and-deserialize-binary-tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree)",
+    "pattern": "Tree",
+    "subPattern": "Level-order BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Encode tree to string with BFS and reconstruct using a queue",
+    "complexity": "O(n) | O(n)",
+    "frequency": 122
+  },
+  {
+    "problem": "First Unique Character in a String",
+    "link": "[https://leetcode.com/problems/first-unique-character-in-a-string](https://leetcode.com/problems/first-unique-character-in-a-string)",
+    "pattern": "Hashing",
+    "subPattern": "Character frequency",
+    "difficulty": "Easy",
+    "coreIdea": "Find the first character with a count of 1 in the frequency map",
+    "complexity": "O(n) | O(1)",
+    "frequency": 122
+  },
+  {
+    "problem": "Majority Element",
+    "link": "[https://leetcode.com/problems/majority-element](https://leetcode.com/problems/majority-element)",
+    "pattern": "Greedy",
+    "subPattern": "Boyer-Moore Voting",
+    "difficulty": "Easy",
+    "coreIdea": "Maintain a candidate and increment/decrement count based on matches",
+    "complexity": "O(n) | O(1)",
+    "frequency": 120
+  },
+  {
+    "problem": "Contains Duplicate",
+    "link": "[https://leetcode.com/problems/contains-duplicate](https://leetcode.com/problems/contains-duplicate)",
+    "pattern": "Hashing",
+    "subPattern": "Set Membership",
+    "difficulty": "Easy",
+    "coreIdea": "Check if an element already exists in a hash set",
+    "complexity": "O(n) | O(n)",
+    "frequency": 120
+  },
+  {
+    "problem": "Maximum Profit in Job Scheduling",
+    "link": "[https://leetcode.com/problems/maximum-profit-in-job-scheduling](https://leetcode.com/problems/maximum-profit-in-job-scheduling)",
+    "pattern": "DP",
+    "subPattern": "Binary Search + Sorting",
+    "difficulty": "Hard",
+    "coreIdea": "Sort by end time and use binary search to find previous non-overlapping job",
+    "complexity": "O(n log n) | O(n)",
+    "frequency": 120
+  },
+  {
+    "problem": "Integer to English Words",
+    "link": "[https://leetcode.com/problems/integer-to-english-words](https://leetcode.com/problems/integer-to-english-words)",
+    "pattern": "Math",
+    "subPattern": "Chunk processing",
+    "difficulty": "Hard",
+    "coreIdea": "Process digits in thousands-based groups and recursively build string",
+    "complexity": "O(1) | O(1)",
+    "frequency": 118
+  },
+  {
+    "problem": "Linked List Cycle",
+    "link": "[https://leetcode.com/problems/linked-list-cycle](https://leetcode.com/problems/linked-list-cycle)",
+    "pattern": "Two Pointers",
+    "subPattern": "Floyd's Cycle",
+    "difficulty": "Easy",
+    "coreIdea": "Fast and slow pointers will eventually meet if a cycle exists",
+    "complexity": "O(n) | O(1)",
+    "frequency": 118
+  },
+  {
+    "problem": "Copy List with Random Pointer",
+    "link": "[https://leetcode.com/problems/copy-list-with-random-pointer](https://leetcode.com/problems/copy-list-with-random-pointer)",
+    "pattern": "Hashing",
+    "subPattern": "Node Map",
+    "difficulty": "Medium",
+    "coreIdea": "Map original nodes to new nodes to replicate pointers",
+    "complexity": "O(n) | O(n)",
+    "frequency": 116
+  },
+  {
+    "problem": "Largest Number",
+    "link": "[https://leetcode.com/problems/largest-number](https://leetcode.com/problems/largest-number)",
+    "pattern": "Greedy",
+    "subPattern": "Custom Sort",
+    "difficulty": "Medium",
+    "coreIdea": "Sort based on string concatenation result (a+b vs b+a)",
+    "complexity": "O(n log n) | O(n)",
+    "frequency": 116
+  },
+  {
+    "problem": "Candy",
+    "link": "[https://leetcode.com/problems/candy](https://leetcode.com/problems/candy)",
+    "pattern": "Greedy",
+    "subPattern": "Two-pass constraints",
+    "difficulty": "Hard",
+    "coreIdea": "Satisfy constraints via left-to-right and right-to-left passes",
+    "complexity": "O(n) | O(n)",
+    "frequency": 114
+  },
+  {
+    "problem": "Reorganize String",
+    "link": "[https://leetcode.com/problems/reorganize-string](https://leetcode.com/problems/reorganize-string)",
+    "pattern": "Greedy",
+    "subPattern": "Heap + Frequency",
+    "difficulty": "Medium",
+    "coreIdea": "Place most frequent characters first at non-adjacent indices",
+    "complexity": "O(n log A) | O(A)",
+    "frequency": 114
+  },
+  {
+    "problem": "Palindromic Substrings",
+    "link": "[https://leetcode.com/problems/palindromic-substrings](https://leetcode.com/problems/palindromic-substrings)",
+    "pattern": "Two Pointers",
+    "subPattern": "Expand center",
+    "difficulty": "Medium",
+    "coreIdea": "Count palindromes by expanding outward from each character/pair",
+    "complexity": "O(n^2) | O(1)",
+    "frequency": 114
+  },
+  {
+    "problem": "Max Consecutive Ones III",
+    "link": "[https://leetcode.com/problems/max-consecutive-ones-iii](https://leetcode.com/problems/max-consecutive-ones-iii)",
+    "pattern": "Sliding Window",
+    "subPattern": "Two Pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand window until k zeros are used, then shrink",
+    "complexity": "O(n) | O(1)",
+    "frequency": 114
+  },
+  {
+    "problem": "Set Matrix Zeroes",
+    "link": "[https://leetcode.com/problems/set-matrix-zeroes](https://leetcode.com/problems/set-matrix-zeroes)",
+    "pattern": "Matrix",
+    "subPattern": "In-place markers",
+    "difficulty": "Medium",
+    "coreIdea": "Use first row and column as markers for zeroing remainder",
+    "complexity": "O(m*n) | O(1)",
+    "frequency": 114
+  },
+  {
+    "problem": "Implement Trie (Prefix Tree)",
+    "link": "[https://leetcode.com/problems/implement-trie-prefix-tree](https://leetcode.com/problems/implement-trie-prefix-tree)",
+    "pattern": "Design",
+    "subPattern": "Prefix Tree",
+    "difficulty": "Medium",
+    "coreIdea": "Store string paths in a tree structure for efficient lookup",
+    "complexity": "O(L) | O(N*L)",
+    "frequency": 112
+  },
+  {
+    "problem": "Evaluate Division",
+    "link": "[https://leetcode.com/problems/evaluate-division](https://leetcode.com/problems/evaluate-division)",
+    "pattern": "Graph",
+    "subPattern": "DFS / Union-Find",
+    "difficulty": "Medium",
+    "coreIdea": "Build a weighted directed graph and perform path finding",
+    "complexity": "O(Q * (V+E)) | O(V+E)",
+    "frequency": 112
+  },
+  {
+    "problem": "Isomorphic Strings",
+    "link": "[https://leetcode.com/problems/isomorphic-strings](https://leetcode.com/problems/isomorphic-strings)",
+    "pattern": "Hashing",
+    "subPattern": "Bijective Mapping",
+    "difficulty": "Easy",
+    "coreIdea": "Verify character mappings between strings are unique and consistent",
+    "complexity": "O(n) | O(1)",
+    "frequency": 110
+  },
+  {
+    "problem": "Pow(x, n)",
+    "link": "[https://leetcode.com/problems/powx-n](https://leetcode.com/problems/powx-n)",
+    "pattern": "Math",
+    "subPattern": "Binary Exponentiation",
+    "difficulty": "Medium",
+    "coreIdea": "Recursively square base to compute power in logarithmic steps",
+    "complexity": "O(log n) | O(log n)",
+    "frequency": 110
+  },
+  {
+    "problem": "Count Binary Substrings",
+    "link": "[https://leetcode.com/problems/count-binary-substrings](https://leetcode.com/problems/count-binary-substrings)",
+    "pattern": "String",
+    "subPattern": "Group counting",
+    "difficulty": "Easy",
+    "coreIdea": "Sum minimum of counts of consecutive zeros and ones",
+    "complexity": "O(n) | O(1)",
+    "frequency": 108
+  },
+  {
+    "problem": "Find the Duplicate Number",
+    "link": "[https://leetcode.com/problems/find-the-duplicate-number](https://leetcode.com/problems/find-the-duplicate-number)",
+    "pattern": "Two Pointers",
+    "subPattern": "Floyd's Cycle",
+    "difficulty": "Medium",
+    "coreIdea": "Treat array indices as pointers to detect the entry point of cycle",
+    "complexity": "O(n) | O(1)",
+    "frequency": 108
+  },
+  {
+    "problem": "Longest Repeating Character Replacement",
+    "link": "[https://leetcode.com/problems/longest-repeating-character-replacement](https://leetcode.com/problems/longest-repeating-character-replacement)",
+    "pattern": "Sliding Window",
+    "subPattern": "Two Pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand window while character swaps needed is within k",
+    "complexity": "O(n) | O(1)",
+    "frequency": 106
+  },
+  {
+    "problem": "Top K Frequent Words",
+    "link": "[https://leetcode.com/problems/top-k-frequent-words](https://leetcode.com/problems/top-k-frequent-words)",
+    "pattern": "Heap",
+    "subPattern": "Priority Queue",
+    "difficulty": "Medium",
+    "coreIdea": "Count frequencies and use a heap to extract top k words",
+    "complexity": "O(n log k) | O(n)",
+    "frequency": 106
+  },
+  {
+    "problem": "Subsets",
+    "link": "[https://leetcode.com/problems/subsets](https://leetcode.com/problems/subsets)",
+    "pattern": "Backtracking",
+    "subPattern": "Power Set",
+    "difficulty": "Medium",
+    "coreIdea": "Include or exclude each element to build all combinations",
+    "complexity": "O(n * 2^n) | O(n * 2^n)",
+    "frequency": 106
+  },
+  {
+    "problem": "Zigzag Conversion",
+    "link": "[https://leetcode.com/problems/zigzag-conversion](https://leetcode.com/problems/zigzag-conversion)",
+    "pattern": "String",
+    "subPattern": "Simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Append characters to rows using a direction-reversing pointer",
+    "complexity": "O(n) | O(n)",
+    "frequency": 106
+  },
+  {
+    "problem": "Decode Ways",
+    "link": "[https://leetcode.com/problems/decode-ways](https://leetcode.com/problems/decode-ways)",
+    "pattern": "DP",
+    "subPattern": "1D Linear DP",
+    "difficulty": "Medium",
+    "coreIdea": "Ways depend on validity of previous 1 and 2 character groups",
+    "complexity": "O(n) | O(n)",
+    "frequency": 106
+  },
+  {
+    "problem": "Capacity To Ship Packages Within D Days",
+    "link": "[https://leetcode.com/problems/capacity-to-ship-packages-within-d-days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days)",
+    "pattern": "Binary Search",
+    "subPattern": "Range Search",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search on possible capacities and validate via greedy",
+    "complexity": "O(n log S) | O(1)",
+    "frequency": 104
+  },
+  {
+    "problem": "Design Circular Queue",
+    "link": "[https://leetcode.com/problems/design-circular-queue](https://leetcode.com/problems/design-circular-queue)",
+    "pattern": "Design",
+    "subPattern": "Array Implementation",
+    "difficulty": "Medium",
+    "coreIdea": "Use a fixed array with head and tail pointers",
+    "complexity": "O(1) | O(k)",
+    "frequency": 104
+  },
+  {
+    "problem": "Fizz Buzz",
+    "link": "[https://leetcode.com/problems/fizz-buzz](https://leetcode.com/problems/fizz-buzz)",
+    "pattern": "Math",
+    "subPattern": "Simulation",
+    "difficulty": "Easy",
+    "coreIdea": "Map numbers to strings based on divisibility by 3 and 5",
+    "complexity": "O(n) | O(1)",
+    "frequency": 104
+  },
+  {
+    "problem": "Word Search II",
+    "link": "[https://leetcode.com/problems/word-search-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/word-search-ii)",
+    "pattern": "Backtracking",
+    "subPattern": "Trie-optimized search",
+    "difficulty": "Hard",
+    "coreIdea": "Use a Trie to prune DFS paths that cannot form valid words",
+    "complexity": "O(M * 4^L) | O(N * L)",
+    "frequency": 104
+  },
+  {
+    "problem": "Maximum Product Subarray",
+    "link": "[https://leetcode.com/problems/maximum-product-subarray](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/maximum-product-subarray)",
+    "pattern": "DP",
+    "subPattern": "Min-Max Tracking",
+    "difficulty": "Medium",
+    "coreIdea": "Maintain both max and min products to handle negative number flips",
+    "complexity": "O(n) | O(1)",
+    "frequency": 104
+  },
+  {
+    "problem": "Maximal Rectangle",
+    "link": "[https://leetcode.com/problems/maximal-rectangle](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/maximal-rectangle)",
+    "pattern": "Stack",
+    "subPattern": "Histogram Transformation",
+    "difficulty": "Hard",
+    "coreIdea": "Convert grid into 1D histograms and find largest rectangle for each row",
+    "complexity": "O(R*C) | O(C)",
+    "frequency": 104
+  },
+  {
+    "problem": "Missing Number",
+    "link": "[https://leetcode.com/problems/missing-number](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/missing-number)",
+    "pattern": "Math",
+    "subPattern": "Gauss Summation",
+    "difficulty": "Easy",
+    "coreIdea": "Compare expected sum of 0 to n with the actual sum of array elements",
+    "complexity": "O(n) | O(1)",
+    "frequency": 102
+  },
+  {
+    "problem": "4Sum",
+    "link": "[https://leetcode.com/problems/4sum](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/4sum)",
+    "pattern": "Two Pointers",
+    "subPattern": "N-sum reduction",
+    "difficulty": "Medium",
+    "coreIdea": "Sort array and use nested loops to reduce problem to 2Sum",
+    "complexity": "O(n^3) | O(n)",
+    "frequency": 102
+  },
+  {
+    "problem": "Max Area of Island",
+    "link": "[https://leetcode.com/problems/max-area-of-island](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/max-area-of-island)",
+    "pattern": "Graph",
+    "subPattern": "DFS recursion",
+    "difficulty": "Medium",
+    "coreIdea": "Traverse each land cell and recursively count size of connected components",
+    "complexity": "O(M*N) | O(M*N)",
+    "frequency": 102
+  },
+  {
+    "problem": "Pascal's Triangle",
+    "link": "[https://leetcode.com/problems/pascals-triangle](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/pascals-triangle)",
+    "pattern": "Array",
+    "subPattern": "Row Simulation",
+    "difficulty": "Easy",
+    "coreIdea": "Generate current row by summing adjacent elements from the previous row",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 100
+  },
+  {
+    "problem": "Split Array Largest Sum",
+    "link": "[https://leetcode.com/problems/split-array-largest-sum](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/split-array-largest-sum)",
+    "pattern": "Binary Search",
+    "subPattern": "Binary Search on Answer",
+    "difficulty": "Hard",
+    "coreIdea": "Search range of possible sums and greedily check if k splits are possible",
+    "complexity": "O(n log(Sum)) | O(1)",
+    "frequency": 100
+  },
+  {
+    "problem": "Fibonacci Number",
+    "link": "[https://leetcode.com/problems/fibonacci-number](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/fibonacci-number)",
+    "pattern": "DP",
+    "subPattern": "State variables",
+    "difficulty": "Easy",
+    "coreIdea": "Sum previous two numbers while tracking states to save space",
+    "complexity": "O(n) | O(1)",
+    "frequency": 100
+  },
+  {
+    "problem": "Diameter of Binary Tree",
+    "link": "[https://leetcode.com/problems/diameter-of-binary-tree](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/diameter-of-binary-tree)",
+    "pattern": "Tree",
+    "subPattern": "Post-order DFS",
+    "difficulty": "Easy",
+    "coreIdea": "Track max value of (left height + right height) across all nodes",
+    "complexity": "O(n) | O(h)",
+    "frequency": 100
+  },
+  {
+    "problem": "Single Element in a Sorted Array",
+    "link": "[https://leetcode.com/problems/single-element-in-a-sorted-array](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/single-element-in-a-sorted-array)",
+    "pattern": "Binary Search",
+    "subPattern": "Index parity",
+    "difficulty": "Medium",
+    "coreIdea": "Check pair symmetry to decide whether to search left or right half",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 100
+  },
+  {
+    "problem": "String to Integer (atoi)",
+    "link": "[https://leetcode.com/problems/string-to-integer-atoi](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/string-to-integer-atoi)",
+    "pattern": "String",
+    "subPattern": "Edge-case Handling",
+    "difficulty": "Medium",
+    "coreIdea": "Iteratively process digits while managing signs and integer overflows",
+    "complexity": "O(n) | O(1)",
+    "frequency": 100
+  },
+  {
+    "problem": "Remove All Adjacent Duplicates in String II",
+    "link": "[https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii)",
+    "pattern": "Stack",
+    "subPattern": "Character Frequency Stack",
+    "difficulty": "Medium",
+    "coreIdea": "Use a stack to track character counts and pop when count hits k",
+    "complexity": "O(n) | O(n)",
+    "frequency": 100
+  },
+  {
+    "problem": "Accounts Merge",
+    "link": "[https://leetcode.com/problems/accounts-merge](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/accounts-merge)",
+    "pattern": "Graph",
+    "subPattern": "Union-Find",
+    "difficulty": "Medium",
+    "coreIdea": "Group emails as graph nodes and find connected components",
+    "complexity": "O(NK log NK) | O(NK)",
+    "frequency": 98
+  },
+  {
+    "problem": "House Robber II",
+    "link": "[https://leetcode.com/problems/house-robber-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/house-robber-ii)",
+    "pattern": "DP",
+    "subPattern": "Circular array reduction",
+    "difficulty": "Medium",
+    "coreIdea": "Solve linear version twice: once without first and once without last",
+    "complexity": "O(n) | O(1)",
+    "frequency": 98
+  },
+  {
+    "problem": "Unique Paths",
+    "link": "[https://leetcode.com/problems/unique-paths](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/unique-paths)",
+    "pattern": "DP",
+    "subPattern": "Grid Combinatorics",
+    "difficulty": "Medium",
+    "coreIdea": "Ways to reach (i,j) is sum of ways to reach top and left neighbors",
+    "complexity": "O(M*N) | O(M*N)",
+    "frequency": 98
+  },
+  {
+    "problem": "Intersection of Two Arrays",
+    "link": "[https://leetcode.com/problems/intersection-of-two-arrays](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/intersection-of-two-arrays)",
+    "pattern": "Hashing",
+    "subPattern": "Set Intersection",
+    "difficulty": "Easy",
+    "coreIdea": "Store one array in set and iterate through other to find matches",
+    "complexity": "O(n+m) | O(n)",
+    "frequency": 98
+  },
+  {
+    "problem": "Search Suggestions System",
+    "link": "[https://leetcode.com/problems/search-suggestions-system](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/search-suggestions-system)",
+    "pattern": "Trie",
+    "subPattern": "Prefix Search + Sorting",
+    "difficulty": "Medium",
+    "coreIdea": "Sort products and use binary search or Trie to find common prefixes",
+    "complexity": "O(N log N + L) | O(N)",
+    "frequency": 98
+  },
+  {
+    "problem": "Subarray Product Less Than K",
+    "link": "[https://leetcode.com/problems/subarray-product-less-than-k](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/subarray-product-less-than-k)",
+    "pattern": "Sliding Window",
+    "subPattern": "Two Pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Maintain window product < k and count window size at each expansion",
+    "complexity": "O(n) | O(1)",
+    "frequency": 98
+  },
+  {
+    "problem": "Sqrt(x)",
+    "link": "[https://leetcode.com/problems/sqrtx](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/sqrtx)",
+    "pattern": "Binary Search",
+    "subPattern": "Range Search",
+    "difficulty": "Easy",
+    "coreIdea": "Binary search between 0 and x to find highest square <= x",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 98
+  },
+  {
+    "problem": "Longest Common Subsequence",
+    "link": "[https://leetcode.com/problems/longest-common-subsequence](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/longest-common-subsequence)",
+    "pattern": "DP",
+    "subPattern": "2D String DP",
+    "difficulty": "Medium",
+    "coreIdea": "Match characters at current indices and carry forward max score",
+    "complexity": "O(M*N) | O(M*N)",
+    "frequency": 98
+  },
+  {
+    "problem": "Remove Nth Node From End of List",
+    "link": "[https://leetcode.com/problems/remove-nth-node-from-end-of-list](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/remove-nth-node-from-end-of-list)",
+    "pattern": "Linked List",
+    "subPattern": "Fast & Slow Pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Advance fast pointer n steps, then move both to find gap",
+    "complexity": "O(n) | O(1)",
+    "frequency": 96
+  },
+  {
+    "problem": "Second Highest Salary",
+    "link": "[https://leetcode.com/problems/second-highest-salary](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/second-highest-salary)",
+    "pattern": "Math",
+    "subPattern": "Sorting logic",
+    "difficulty": "Medium",
+    "coreIdea": "Identify max element and find the largest element strictly less than it",
+    "complexity": "O(n) | O(1)",
+    "frequency": 96
+  },
+  {
+    "problem": "Simple Bank System",
+    "link": "[https://leetcode.com/problems/simple-bank-system](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/simple-bank-system)",
+    "pattern": "Design",
+    "subPattern": "Array Simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Implement bank operations with index and balance validation",
+    "complexity": "O(1) | O(n)",
+    "frequency": 96
+  },
+  {
+    "problem": "Validate Binary Search Tree",
+    "link": "[https://leetcode.com/problems/validate-binary-search-tree](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/validate-binary-search-tree)",
+    "pattern": "Tree",
+    "subPattern": "Recursive Bounds",
+    "difficulty": "Medium",
+    "coreIdea": "Validate each node against min and max bounds inherited from parents",
+    "complexity": "O(n) | O(h)",
+    "frequency": 96
+  },
+  {
+    "problem": "Evaluate Reverse Polish Notation",
+    "link": "[https://leetcode.com/problems/evaluate-reverse-polish-notation](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/evaluate-reverse-polish-notation)",
+    "pattern": "Stack",
+    "subPattern": "Arithmetic simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Push operands to stack and pop top two when operator is found",
+    "complexity": "O(n) | O(n)",
+    "frequency": 96
+  },
+  {
+    "problem": "Squares of a Sorted Array",
+    "link": "[https://leetcode.com/problems/squares-of-a-sorted-array](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/squares-of-a-sorted-array)",
+    "pattern": "Two Pointers",
+    "subPattern": "Two-end merge",
+    "difficulty": "Easy",
+    "coreIdea": "Compare squares at both ends and fill result array from back to front",
+    "complexity": "O(n) | O(n)",
+    "frequency": 96
+  },
+  {
+    "problem": "Remove K Digits",
+    "link": "[https://leetcode.com/problems/remove-k-digits](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/remove-k-digits)",
+    "pattern": "Stack",
+    "subPattern": "Monotonic Stack",
+    "difficulty": "Medium",
+    "coreIdea": "Maintain non-decreasing sequence in stack to minimize result",
+    "complexity": "O(n) | O(n)",
+    "frequency": 96
+  },
+  {
+    "problem": "Palindrome Linked List",
+    "link": "[https://leetcode.com/problems/palindrome-linked-list](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/palindrome-linked-list)",
+    "pattern": "Linked List",
+    "subPattern": "Reversal strategy",
+    "difficulty": "Easy",
+    "coreIdea": "Reverse second half of list and compare with first half",
+    "complexity": "O(n) | O(1)",
+    "frequency": 96
+  },
+  {
+    "problem": "Logger Rate Limiter",
+    "link": "[https://leetcode.com/problems/logger-rate-limiter](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/logger-rate-limiter)",
+    "pattern": "Hashing",
+    "subPattern": "Message timestamp map",
+    "difficulty": "Easy",
+    "coreIdea": "Store timestamps for each message and check 10-second gap",
+    "complexity": "O(1) | O(n)",
+    "frequency": 96
+  },
+  {
+    "problem": "Making A Large Island",
+    "link": "[https://leetcode.com/problems/making-a-large-island](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/making-a-large-island)",
+    "pattern": "Graph",
+    "subPattern": "Connected Components",
+    "difficulty": "Hard",
+    "coreIdea": "Label islands and sum sizes of unique neighbors for each water cell",
+    "complexity": "O(M*N) | O(M*N)",
+    "frequency": 94
+  },
+  {
+    "problem": "Valid Palindrome II",
+    "link": "[https://leetcode.com/problems/valid-palindrome-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/valid-palindrome-ii)",
+    "pattern": "Two Pointers",
+    "subPattern": "One-skip check",
+    "difficulty": "Easy",
+    "coreIdea": "Try skipping one character when a mismatch occurs in palindrome check",
+    "complexity": "O(n) | O(1)",
+    "frequency": 94
+  },
+  {
+    "problem": "Search a 2D Matrix",
+    "link": "[https://leetcode.com/problems/search-a-2d-matrix](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/search-a-2d-matrix)",
+    "pattern": "Binary Search",
+    "subPattern": "Grid Unrolling",
+    "difficulty": "Medium",
+    "coreIdea": "Treat 2D grid as a flattened sorted array for binary search",
+    "complexity": "O(log(M*N)) | O(1)",
+    "frequency": 94
+  },
+  {
+    "problem": "Snapshot Array",
+    "link": "[https://leetcode.com/problems/snapshot-array](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/snapshot-array)",
+    "pattern": "Design",
+    "subPattern": "Binary Search on Snapshots",
+    "difficulty": "Medium",
+    "coreIdea": "Store value history for each index and pick via binary search",
+    "complexity": "O(log S) | O(N*S)",
+    "frequency": 92
+  },
+  {
+    "problem": "Reverse Linked List II",
+    "link": "[https://leetcode.com/problems/reverse-linked-list-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/reverse-linked-list-ii)",
+    "pattern": "Linked List",
+    "subPattern": "In-place reversal",
+    "difficulty": "Medium",
+    "coreIdea": "Identify segment range and reverse pointers within that segment",
+    "complexity": "O(n) | O(1)",
+    "frequency": 92
+  },
+  {
+    "problem": "Is Subsequence",
+    "link": "[https://leetcode.com/problems/is-subsequence](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/is-subsequence)",
+    "pattern": "Two Pointers",
+    "subPattern": "Iterative matching",
+    "difficulty": "Easy",
+    "coreIdea": "Scan both strings and advance target pointer on every match",
+    "complexity": "O(n) | O(1)",
+    "frequency": 92
+  },
+  {
+    "problem": "Minimum Absolute Difference",
+    "link": "[https://leetcode.com/problems/minimum-absolute-difference](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/minimum-absolute-difference)",
+    "pattern": "Sorting",
+    "subPattern": "Adjacent comparison",
+    "difficulty": "Easy",
+    "coreIdea": "Sort array and find pairs with minimum gap in one pass",
+    "complexity": "O(n log n) | O(1)",
+    "frequency": 92
+  },
+  {
+    "problem": "Next Greater Element I",
+    "link": "[https://leetcode.com/problems/next-greater-element-i](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/next-greater-element-i)",
+    "pattern": "Stack",
+    "subPattern": "Monotonic Stack",
+    "difficulty": "Easy",
+    "coreIdea": "Pre-calculate all next greater values using a stack and map",
+    "complexity": "O(n) | O(n)",
+    "frequency": 90
+  },
+  {
+    "problem": "Find Minimum in Rotated Sorted Array",
+    "link": "[https://leetcode.com/problems/find-minimum-in-rotated-sorted-array](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/find-minimum-in-rotated-sorted-array)",
+    "pattern": "Binary Search",
+    "subPattern": "Inflection point",
+    "difficulty": "Medium",
+    "coreIdea": "Identify the unsorted half to find the pivot point of rotation",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 90
+  },
+  {
+    "problem": "Sudoku Solver",
+    "link": "[https://leetcode.com/problems/sudoku-solver](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/sudoku-solver)",
+    "pattern": "Backtracking",
+    "subPattern": "Constraint Satisfaction",
+    "difficulty": "Hard",
+    "coreIdea": "Exhaustively try numbers 1-9 for every empty cell",
+    "complexity": "O(9^81) | O(1)",
+    "frequency": 90
+  },
+  {
+    "problem": "Find the Index of the First Occurrence in a String",
+    "link": "[https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string)",
+    "pattern": "String",
+    "subPattern": "KMP / Sliding Window",
+    "difficulty": "Easy",
+    "coreIdea": "Check all window substrings or use KMP preprocessing for speed",
+    "complexity": "O(n) | O(1)",
+    "frequency": 90
+  },
+  {
+    "problem": "Find All Anagrams in a String",
+    "link": "[https://leetcode.com/problems/find-all-anagrams-in-a-string](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/find-all-anagrams-in-a-string)",
+    "pattern": "Sliding Window",
+    "subPattern": "Frequency Hashing",
+    "difficulty": "Medium",
+    "coreIdea": "Maintain character count window and compare with target frequency",
+    "complexity": "O(n) | O(1)",
+    "frequency": 90
+  },
+  {
+    "problem": "Insert Interval",
+    "link": "[https://leetcode.com/problems/insert-interval](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/insert-interval)",
+    "pattern": "Intervals",
+    "subPattern": "Merge Strategy",
+    "difficulty": "Medium",
+    "coreIdea": "Merge overlapping parts while adding non-overlapping ones sequentially",
+    "complexity": "O(n) | O(n)",
+    "frequency": 90
+  },
+  {
+    "problem": "Remove All Adjacent Duplicates In String",
+    "link": "[https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string)",
+    "pattern": "Stack",
+    "subPattern": "Recursive simplification",
+    "difficulty": "Easy",
+    "coreIdea": "Use a stack to cancel out adjacent identical characters",
+    "complexity": "O(n) | O(n)",
+    "frequency": 88
+  },
+  {
+    "problem": "Combination Sum II",
+    "link": "[https://leetcode.com/problems/combination-sum-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/combination-sum-ii)",
+    "pattern": "Backtracking",
+    "subPattern": "Skip Duplicates",
+    "difficulty": "Medium",
+    "coreIdea": "Sort elements and skip consecutive identical numbers in recursion",
+    "complexity": "O(2^n) | O(n)",
+    "frequency": 88
+  },
+  {
+    "problem": "N-Queens",
+    "link": "[https://leetcode.com/problems/n-queens](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/n-queens)",
+    "pattern": "Backtracking",
+    "subPattern": "Matrix Pruning",
+    "difficulty": "Hard",
+    "coreIdea": "Place queens row by row while checking row, col, and diagonal constraints",
+    "complexity": "O(n!) | O(n^2)",
+    "frequency": 88
+  },
+  {
+    "problem": "Subarrays with K Different Integers",
+    "link": "[https://leetcode.com/problems/subarrays-with-k-different-integers](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/subarrays-with-k-different-integers)",
+    "pattern": "Sliding Window",
+    "subPattern": "Difference calculation",
+    "difficulty": "Hard",
+    "coreIdea": "Solve for 'at most K' minus 'at most K-1' unique integers",
+    "complexity": "O(n) | O(k)",
+    "frequency": 88
+  },
+  {
+    "problem": "Find K Closest Elements",
+    "link": "[https://leetcode.com/problems/find-k-closest-elements](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/find-k-closest-elements)",
+    "pattern": "Binary Search",
+    "subPattern": "Window Search",
+    "difficulty": "Medium",
+    "coreIdea": "Find the left bound of the k-length window using binary search",
+    "complexity": "O(log(N-K) + K) | O(1)",
+    "frequency": 86
+  },
+  {
+    "problem": "Reconstruct Itinerary",
+    "link": "[https://leetcode.com/problems/reconstruct-itinerary](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/reconstruct-itinerary)",
+    "pattern": "Graph",
+    "subPattern": "Eulerian Path",
+    "difficulty": "Hard",
+    "coreIdea": "Use Hierholzer's algorithm via DFS to visit all edges lexicographically",
+    "complexity": "O(E log E) | O(V+E)",
+    "frequency": 86
+  },
+  {
+    "problem": "Reorder List",
+    "link": "[https://leetcode.com/problems/reorder-list](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/reorder-list)",
+    "pattern": "Linked List",
+    "subPattern": "Reverse and Merge",
+    "difficulty": "Medium",
+    "coreIdea": "Find middle, reverse second half, and interleave nodes",
+    "complexity": "O(n) | O(1)",
+    "frequency": 86
+  },
+  {
+    "problem": "Open the Lock",
+    "link": "[https://leetcode.com/problems/open-the-lock](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/open-the-lock)",
+    "pattern": "Graph",
+    "subPattern": "BFS Search",
+    "difficulty": "Medium",
+    "coreIdea": "Level-order traversal of all possible wheel rotations while avoiding deadends",
+    "complexity": "O(10^4) | O(10^4)",
+    "frequency": 86
+  },
+  {
+    "problem": "Permutation in String",
+    "link": "[https://leetcode.com/problems/permutation-in-string](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/permutation-in-string)",
+    "pattern": "Sliding Window",
+    "subPattern": "Fixed frequency window",
+    "difficulty": "Medium",
+    "coreIdea": "Compare character frequency window in s2 with s1's frequency",
+    "complexity": "O(n) | O(1)",
+    "frequency": 86
+  },
+  {
+    "problem": "Clone Graph",
+    "link": "[https://leetcode.com/problems/clone-graph](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/clone-graph)",
+    "pattern": "Graph",
+    "subPattern": "Deep Copy / Hashing",
+    "difficulty": "Medium",
+    "coreIdea": "Use a hash map to map original nodes to their copies during DFS",
+    "complexity": "O(V+E) | O(V)",
+    "frequency": 86
+  },
+  {
+    "problem": "Design HashMap",
+    "link": "[https://leetcode.com/problems/design-hashmap](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/design-hashmap)",
+    "pattern": "Design",
+    "subPattern": "Chaining / Modulo",
+    "difficulty": "Easy",
+    "coreIdea": "Use a list of buckets with modulo indexing to handle collisions",
+    "complexity": "O(1) avg | O(n)",
+    "frequency": 86
+  },
+  {
+    "problem": "Alien Dictionary",
+    "link": "[https://leetcode.com/problems/alien-dictionary](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/alien-dictionary)",
+    "pattern": "Graph",
+    "subPattern": "Topological Sort",
+    "difficulty": "Hard",
+    "coreIdea": "Build dependency graph from word pairs and find valid ordering",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 86
+  },
+  {
+    "problem": "Two Sum II - Input Array Is Sorted",
+    "link": "[https://leetcode.com/problems/two-sum-ii-input-array-is-sorted](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/two-sum-ii-input-array-is-sorted)",
+    "pattern": "Two Pointers",
+    "subPattern": "Opposite ends",
+    "difficulty": "Medium",
+    "coreIdea": "Move pointers based on sum magnitude relative to target",
+    "complexity": "O(n) | O(1)",
+    "frequency": 86
+  },
+  {
+    "problem": "Multiply Strings",
+    "link": "[https://leetcode.com/problems/multiply-strings](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/multiply-strings)",
+    "pattern": "Math",
+    "subPattern": "Digit Simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Manually compute products for each digit and handle carries",
+    "complexity": "O(M*N) | O(M+N)",
+    "frequency": 86
+  },
+  {
+    "problem": "Wildcard Matching",
+    "link": "[https://leetcode.com/problems/wildcard-matching](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/wildcard-matching)",
+    "pattern": "DP",
+    "subPattern": "String matching",
+    "difficulty": "Hard",
+    "coreIdea": "Handle '?' and '*' by comparing characters or skipping with '*' wildcard",
+    "complexity": "O(M*N) | O(M*N)",
+    "frequency": 86
+  },
+  {
+    "problem": "Minimum Path Sum",
+    "link": "[https://leetcode.com/problems/minimum-path-sum](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/minimum-path-sum)",
+    "pattern": "DP",
+    "subPattern": "2D Grid DP",
+    "difficulty": "Medium",
+    "coreIdea": "Accumulate min path value by checking top and left neighbors",
+    "complexity": "O(M*N) | O(1)",
+    "frequency": 84
+  },
+  {
+    "problem": "Cheapest Flights Within K Stops",
+    "link": "[https://leetcode.com/problems/cheapest-flights-within-k-stops](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/cheapest-flights-within-k-stops)",
+    "pattern": "Graph",
+    "subPattern": "Bellman-Ford / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Update min costs over k+1 iterations of edge relaxation",
+    "complexity": "O(K*E) | O(V)",
+    "frequency": 84
+  },
+  {
+    "problem": "Bus Routes",
+    "link": "[https://leetcode.com/problems/bus-routes](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/bus-routes)",
+    "pattern": "Graph",
+    "subPattern": "BFS BFS / Layered",
+    "difficulty": "Hard",
+    "coreIdea": "Treat buses as nodes and transfer stops as edges to find shortest path",
+    "complexity": "O(N^2 + \\u03a3routes) | O(N^2)",
+    "frequency": 84
+  },
+  {
+    "problem": "Non-overlapping Intervals",
+    "link": "[https://leetcode.com/problems/non-overlapping-intervals](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/non-overlapping-intervals)",
+    "pattern": "Greedy",
+    "subPattern": "Interval Sorting",
+    "difficulty": "Medium",
+    "coreIdea": "Sort by end times to fit the maximum number of non-overlapping intervals",
+    "complexity": "O(n log n) | O(1)",
+    "frequency": 82
+  },
+  {
+    "problem": "Add Binary",
+    "link": "[https://leetcode.com/problems/add-binary](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/add-binary)",
+    "pattern": "Math",
+    "subPattern": "Bitwise Simulation",
+    "difficulty": "Easy",
+    "coreIdea": "Iterate backwards from both strings while managing a carry bit",
+    "complexity": "O(max(n, m)) | O(max(n, m))",
+    "frequency": 82
+  },
+  {
+    "problem": "Valid Parenthesis String",
+    "link": "[https://leetcode.com/problems/valid-parenthesis-string](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/valid-parenthesis-string)",
+    "pattern": "Greedy",
+    "subPattern": "Balanced Count Range",
+    "difficulty": "Medium",
+    "coreIdea": "Track the minimum and maximum possible number of open parentheses",
+    "complexity": "O(n) | O(1)",
+    "frequency": 82
+  },
+  {
+    "problem": "Sort Characters By Frequency",
+    "link": "[https://leetcode.com/problems/sort-characters-by-frequency](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/sort-characters-by-frequency)",
+    "pattern": "Heap",
+    "subPattern": "Frequency Sorting",
+    "difficulty": "Medium",
+    "coreIdea": "Count frequencies and use a heap or bucket sort to rebuild the string",
+    "complexity": "O(n log k) | O(n)",
+    "frequency": 82
+  },
+  {
+    "problem": "Binary Tree Zigzag Level Order Traversal",
+    "link": "[https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal)",
+    "pattern": "Tree",
+    "subPattern": "BFS Deque",
+    "difficulty": "Medium",
+    "coreIdea": "Use a deque to alternate insertion order for each tree level",
+    "complexity": "O(n) | O(n)",
+    "frequency": 82
+  },
+  {
+    "problem": "Plus One",
+    "link": "[https://leetcode.com/problems/plus-one](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/plus-one)",
+    "pattern": "Math",
+    "subPattern": "Array Manipulation",
+    "difficulty": "Easy",
+    "coreIdea": "Traverse from the end, incrementing and handling carry specifically for '9's",
+    "complexity": "O(n) | O(n)",
+    "frequency": 82
+  },
+  {
+    "problem": "Single Number",
+    "link": "[https://leetcode.com/problems/single-number](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/single-number)",
+    "pattern": "Bit Manipulation",
+    "subPattern": "XOR Cancellation",
+    "difficulty": "Easy",
+    "coreIdea": "XOR all elements together; identical pairs cancel out to zero",
+    "complexity": "O(n) | O(1)",
+    "frequency": 82
+  },
+  {
+    "problem": "Reverse String",
+    "link": "[https://leetcode.com/problems/reverse-string](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/reverse-string)",
+    "pattern": "Two Pointers",
+    "subPattern": "Swapping",
+    "difficulty": "Easy",
+    "coreIdea": "Swap characters at the start and end pointers moving inward",
+    "complexity": "O(n) | O(1)",
+    "frequency": 82
+  },
+  {
+    "problem": "Partition Equal Subset Sum",
+    "link": "[https://leetcode.com/problems/partition-equal-subset-sum](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/partition-equal-subset-sum)",
+    "pattern": "DP",
+    "subPattern": "0/1 Knapsack",
+    "difficulty": "Medium",
+    "coreIdea": "Determine if a subset exists that sums to exactly half of the total sum",
+    "complexity": "O(n * sum) | O(sum)",
+    "frequency": 80
+  },
+  {
+    "problem": "Binary Tree Level Order Traversal",
+    "link": "[https://leetcode.com/problems/binary-tree-level-order-traversal](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/binary-tree-level-order-traversal)",
+    "pattern": "Tree",
+    "subPattern": "BFS Queue",
+    "difficulty": "Medium",
+    "coreIdea": "Use a queue to process all nodes level by level",
+    "complexity": "O(n) | O(n)",
+    "frequency": 80
+  },
+  {
+    "problem": "Count Primes",
+    "link": "[https://leetcode.com/problems/count-primes](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/count-primes)",
+    "pattern": "Math",
+    "subPattern": "Sieve of Eratosthenes",
+    "difficulty": "Medium",
+    "coreIdea": "Efficiently mark multiples of primes as non-prime",
+    "complexity": "O(n log log n) | O(n)",
+    "frequency": 80
+  },
+  {
+    "problem": "Shortest Path in Binary Matrix",
+    "link": "[https://leetcode.com/problems/shortest-path-in-binary-matrix](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/shortest-path-in-binary-matrix)",
+    "pattern": "Graph",
+    "subPattern": "BFS Grid",
+    "difficulty": "Medium",
+    "coreIdea": "Perform BFS to find the shortest clear path to the target cell",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 78
+  },
+  {
+    "problem": "K Closest Points to Origin",
+    "link": "[https://leetcode.com/problems/k-closest-points-to-origin](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/k-closest-points-to-origin)",
+    "pattern": "Heap",
+    "subPattern": "Max Heap",
+    "difficulty": "Medium",
+    "coreIdea": "Maintain a max-heap of size k to keep the points with smallest distances",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 78
+  },
+  {
+    "problem": "Shortest Bridge",
+    "link": "[https://leetcode.com/problems/shortest-bridge](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/shortest-bridge)",
+    "pattern": "Graph",
+    "subPattern": "DFS + BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Identify first island with DFS, then expand with BFS to find the second",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 78
+  },
+  {
+    "problem": "Can Place Flowers",
+    "link": "[https://leetcode.com/problems/can-place-flowers](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/can-place-flowers)",
+    "pattern": "Greedy",
+    "subPattern": "Boundary Check",
+    "difficulty": "Easy",
+    "coreIdea": "Check current and adjacent plots to see if a flower can be placed",
+    "complexity": "O(n) | O(1)",
+    "frequency": 78
+  },
+  {
+    "problem": "Restore IP Addresses",
+    "link": "[https://leetcode.com/problems/restore-ip-addresses](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/restore-ip-addresses)",
+    "pattern": "Backtracking",
+    "subPattern": "Partitioning",
+    "difficulty": "Medium",
+    "coreIdea": "Recursively split string into four segments valid for IP addressing",
+    "complexity": "O(3^4) | O(1)",
+    "frequency": 78
+  },
+  {
+    "problem": "Add Strings",
+    "link": "[https://leetcode.com/problems/add-strings](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/add-strings)",
+    "pattern": "Math",
+    "subPattern": "Digit Simulation",
+    "difficulty": "Easy",
+    "coreIdea": "Simulate manual addition digit-by-digit from the end of strings",
+    "complexity": "O(max(n, m)) | O(max(n, m))",
+    "frequency": 78
+  },
+  {
+    "problem": "Next Greater Element II",
+    "link": "[https://leetcode.com/problems/next-greater-element-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/next-greater-element-ii)",
+    "pattern": "Stack",
+    "subPattern": "Circular Monotonic Stack",
+    "difficulty": "Medium",
+    "coreIdea": "Simulate a circular array by iterating through the array twice with a stack",
+    "complexity": "O(n) | O(n)",
+    "frequency": 78
+  },
+  {
+    "problem": "Find Pivot Index",
+    "link": "[https://leetcode.com/problems/find-pivot-index](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/find-pivot-index)",
+    "pattern": "Array",
+    "subPattern": "Prefix Sum",
+    "difficulty": "Easy",
+    "coreIdea": "Check if left sum equals (total sum - left sum - current value)",
+    "complexity": "O(n) | O(1)",
+    "frequency": 78
+  },
+  {
+    "problem": "Contains Duplicate II",
+    "link": "[https://leetcode.com/problems/contains-duplicate-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/contains-duplicate-ii)",
+    "pattern": "Hashing",
+    "subPattern": "Sliding Window Map",
+    "difficulty": "Easy",
+    "coreIdea": "Track the last seen index of each element in a hash map",
+    "complexity": "O(n) | O(n)",
+    "frequency": 78
+  },
+  {
+    "problem": "Flatten Nested List Iterator",
+    "link": "[https://leetcode.com/problems/flatten-nested-list-iterator](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/flatten-nested-list-iterator)",
+    "pattern": "Design",
+    "subPattern": "Stack Unfolding",
+    "difficulty": "Medium",
+    "coreIdea": "Use a stack to lazily flatten the nested structure as we iterate",
+    "complexity": "O(n) | O(n)",
+    "frequency": 78
+  },
+  {
+    "problem": "Search a 2D Matrix II",
+    "link": "[https://leetcode.com/problems/search-a-2d-matrix-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/search-a-2d-matrix-ii)",
+    "pattern": "Binary Search",
+    "subPattern": "Corner Pivot",
+    "difficulty": "Medium",
+    "coreIdea": "Start from top-right corner and move left or down to find the target",
+    "complexity": "O(m + n) | O(1)",
+    "frequency": 76
+  },
+  {
+    "problem": "Binary Tree Right Side View",
+    "link": "[https://leetcode.com/problems/binary-tree-right-side-view](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/binary-tree-right-side-view)",
+    "pattern": "Tree",
+    "subPattern": "BFS/DFS Level Last",
+    "difficulty": "Medium",
+    "coreIdea": "Collect the last node encountered at each level of the tree",
+    "complexity": "O(n) | O(h)",
+    "frequency": 76
+  },
+  {
+    "problem": "Longest String Chain",
+    "link": "[https://leetcode.com/problems/longest-string-chain](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/longest-string-chain)",
+    "pattern": "DP",
+    "subPattern": "Word Building Hashing",
+    "difficulty": "Medium",
+    "coreIdea": "Sort words and use a map to build chains by removing one char at a time",
+    "complexity": "O(n log n + n * L^2) | O(n * L)",
+    "frequency": 76
+  },
+  {
+    "problem": "Longest Increasing Path in a Matrix",
+    "link": "[https://leetcode.com/problems/longest-increasing-path-in-a-matrix](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/longest-increasing-path-in-a-matrix)",
+    "pattern": "Graph",
+    "subPattern": "DFS + Memoization",
+    "difficulty": "Hard",
+    "coreIdea": "Explore all paths with DFS while memoizing results for each cell",
+    "complexity": "O(M*N) | O(M*N)",
+    "frequency": 76
+  },
+  {
+    "problem": "Search Insert Position",
+    "link": "[https://leetcode.com/problems/search-insert-position](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/search-insert-position)",
+    "pattern": "Binary Search",
+    "subPattern": "Target Placement",
+    "difficulty": "Easy",
+    "coreIdea": "Standard binary search returning the low pointer for insertion",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 76
+  },
+  {
+    "problem": "Max Consecutive Ones",
+    "link": "[https://leetcode.com/problems/max-consecutive-ones](https://leetcode.com/problems/max-consecutive-ones)",
+    "pattern": "Array",
+    "subPattern": "Counter",
+    "difficulty": "Easy",
+    "coreIdea": "Maintain a counter that resets to zero whenever a '0' is encountered",
+    "complexity": "O(n) | O(1)",
+    "frequency": 76
+  },
+  {
+    "problem": "Middle of the Linked List",
+    "link": "[https://leetcode.com/problems/middle-of-the-linked-list](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/middle-of-the-linked-list)",
+    "pattern": "Two Pointers",
+    "subPattern": "Fast & Slow Pointers",
+    "difficulty": "Easy",
+    "coreIdea": "A fast pointer twice as fast as the slow one reaches end when slow is at middle",
+    "complexity": "O(n) | O(1)",
+    "frequency": 76
+  },
+  {
+    "problem": "Max Points on a Line",
+    "link": "[https://leetcode.com/problems/max-points-on-a-line](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/max-points-on-a-line)",
+    "pattern": "Hashing",
+    "subPattern": "Slope Tracking",
+    "difficulty": "Hard",
+    "coreIdea": "For each point, calculate slopes with other points and store counts in a map",
+    "complexity": "O(n^2) | O(n)",
+    "frequency": 76
+  },
+  {
+    "problem": "Number of Visible People in a Queue",
+    "link": "[https://leetcode.com/problems/number-of-visible-people-in-a-queue](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/number-of-visible-people-in-a-queue)",
+    "pattern": "Stack",
+    "subPattern": "Monotonic Stack",
+    "difficulty": "Hard",
+    "coreIdea": "Use a monotonic decreasing stack from right to left to count visible neighbors",
+    "complexity": "O(n) | O(n)",
+    "frequency": 76
+  },
+  {
+    "problem": "Minimum Size Subarray Sum",
+    "link": "[https://leetcode.com/problems/minimum-size-subarray-sum](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/minimum-size-subarray-sum)",
+    "pattern": "Sliding Window",
+    "subPattern": "Variable Window",
+    "difficulty": "Medium",
+    "coreIdea": "Expand window until sum >= target, then shrink to find minimum size",
+    "complexity": "O(n) | O(1)",
+    "frequency": 76
+  },
+  {
+    "problem": "Swap Nodes in Pairs",
+    "link": "[https://leetcode.com/problems/swap-nodes-in-pairs](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/swap-nodes-in-pairs)",
+    "pattern": "Linked List",
+    "subPattern": "Pointer Manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Iteratively or recursively re-link pairs of nodes",
+    "complexity": "O(n) | O(1)",
+    "frequency": 74
+  },
+  {
+    "problem": "Binary Tree Cameras",
+    "link": "[https://leetcode.com/problems/binary-tree-cameras](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/binary-tree-cameras)",
+    "pattern": "Tree",
+    "subPattern": "Greedy DFS",
+    "difficulty": "Hard",
+    "coreIdea": "Post-order DFS to place cameras greedily from bottom up",
+    "complexity": "O(n) | O(h)",
+    "frequency": 74
+  },
+  {
+    "problem": "Intersection of Two Linked Lists",
+    "link": "[https://leetcode.com/problems/intersection-of-two-linked-lists](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/intersection-of-two-linked-lists)",
+    "pattern": "Linked List",
+    "subPattern": "Offset Comparison",
+    "difficulty": "Easy",
+    "coreIdea": "Iterate through both lists; switch to the other head upon reaching end to meet at intersection",
+    "complexity": "O(n + m) | O(1)",
+    "frequency": 74
+  },
+  {
+    "problem": "Maximum Depth of Binary Tree",
+    "link": "[https://leetcode.com/problems/maximum-depth-of-binary-tree](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/maximum-depth-of-binary-tree)",
+    "pattern": "Tree",
+    "subPattern": "DFS Recursion",
+    "difficulty": "Easy",
+    "coreIdea": "Max depth is 1 + max of left and right child depths",
+    "complexity": "O(n) | O(h)",
+    "frequency": 74
+  },
+  {
+    "problem": "Design Tic-Tac-Toe",
+    "link": "[https://leetcode.com/problems/design-tic-tac-toe](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/design-tic-tac-toe)",
+    "pattern": "Design",
+    "subPattern": "Row/Col Sums",
+    "difficulty": "Medium",
+    "coreIdea": "Track sums for rows, cols, and diagonals to detect winners in O(1)",
+    "complexity": "O(1) | O(n)",
+    "frequency": 74
+  },
+  {
+    "problem": "Distinct Subsequences",
+    "link": "[https://leetcode.com/problems/distinct-subsequences](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/distinct-subsequences)",
+    "pattern": "DP",
+    "subPattern": "2D Pattern Matching",
+    "difficulty": "Hard",
+    "coreIdea": "Match target characters with source characters using 2D DP",
+    "complexity": "O(M*N) | O(M*N)",
+    "frequency": 74
+  },
+  {
+    "problem": "Design Add and Search Words Data Structure",
+    "link": "[https://leetcode.com/problems/design-add-and-search-words-data-structure](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/design-add-and-search-words-data-structure)",
+    "pattern": "Design",
+    "subPattern": "Trie with Wildcards",
+    "difficulty": "Medium",
+    "coreIdea": "Implement a Trie and use DFS to handle '.' wildcard searches",
+    "complexity": "O(L) | O(Nodes)",
+    "frequency": 72
+  },
+  {
+    "problem": "Trapping Rain Water II",
+    "link": "[https://leetcode.com/problems/trapping-rain-water-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/trapping-rain-water-ii)",
+    "pattern": "Heap",
+    "subPattern": "Priority Queue BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Use a min-heap to explore inward from the boundaries of the grid",
+    "complexity": "O(M*N log(M*N)) | O(M*N)",
+    "frequency": 72
+  },
+  {
+    "problem": "Find the Length of the Longest Common Prefix",
+    "link": "[https://leetcode.com/problems/find-the-length-of-the-longest-common-prefix](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/find-the-length-of-the-longest-common-prefix)",
+    "pattern": "Trie",
+    "subPattern": "Prefix Mapping",
+    "difficulty": "Medium",
+    "coreIdea": "Build a Trie for one set and find the deepest match for strings in the second set",
+    "complexity": "O(n*L) | O(n*L)",
+    "frequency": 72
+  },
+  {
+    "problem": "Binary Search",
+    "link": "[https://leetcode.com/problems/binary-search](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/binary-search)",
+    "pattern": "Binary Search",
+    "subPattern": "Standard Search",
+    "difficulty": "Easy",
+    "coreIdea": "Divide and conquer the sorted search range by half",
+    "complexity": "O(log n) | O(1)",
+    "frequency": 72
+  },
+  {
+    "problem": "Design Twitter",
+    "link": "[https://leetcode.com/problems/design-twitter](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/design-twitter)",
+    "pattern": "Design",
+    "subPattern": "Heap k-merge",
+    "difficulty": "Medium",
+    "coreIdea": "Merge most recent posts from followed users using a heap",
+    "complexity": "O(log n) | O(User*Tweet)",
+    "frequency": 72
+  },
+  {
+    "problem": "Find the Celebrity",
+    "link": "[https://leetcode.com/problems/find-the-celebrity](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/find-the-celebrity)",
+    "pattern": "Greedy",
+    "subPattern": "Logical Elimination",
+    "difficulty": "Medium",
+    "coreIdea": "Eliminate non-celebrities in one pass, then verify the last candidate",
+    "complexity": "O(n) | O(1)",
+    "frequency": 72
+  },
+  {
+    "problem": "Maximum Product of Three Numbers",
+    "link": "[https://leetcode.com/problems/maximum-product-of-three-numbers](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/maximum-product-of-three-numbers)",
+    "pattern": "Greedy",
+    "subPattern": "Sorting logic",
+    "difficulty": "Easy",
+    "coreIdea": "Compare product of three largest with product of two smallest and the largest",
+    "complexity": "O(n) | O(1)",
+    "frequency": 70
+  },
+  {
+    "problem": "Word Break II",
+    "link": "[https://leetcode.com/problems/word-break-ii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/word-break-ii)",
+    "pattern": "Backtracking",
+    "subPattern": "DFS + Memoization",
+    "difficulty": "Hard",
+    "coreIdea": "Split string and recursively solve for remaining parts using memoization",
+    "complexity": "O(2^n) | O(2^n)",
+    "frequency": 70
+  },
+  {
+    "problem": "Maximum Number of Events That Can Be Attended",
+    "link": "[https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended)",
+    "pattern": "Greedy",
+    "subPattern": "Heap Priority Queue",
+    "difficulty": "Medium",
+    "coreIdea": "Attend events that end earliest on each available day using a heap",
+    "complexity": "O(n log n) | O(n)",
+    "frequency": 70
+  },
+  {
+    "problem": "Boats to Save People",
+    "link": "[https://leetcode.com/problems/boats-to-save-people](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/boats-to-save-people)",
+    "pattern": "Two Pointers",
+    "subPattern": "Greedy Matching",
+    "difficulty": "Medium",
+    "coreIdea": "Pair heaviest and lightest people together if their sum is within limit",
+    "complexity": "O(n log n) | O(1)",
+    "frequency": 70
+  },
+  {
+    "problem": "Interval List Intersections",
+    "link": "[https://leetcode.com/problems/interval-list-intersections](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/interval-list-intersections)",
+    "pattern": "Two Pointers",
+    "subPattern": "Range Comparison",
+    "difficulty": "Medium",
+    "coreIdea": "Find the intersection of two current intervals and advance pointers accordingly",
+    "complexity": "O(n + m) | O(n + m)",
+    "frequency": 70
+  },
+  {
+    "problem": "Best Time to Buy and Sell Stock III",
+    "link": "[https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii)",
+    "pattern": "DP",
+    "subPattern": "State Machine",
+    "difficulty": "Hard",
+    "coreIdea": "Track max profits for up to two transactions via distinct states",
+    "complexity": "O(n) | O(1)",
+    "frequency": 70
+  },
+  {
+    "problem": "Game of Life",
+    "link": "[https://leetcode.com/problems/game-of-life](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/game-of-life)",
+    "pattern": "Matrix",
+    "subPattern": "State Encoding",
+    "difficulty": "Medium",
+    "coreIdea": "Encode current and next state in bits to update the board in-place",
+    "complexity": "O(M*N) | O(1)",
+    "frequency": 70
+  },
+  {
+    "problem": "Longest Palindromic Subsequence",
+    "link": "[https://leetcode.com/problems/longest-palindromic-subsequence](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/longest-palindromic-subsequence)",
+    "pattern": "DP",
+    "subPattern": "2D String DP",
+    "difficulty": "Medium",
+    "coreIdea": "LCS of string and its reverse provides the longest palindromic subsequence",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 70
+  },
+  {
+    "problem": "Design Memory Allocator",
+    "link": "[https://leetcode.com/problems/design-memory-allocator](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/design-memory-allocator)",
+    "pattern": "Design",
+    "subPattern": "Array Simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Find contiguous empty blocks in an array for allocation and clear by ID",
+    "complexity": "O(n) | O(n)",
+    "frequency": 70
+  },
+  {
+    "problem": "Flood Fill",
+    "link": "[https://leetcode.com/problems/flood-fill](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/flood-fill)",
+    "pattern": "Graph",
+    "subPattern": "DFS/BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursively color all connected pixels of the same starting color",
+    "complexity": "O(M*N) | O(M*N)",
+    "frequency": 68
+  },
+  {
+    "problem": "Minimum Remove to Make Valid Parentheses",
+    "link": "[https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses)",
+    "pattern": "Stack",
+    "subPattern": "Balanced Removal",
+    "difficulty": "Medium",
+    "coreIdea": "Use a stack to find indices of invalid parentheses to remove them",
+    "complexity": "O(n) | O(n)",
+    "frequency": 68
+  },
+  {
+    "problem": "Count and Say",
+    "link": "[https://leetcode.com/problems/count-and-say](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/count-and-say)",
+    "pattern": "String",
+    "subPattern": "Run-length Encoding",
+    "difficulty": "Medium",
+    "coreIdea": "Iteratively describe the frequency of digit groups in the previous term",
+    "complexity": "O(2^n) | O(2^n)",
+    "frequency": 68
+  },
+  {
+    "problem": "Diagonal Traverse",
+    "link": "[https://leetcode.com/problems/diagonal-traverse](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/diagonal-traverse)",
+    "pattern": "Matrix",
+    "subPattern": "Simulation",
+    "difficulty": "Medium",
+    "coreIdea": "Traverse the matrix in zigzag diagonal paths by toggling direction",
+    "complexity": "O(M*N) | O(1)",
+    "frequency": 68
+  },
+  {
+    "problem": "Design In-Memory File System",
+    "link": "[https://leetcode.com/problems/design-in-memory-file-system](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/design-in-memory-file-system)",
+    "pattern": "Design",
+    "subPattern": "Trie Hierarchy",
+    "difficulty": "Hard",
+    "coreIdea": "Represent the file system as a trie-like structure of nodes",
+    "complexity": "O(PathLength) | O(Nodes)",
+    "frequency": 68
+  },
+  {
+    "problem": "Contiguous Array",
+    "link": "[https://leetcode.com/problems/contiguous-array](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/contiguous-array)",
+    "pattern": "Hashing",
+    "subPattern": "Prefix Sum Map",
+    "difficulty": "Medium",
+    "coreIdea": "Map running relative counts of 0s and 1s to their first seen index",
+    "complexity": "O(n) | O(n)",
+    "frequency": 68
+  },
+  {
+    "problem": "Merge Strings Alternately",
+    "link": "[https://leetcode.com/problems/merge-strings-alternately](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/merge-strings-alternately)",
+    "pattern": "String",
+    "subPattern": "Two Pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Iterate through both strings and pick characters alternately",
+    "complexity": "O(n + m) | O(n + m)",
+    "frequency": 68
+  },
+  {
+    "problem": "01 Matrix",
+    "link": "[https://leetcode.com/problems/01-matrix](https://www.google.com/url?sa=E&source=gmail&q=https://leetcode.com/problems/01-matrix)",
+    "pattern": "Graph",
+    "subPattern": "Multi-source BFS",
+    "difficulty": "Medium",
+    "coreIdea": "BFS from all '0's simultaneously to find minimum distance for each '1'",
+    "complexity": "O(M*N) | O(M*N)",
+    "frequency": 68
+  },
+  {
+    "problem": "All Nodes Distance K in Binary Tree",
+    "link": "https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 68
+  },
+  {
+    "problem": "Burst Balloons",
+    "link": "https://leetcode.com/problems/burst-balloons",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Hard",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 68
+  },
+  {
+    "problem": "Rotate List",
+    "link": "https://leetcode.com/problems/rotate-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 68
+  },
+  {
+    "problem": "Boundary of Binary Tree",
+    "link": "https://leetcode.com/problems/boundary-of-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 68
+  },
+  {
+    "problem": "Basic Calculator III",
+    "link": "https://leetcode.com/problems/basic-calculator-iii",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Hard",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 66
+  },
+  {
+    "problem": "Kth Smallest Element in a BST",
+    "link": "https://leetcode.com/problems/kth-smallest-element-in-a-bst",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 66
+  },
+  {
+    "problem": "Triangle",
+    "link": "https://leetcode.com/problems/triangle",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 66
+  },
+  {
+    "problem": "Vertical Order Traversal of a Binary Tree",
+    "link": "https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 66
+  },
+  {
+    "problem": "Find All Duplicates in an Array",
+    "link": "https://leetcode.com/problems/find-all-duplicates-in-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 66
+  },
+  {
+    "problem": "Rising Temperature",
+    "link": "https://leetcode.com/problems/rising-temperature",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 66
+  },
+  {
+    "problem": "Design Browser History",
+    "link": "https://leetcode.com/problems/design-browser-history",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Medium",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 66
+  },
+  {
+    "problem": "Construct Binary Tree from Preorder and Inorder Traversal",
+    "link": "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 64
+  },
+  {
+    "problem": "Rotate String",
+    "link": "https://leetcode.com/problems/rotate-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 64
+  },
+  {
+    "problem": "Shortest Path in a Grid with Obstacles Elimination",
+    "link": "https://leetcode.com/problems/shortest-path-in-a-grid-with-obstacles-elimination",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 64
+  },
+  {
+    "problem": "3Sum Closest",
+    "link": "https://leetcode.com/problems/3sum-closest",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 64
+  },
+  {
+    "problem": "Find the Smallest Divisor Given a Threshold",
+    "link": "https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold",
+    "pattern": "Binary Search",
+    "subPattern": "Monotonic predicate",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search on answer or index space.",
+    "complexity": "O(n log U) | O(1)",
+    "frequency": 64
+  },
+  {
+    "problem": "Remove Element",
+    "link": "https://leetcode.com/problems/remove-element",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 64
+  },
+  {
+    "problem": "Remove Duplicates from Sorted Array II",
+    "link": "https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 64
+  },
+  {
+    "problem": "Interleaving String",
+    "link": "https://leetcode.com/problems/interleaving-string",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 64
+  },
+  {
+    "problem": "Reverse Vowels of a String",
+    "link": "https://leetcode.com/problems/reverse-vowels-of-a-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 64
+  },
+  {
+    "problem": "Ransom Note",
+    "link": "https://leetcode.com/problems/ransom-note",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 62
+  },
+  {
+    "problem": "Design Search Autocomplete System",
+    "link": "https://leetcode.com/problems/design-search-autocomplete-system",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Hard",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 62
+  },
+  {
+    "problem": "Backspace String Compare",
+    "link": "https://leetcode.com/problems/backspace-string-compare",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 62
+  },
+  {
+    "problem": "Shortest Distance from All Buildings",
+    "link": "https://leetcode.com/problems/shortest-distance-from-all-buildings",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 62
+  },
+  {
+    "problem": "Furthest Building You Can Reach",
+    "link": "https://leetcode.com/problems/furthest-building-you-can-reach",
+    "pattern": "Heap",
+    "subPattern": "Priority queue",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to maintain order statistics or greedy choice.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 62
+  },
+  {
+    "problem": "Unique Paths II",
+    "link": "https://leetcode.com/problems/unique-paths-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 62
+  },
+  {
+    "problem": "Create Hello World Function",
+    "link": "https://leetcode.com/problems/create-hello-world-function",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 62
+  },
+  {
+    "problem": "Word Ladder II",
+    "link": "https://leetcode.com/problems/word-ladder-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 62
+  },
+  {
+    "problem": "Symmetric Tree",
+    "link": "https://leetcode.com/problems/symmetric-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 62
+  },
+  {
+    "problem": "The Skyline Problem",
+    "link": "https://leetcode.com/problems/the-skyline-problem",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 62
+  },
+  {
+    "problem": "Delete Node in a BST",
+    "link": "https://leetcode.com/problems/delete-node-in-a-bst",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 62
+  },
+  {
+    "problem": "Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit",
+    "link": "https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 62
+  },
+  {
+    "problem": "Exclusive Time of Functions",
+    "link": "https://leetcode.com/problems/exclusive-time-of-functions",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 62
+  },
+  {
+    "problem": "Surrounded Regions",
+    "link": "https://leetcode.com/problems/surrounded-regions",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 62
+  },
+  {
+    "problem": "Power of Two",
+    "link": "https://leetcode.com/problems/power-of-two",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Easy",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 60
+  },
+  {
+    "problem": "Balanced Binary Tree",
+    "link": "https://leetcode.com/problems/balanced-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 60
+  },
+  {
+    "problem": "Dot Product of Two Sparse Vectors",
+    "link": "https://leetcode.com/problems/dot-product-of-two-sparse-vectors",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 60
+  },
+  {
+    "problem": "Heaters",
+    "link": "https://leetcode.com/problems/heaters",
+    "pattern": "Heap",
+    "subPattern": "Priority queue",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to maintain order statistics or greedy choice.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 60
+  },
+  {
+    "problem": "Reverse Bits",
+    "link": "https://leetcode.com/problems/reverse-bits",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Easy",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 60
+  },
+  {
+    "problem": "Last Stone Weight",
+    "link": "https://leetcode.com/problems/last-stone-weight",
+    "pattern": "Heap",
+    "subPattern": "Priority queue",
+    "difficulty": "Easy",
+    "coreIdea": "Push/pop to maintain order statistics or greedy choice.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 60
+  },
+  {
+    "problem": "Same Tree",
+    "link": "https://leetcode.com/problems/same-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 60
+  },
+  {
+    "problem": "Linked List Cycle II",
+    "link": "https://leetcode.com/problems/linked-list-cycle-ii",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 60
+  },
+  {
+    "problem": "Coin Change II",
+    "link": "https://leetcode.com/problems/coin-change-ii",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 60
+  },
+  {
+    "problem": "Number of Distinct Islands",
+    "link": "https://leetcode.com/problems/number-of-distinct-islands",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 60
+  },
+  {
+    "problem": "Employees Earning More Than Their Managers",
+    "link": "https://leetcode.com/problems/employees-earning-more-than-their-managers",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 60
+  },
+  {
+    "problem": "Remove Duplicate Letters",
+    "link": "https://leetcode.com/problems/remove-duplicate-letters",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 60
+  },
+  {
+    "problem": "Frequency of the Most Frequent Element",
+    "link": "https://leetcode.com/problems/frequency-of-the-most-frequent-element",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 58
+  },
+  {
+    "problem": "House Robber III",
+    "link": "https://leetcode.com/problems/house-robber-iii",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 58
+  },
+  {
+    "problem": "Perfect Squares",
+    "link": "https://leetcode.com/problems/perfect-squares",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 58
+  },
+  {
+    "problem": "Car Pooling",
+    "link": "https://leetcode.com/problems/car-pooling",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 58
+  },
+  {
+    "problem": "Next Greater Element III",
+    "link": "https://leetcode.com/problems/next-greater-element-iii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 58
+  },
+  {
+    "problem": "Insert Delete GetRandom O(1) - Duplicates allowed",
+    "link": "https://leetcode.com/problems/insert-delete-getrandom-o1-duplicates-allowed",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 58
+  },
+  {
+    "problem": "Odd Even Linked List",
+    "link": "https://leetcode.com/problems/odd-even-linked-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 58
+  },
+  {
+    "problem": "Maximum Average Subarray I",
+    "link": "https://leetcode.com/problems/maximum-average-subarray-i",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 58
+  },
+  {
+    "problem": "Sum of Subarray Minimums",
+    "link": "https://leetcode.com/problems/sum-of-subarray-minimums",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 58
+  },
+  {
+    "problem": "Optimal Account Balancing",
+    "link": "https://leetcode.com/problems/optimal-account-balancing",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 58
+  },
+  {
+    "problem": "Maximum Points You Can Obtain from Cards",
+    "link": "https://leetcode.com/problems/maximum-points-you-can-obtain-from-cards",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 58
+  },
+  {
+    "problem": "Add Digits",
+    "link": "https://leetcode.com/problems/add-digits",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 58
+  },
+  {
+    "problem": "Kth Missing Positive Number",
+    "link": "https://leetcode.com/problems/kth-missing-positive-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 58
+  },
+  {
+    "problem": "Check if Array Is Sorted and Rotated",
+    "link": "https://leetcode.com/problems/check-if-array-is-sorted-and-rotated",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 58
+  },
+  {
+    "problem": "Pacific Atlantic Water Flow",
+    "link": "https://leetcode.com/problems/pacific-atlantic-water-flow",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 58
+  },
+  {
+    "problem": "Degree of an Array",
+    "link": "https://leetcode.com/problems/degree-of-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 56
+  },
+  {
+    "problem": "Majority Element II",
+    "link": "https://leetcode.com/problems/majority-element-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 56
+  },
+  {
+    "problem": "Validate IP Address",
+    "link": "https://leetcode.com/problems/validate-ip-address",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 56
+  },
+  {
+    "problem": "Number of Provinces",
+    "link": "https://leetcode.com/problems/number-of-provinces",
+    "pattern": "Union Find",
+    "subPattern": "Components",
+    "difficulty": "Medium",
+    "coreIdea": "Union connected elements; count or query components.",
+    "complexity": "O(α(n)) | O(n)",
+    "frequency": 56
+  },
+  {
+    "problem": "Number of Recent Calls",
+    "link": "https://leetcode.com/problems/number-of-recent-calls",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 56
+  },
+  {
+    "problem": "Walls and Gates",
+    "link": "https://leetcode.com/problems/walls-and-gates",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 56
+  },
+  {
+    "problem": "Unique Binary Search Trees",
+    "link": "https://leetcode.com/problems/unique-binary-search-trees",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 56
+  },
+  {
+    "problem": "Target Sum",
+    "link": "https://leetcode.com/problems/target-sum",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 56
+  },
+  {
+    "problem": "Car Fleet",
+    "link": "https://leetcode.com/problems/car-fleet",
+    "pattern": "Greedy",
+    "subPattern": "Sort + scan",
+    "difficulty": "Medium",
+    "coreIdea": "Sort by end/start then iterate with local optimal choice.",
+    "complexity": "O(n log n) | O(1)",
+    "frequency": 56
+  },
+  {
+    "problem": "Article Views I",
+    "link": "https://leetcode.com/problems/article-views-i",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 56
+  },
+  {
+    "problem": "Design Authentication Manager",
+    "link": "https://leetcode.com/problems/design-authentication-manager",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Medium",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 56
+  },
+  {
+    "problem": "Design a Text Editor",
+    "link": "https://leetcode.com/problems/design-a-text-editor",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Hard",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 56
+  },
+  {
+    "problem": "Remove Duplicates from Sorted List",
+    "link": "https://leetcode.com/problems/remove-duplicates-from-sorted-list",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 56
+  },
+  {
+    "problem": "Meeting Rooms III",
+    "link": "https://leetcode.com/problems/meeting-rooms-iii",
+    "pattern": "Greedy",
+    "subPattern": "Sort + scan",
+    "difficulty": "Hard",
+    "coreIdea": "Sort by end/start then iterate with local optimal choice.",
+    "complexity": "O(n log n) | O(1)",
+    "frequency": 56
+  },
+  {
+    "problem": "Subarray Sums Divisible by K",
+    "link": "https://leetcode.com/problems/subarray-sums-divisible-by-k",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 56
+  },
+  {
+    "problem": "Department Top Three Salaries",
+    "link": "https://leetcode.com/problems/department-top-three-salaries",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Hard",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 54
+  },
+  {
+    "problem": "Path Sum II",
+    "link": "https://leetcode.com/problems/path-sum-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Concatenation of Array",
+    "link": "https://leetcode.com/problems/concatenation-of-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Summary Ranges",
+    "link": "https://leetcode.com/problems/summary-ranges",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Find All Numbers Disappeared in an Array",
+    "link": "https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Maximum Frequency Stack",
+    "link": "https://leetcode.com/problems/maximum-frequency-stack",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Hard",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Meeting Rooms",
+    "link": "https://leetcode.com/problems/meeting-rooms",
+    "pattern": "Greedy",
+    "subPattern": "Sort + scan",
+    "difficulty": "Easy",
+    "coreIdea": "Sort by end/start then iterate with local optimal choice.",
+    "complexity": "O(n log n) | O(1)",
+    "frequency": 54
+  },
+  {
+    "problem": "Divide Two Integers",
+    "link": "https://leetcode.com/problems/divide-two-integers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Russian Doll Envelopes",
+    "link": "https://leetcode.com/problems/russian-doll-envelopes",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Hard",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 54
+  },
+  {
+    "problem": "Bulb Switcher",
+    "link": "https://leetcode.com/problems/bulb-switcher",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Sort List",
+    "link": "https://leetcode.com/problems/sort-list",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "H-Index",
+    "link": "https://leetcode.com/problems/h-index",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Recyclable and Low Fat Products",
+    "link": "https://leetcode.com/problems/recyclable-and-low-fat-products",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 54
+  },
+  {
+    "problem": "Sliding Window Median",
+    "link": "https://leetcode.com/problems/sliding-window-median",
+    "pattern": "Heap",
+    "subPattern": "Priority queue",
+    "difficulty": "Hard",
+    "coreIdea": "Push/pop to maintain order statistics or greedy choice.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 54
+  },
+  {
+    "problem": "Reaching Points",
+    "link": "https://leetcode.com/problems/reaching-points",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Length of Last Word",
+    "link": "https://leetcode.com/problems/length-of-last-word",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Sort an Array",
+    "link": "https://leetcode.com/problems/sort-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 54
+  },
+  {
+    "problem": "Longest Substring with At Most K Distinct Characters",
+    "link": "https://leetcode.com/problems/longest-substring-with-at-most-k-distinct-characters",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 52
+  },
+  {
+    "problem": "Add Two Integers",
+    "link": "https://leetcode.com/problems/add-two-integers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 52
+  },
+  {
+    "problem": "Encode and Decode Strings",
+    "link": "https://leetcode.com/problems/encode-and-decode-strings",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 52
+  },
+  {
+    "problem": "Keys and Rooms",
+    "link": "https://leetcode.com/problems/keys-and-rooms",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 52
+  },
+  {
+    "problem": "Sort Array by Increasing Frequency",
+    "link": "https://leetcode.com/problems/sort-array-by-increasing-frequency",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 52
+  },
+  {
+    "problem": "Kth Smallest Element in a Sorted Matrix",
+    "link": "https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 52
+  },
+  {
+    "problem": "Number of Good Pairs",
+    "link": "https://leetcode.com/problems/number-of-good-pairs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 52
+  },
+  {
+    "problem": "Convert Sorted Array to Binary Search Tree",
+    "link": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 52
+  },
+  {
+    "problem": "IPO",
+    "link": "https://leetcode.com/problems/ipo",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 52
+  },
+  {
+    "problem": "Find the Winner of the Circular Game",
+    "link": "https://leetcode.com/problems/find-the-winner-of-the-circular-game",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 52
+  },
+  {
+    "problem": "Invert Binary Tree",
+    "link": "https://leetcode.com/problems/invert-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 52
+  },
+  {
+    "problem": "Amount of Time for Binary Tree to Be Infected",
+    "link": "https://leetcode.com/problems/amount-of-time-for-binary-tree-to-be-infected",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 52
+  },
+  {
+    "problem": "Most Stones Removed with Same Row or Column",
+    "link": "https://leetcode.com/problems/most-stones-removed-with-same-row-or-column",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Medium",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 52
+  },
+  {
+    "problem": "Palindrome Partitioning II",
+    "link": "https://leetcode.com/problems/palindrome-partitioning-ii",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Hard",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 52
+  },
+  {
+    "problem": "Combine Two Tables",
+    "link": "https://leetcode.com/problems/combine-two-tables",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 52
+  },
+  {
+    "problem": "Delete Node in a Linked List",
+    "link": "https://leetcode.com/problems/delete-node-in-a-linked-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 52
+  },
+  {
+    "problem": "Design File System",
+    "link": "https://leetcode.com/problems/design-file-system",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Medium",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 52
+  },
+  {
+    "problem": "Employee Free Time",
+    "link": "https://leetcode.com/problems/employee-free-time",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Hard",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 50
+  },
+  {
+    "problem": "Minimum Knight Moves",
+    "link": "https://leetcode.com/problems/minimum-knight-moves",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "Subsets II",
+    "link": "https://leetcode.com/problems/subsets-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "Fraction to Recurring Decimal",
+    "link": "https://leetcode.com/problems/fraction-to-recurring-decimal",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "Remove Linked List Elements",
+    "link": "https://leetcode.com/problems/remove-linked-list-elements",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Easy",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 50
+  },
+  {
+    "problem": "Path Sum III",
+    "link": "https://leetcode.com/problems/path-sum-iii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "Two Sum IV - Input is a BST",
+    "link": "https://leetcode.com/problems/two-sum-iv-input-is-a-bst",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 50
+  },
+  {
+    "problem": "Fruit Into Baskets",
+    "link": "https://leetcode.com/problems/fruit-into-baskets",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 50
+  },
+  {
+    "problem": "Valid Triangle Number",
+    "link": "https://leetcode.com/problems/valid-triangle-number",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 50
+  },
+  {
+    "problem": "Shortest Palindrome",
+    "link": "https://leetcode.com/problems/shortest-palindrome",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 50
+  },
+  {
+    "problem": "132 Pattern",
+    "link": "https://leetcode.com/problems/132-pattern",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "All O`one Data Structure",
+    "link": "https://leetcode.com/problems/all-oone-data-structure",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Hard",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "Remove All Occurrences of a Substring",
+    "link": "https://leetcode.com/problems/remove-all-occurrences-of-a-substring",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 50
+  },
+  {
+    "problem": "Find All Possible Recipes from Given Supplies",
+    "link": "https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Medium",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 50
+  },
+  {
+    "problem": "The Maze",
+    "link": "https://leetcode.com/problems/the-maze",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Medium",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 50
+  },
+  {
+    "problem": "Populating Next Right Pointers in Each Node",
+    "link": "https://leetcode.com/problems/populating-next-right-pointers-in-each-node",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "Kth Largest Element in a Stream",
+    "link": "https://leetcode.com/problems/kth-largest-element-in-a-stream",
+    "pattern": "Heap",
+    "subPattern": "Priority queue",
+    "difficulty": "Easy",
+    "coreIdea": "Push/pop to maintain order statistics or greedy choice.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 50
+  },
+  {
+    "problem": "Delete and Earn",
+    "link": "https://leetcode.com/problems/delete-and-earn",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "Minimum Number of Swaps to Make the String Balanced",
+    "link": "https://leetcode.com/problems/minimum-number-of-swaps-to-make-the-string-balanced",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 50
+  },
+  {
+    "problem": "Permutations II",
+    "link": "https://leetcode.com/problems/permutations-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "Collect Coins in a Tree",
+    "link": "https://leetcode.com/problems/collect-coins-in-a-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 50
+  },
+  {
+    "problem": "Implement Queue using Stacks",
+    "link": "https://leetcode.com/problems/implement-queue-using-stacks",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Easy",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 50
+  },
+  {
+    "problem": "Network Delay Time",
+    "link": "https://leetcode.com/problems/network-delay-time",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Medium",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 50
+  },
+  {
+    "problem": "Palindrome Partitioning",
+    "link": "https://leetcode.com/problems/palindrome-partitioning",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 50
+  },
+  {
+    "problem": "Minimum Cost For Tickets",
+    "link": "https://leetcode.com/problems/minimum-cost-for-tickets",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 48
+  },
+  {
+    "problem": "Battleships in a Board",
+    "link": "https://leetcode.com/problems/battleships-in-a-board",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 48
+  },
+  {
+    "problem": "Minimum Absolute Difference Between Elements With Constraint",
+    "link": "https://leetcode.com/problems/minimum-absolute-difference-between-elements-with-constraint",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 48
+  },
+  {
+    "problem": "Smallest Range Covering Elements from K Lists",
+    "link": "https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists",
+    "pattern": "Heap",
+    "subPattern": "Priority queue",
+    "difficulty": "Hard",
+    "coreIdea": "Push/pop to maintain order statistics or greedy choice.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 48
+  },
+  {
+    "problem": "Minimum Edge Reversals So Every Node Is Reachable",
+    "link": "https://leetcode.com/problems/minimum-edge-reversals-so-every-node-is-reachable",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 48
+  },
+  {
+    "problem": "Minimum Number of Steps to Make Two Strings Anagram",
+    "link": "https://leetcode.com/problems/minimum-number-of-steps-to-make-two-strings-anagram",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 48
+  },
+  {
+    "problem": "Number of 1 Bits",
+    "link": "https://leetcode.com/problems/number-of-1-bits",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Easy",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 48
+  },
+  {
+    "problem": "Nth Highest Salary",
+    "link": "https://leetcode.com/problems/nth-highest-salary",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Medium",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 48
+  },
+  {
+    "problem": "Snakes and Ladders",
+    "link": "https://leetcode.com/problems/snakes-and-ladders",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Medium",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 48
+  },
+  {
+    "problem": "Running Sum of 1d Array",
+    "link": "https://leetcode.com/problems/running-sum-of-1d-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 48
+  },
+  {
+    "problem": "Convert Binary Number in a Linked List to Integer",
+    "link": "https://leetcode.com/problems/convert-binary-number-in-a-linked-list-to-integer",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Easy",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 48
+  },
+  {
+    "problem": "Average Time of Process per Machine",
+    "link": "https://leetcode.com/problems/average-time-of-process-per-machine",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 48
+  },
+  {
+    "problem": "Increasing Triplet Subsequence",
+    "link": "https://leetcode.com/problems/increasing-triplet-subsequence",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 48
+  },
+  {
+    "problem": "Partition Array Into Two Arrays to Minimize Sum Difference",
+    "link": "https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Hard",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 48
+  },
+  {
+    "problem": "Online Stock Span",
+    "link": "https://leetcode.com/problems/online-stock-span",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 48
+  },
+  {
+    "problem": "Lowest Common Ancestor of a Binary Search Tree",
+    "link": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree",
+    "pattern": "Tree",
+    "subPattern": "LCA / ancestor",
+    "difficulty": "Medium",
+    "coreIdea": "Traverse or walk up parent pointers to find common ancestor.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 48
+  },
+  {
+    "problem": "Longest Mountain in Array",
+    "link": "https://leetcode.com/problems/longest-mountain-in-array",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 48
+  },
+  {
+    "problem": "Excel Sheet Column Title",
+    "link": "https://leetcode.com/problems/excel-sheet-column-title",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 48
+  },
+  {
+    "problem": "Candy Crush",
+    "link": "https://leetcode.com/problems/candy-crush",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 48
+  },
+  {
+    "problem": "Find K Pairs with Smallest Sums",
+    "link": "https://leetcode.com/problems/find-k-pairs-with-smallest-sums",
+    "pattern": "Heap",
+    "subPattern": "Priority queue",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to maintain order statistics or greedy choice.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 48
+  },
+  {
+    "problem": "Path Sum",
+    "link": "https://leetcode.com/problems/path-sum",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 48
+  },
+  {
+    "problem": "Remove Invalid Parentheses",
+    "link": "https://leetcode.com/problems/remove-invalid-parentheses",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Hard",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 48
+  },
+  {
+    "problem": "Maximum Width of Binary Tree",
+    "link": "https://leetcode.com/problems/maximum-width-of-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 48
+  },
+  {
+    "problem": "Swim in Rising Water",
+    "link": "https://leetcode.com/problems/swim-in-rising-water",
+    "pattern": "Heap",
+    "subPattern": "Priority queue",
+    "difficulty": "Hard",
+    "coreIdea": "Push/pop to maintain order statistics or greedy choice.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 48
+  },
+  {
+    "problem": "Possible Bipartition",
+    "link": "https://leetcode.com/problems/possible-bipartition",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Medium",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 46
+  },
+  {
+    "problem": "Spiral Matrix II",
+    "link": "https://leetcode.com/problems/spiral-matrix-ii",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 46
+  },
+  {
+    "problem": "Lowest Common Ancestor of a Binary Tree III",
+    "link": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii",
+    "pattern": "Tree",
+    "subPattern": "LCA / ancestor",
+    "difficulty": "Medium",
+    "coreIdea": "Traverse or walk up parent pointers to find common ancestor.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 46
+  },
+  {
+    "problem": "Excel Sheet Column Number",
+    "link": "https://leetcode.com/problems/excel-sheet-column-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Reverse Pairs",
+    "link": "https://leetcode.com/problems/reverse-pairs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Max Stack",
+    "link": "https://leetcode.com/problems/max-stack",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Hard",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Longest Substring with At Least K Repeating Characters",
+    "link": "https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 46
+  },
+  {
+    "problem": "Minimum Number of Days to Make m Bouquets",
+    "link": "https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets",
+    "pattern": "Binary Search",
+    "subPattern": "Monotonic predicate",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search on answer or index space.",
+    "complexity": "O(n log U) | O(1)",
+    "frequency": 46
+  },
+  {
+    "problem": "Replace Employee ID With The Unique Identifier",
+    "link": "https://leetcode.com/problems/replace-employee-id-with-the-unique-identifier",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 46
+  },
+  {
+    "problem": "N-Queens II",
+    "link": "https://leetcode.com/problems/n-queens-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Assign Cookies",
+    "link": "https://leetcode.com/problems/assign-cookies",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Exchange Seats",
+    "link": "https://leetcode.com/problems/exchange-seats",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Medium",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 46
+  },
+  {
+    "problem": "Employee Bonus",
+    "link": "https://leetcode.com/problems/employee-bonus",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 46
+  },
+  {
+    "problem": "Minimum Deletions to Make String Balanced",
+    "link": "https://leetcode.com/problems/minimum-deletions-to-make-string-balanced",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 46
+  },
+  {
+    "problem": "Minimum Add to Make Parentheses Valid",
+    "link": "https://leetcode.com/problems/minimum-add-to-make-parentheses-valid",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Count Palindromic Subsequences",
+    "link": "https://leetcode.com/problems/count-palindromic-subsequences",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Guess the Word",
+    "link": "https://leetcode.com/problems/guess-the-word",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Moving Average from Data Stream",
+    "link": "https://leetcode.com/problems/moving-average-from-data-stream",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Compare Version Numbers",
+    "link": "https://leetcode.com/problems/compare-version-numbers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Is Graph Bipartite?",
+    "link": "https://leetcode.com/problems/is-graph-bipartite",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Pairs of Songs With Total Durations Divisible by 60",
+    "link": "https://leetcode.com/problems/pairs-of-songs-with-total-durations-divisible-by-60",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Add Two Numbers II",
+    "link": "https://leetcode.com/problems/add-two-numbers-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Binary Tree Vertical Order Traversal",
+    "link": "https://leetcode.com/problems/binary-tree-vertical-order-traversal",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 46
+  },
+  {
+    "problem": "Implement Stack using Queues",
+    "link": "https://leetcode.com/problems/implement-stack-using-queues",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Easy",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Intersection of Two Arrays II",
+    "link": "https://leetcode.com/problems/intersection-of-two-arrays-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 46
+  },
+  {
+    "problem": "Word Pattern",
+    "link": "https://leetcode.com/problems/word-pattern",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 44
+  },
+  {
+    "problem": "Design A Leaderboard",
+    "link": "https://leetcode.com/problems/design-a-leaderboard",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Medium",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 44
+  },
+  {
+    "problem": "Minimum Increment to Make Array Unique",
+    "link": "https://leetcode.com/problems/minimum-increment-to-make-array-unique",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 44
+  },
+  {
+    "problem": "Perfect Number",
+    "link": "https://leetcode.com/problems/perfect-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 44
+  },
+  {
+    "problem": "Range Sum Query - Immutable",
+    "link": "https://leetcode.com/problems/range-sum-query-immutable",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 44
+  },
+  {
+    "problem": "Continuous Subarray Sum",
+    "link": "https://leetcode.com/problems/continuous-subarray-sum",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 44
+  },
+  {
+    "problem": "Contains Duplicate III",
+    "link": "https://leetcode.com/problems/contains-duplicate-iii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 44
+  },
+  {
+    "problem": "Peak Index in a Mountain Array",
+    "link": "https://leetcode.com/problems/peak-index-in-a-mountain-array",
+    "pattern": "Binary Search",
+    "subPattern": "Monotonic predicate",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search on answer or index space.",
+    "complexity": "O(n log U) | O(1)",
+    "frequency": 44
+  },
+  {
+    "problem": "Delete Duplicate Emails",
+    "link": "https://leetcode.com/problems/delete-duplicate-emails",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 44
+  },
+  {
+    "problem": "Merge In Between Linked Lists",
+    "link": "https://leetcode.com/problems/merge-in-between-linked-lists",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 44
+  },
+  {
+    "problem": "Minimum Number of Taps to Open to Water a Garden",
+    "link": "https://leetcode.com/problems/minimum-number-of-taps-to-open-to-water-a-garden",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 44
+  },
+  {
+    "problem": "Count Vowel Substrings of a String",
+    "link": "https://leetcode.com/problems/count-vowel-substrings-of-a-string",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 44
+  },
+  {
+    "problem": "Average Selling Price",
+    "link": "https://leetcode.com/problems/average-selling-price",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 44
+  },
+  {
+    "problem": "Number of Operations to Make Network Connected",
+    "link": "https://leetcode.com/problems/number-of-operations-to-make-network-connected",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Medium",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 44
+  },
+  {
+    "problem": "Managers with at Least 5 Direct Reports",
+    "link": "https://leetcode.com/problems/managers-with-at-least-5-direct-reports",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Medium",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 44
+  },
+  {
+    "problem": "Balance a Binary Search Tree",
+    "link": "https://leetcode.com/problems/balance-a-binary-search-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 44
+  },
+  {
+    "problem": "Minimum Number of Refueling Stops",
+    "link": "https://leetcode.com/problems/minimum-number-of-refueling-stops",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 44
+  },
+  {
+    "problem": "Critical Connections in a Network",
+    "link": "https://leetcode.com/problems/critical-connections-in-a-network",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Hard",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 44
+  },
+  {
+    "problem": "My Calendar I",
+    "link": "https://leetcode.com/problems/my-calendar-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 44
+  },
+  {
+    "problem": "Big Countries",
+    "link": "https://leetcode.com/problems/big-countries",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 44
+  },
+  {
+    "problem": "Special Binary String",
+    "link": "https://leetcode.com/problems/special-binary-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 44
+  },
+  {
+    "problem": "Maximum Width Ramp",
+    "link": "https://leetcode.com/problems/maximum-width-ramp",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "First Bad Version",
+    "link": "https://leetcode.com/problems/first-bad-version",
+    "pattern": "Binary Search",
+    "subPattern": "Monotonic predicate",
+    "difficulty": "Easy",
+    "coreIdea": "Binary search on answer or index space.",
+    "complexity": "O(n log U) | O(1)",
+    "frequency": 42
+  },
+  {
+    "problem": "Monotonic Array",
+    "link": "https://leetcode.com/problems/monotonic-array",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Easy",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Substring with Concatenation of All Words",
+    "link": "https://leetcode.com/problems/substring-with-concatenation-of-all-words",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 42
+  },
+  {
+    "problem": "Remove Duplicates from Sorted List II",
+    "link": "https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Search in Rotated Sorted Array II",
+    "link": "https://leetcode.com/problems/search-in-rotated-sorted-array-ii",
+    "pattern": "Binary Search",
+    "subPattern": "Monotonic predicate",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search on answer or index space.",
+    "complexity": "O(n log U) | O(1)",
+    "frequency": 42
+  },
+  {
+    "problem": "Path With Minimum Effort",
+    "link": "https://leetcode.com/problems/path-with-minimum-effort",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Best Time to Buy and Sell Stock with Cooldown",
+    "link": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Flatten a Multilevel Doubly Linked List",
+    "link": "https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 42
+  },
+  {
+    "problem": "To Be Or Not To Be",
+    "link": "https://leetcode.com/problems/to-be-or-not-to-be",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Minimum Time Difference",
+    "link": "https://leetcode.com/problems/minimum-time-difference",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Design Excel Sum Formula",
+    "link": "https://leetcode.com/problems/design-excel-sum-formula",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Hard",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Divide an Array Into Subarrays With Minimum Cost I",
+    "link": "https://leetcode.com/problems/divide-an-array-into-subarrays-with-minimum-cost-i",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 42
+  },
+  {
+    "problem": "Paint House",
+    "link": "https://leetcode.com/problems/paint-house",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "The kth Factor of n",
+    "link": "https://leetcode.com/problems/the-kth-factor-of-n",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Restore the Array From Adjacent Pairs",
+    "link": "https://leetcode.com/problems/restore-the-array-from-adjacent-pairs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Sparse Matrix Multiplication",
+    "link": "https://leetcode.com/problems/sparse-matrix-multiplication",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 42
+  },
+  {
+    "problem": "Number of Divisible Triplet Sums",
+    "link": "https://leetcode.com/problems/number-of-divisible-triplet-sums",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Customer Who Visited but Did Not Make Any Transactions",
+    "link": "https://leetcode.com/problems/customer-who-visited-but-did-not-make-any-transactions",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 42
+  },
+  {
+    "problem": "Minimum Number of Arrows to Burst Balloons",
+    "link": "https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 42
+  },
+  {
+    "problem": "Permutation Sequence",
+    "link": "https://leetcode.com/problems/permutation-sequence",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Web Crawler Multithreaded",
+    "link": "https://leetcode.com/problems/web-crawler-multithreaded",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Immediate Food Delivery II",
+    "link": "https://leetcode.com/problems/immediate-food-delivery-ii",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Medium",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 42
+  },
+  {
+    "problem": "Minimum Operations to Reduce an Integer to 0",
+    "link": "https://leetcode.com/problems/minimum-operations-to-reduce-an-integer-to-0",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 42
+  },
+  {
+    "problem": "Duplicate Emails",
+    "link": "https://leetcode.com/problems/duplicate-emails",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 40
+  },
+  {
+    "problem": "Count Subarrays With Fixed Bounds",
+    "link": "https://leetcode.com/problems/count-subarrays-with-fixed-bounds",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 40
+  },
+  {
+    "problem": "Robot Bounded In Circle",
+    "link": "https://leetcode.com/problems/robot-bounded-in-circle",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Convert Sorted List to Binary Search Tree",
+    "link": "https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 40
+  },
+  {
+    "problem": "Longest Palindrome",
+    "link": "https://leetcode.com/problems/longest-palindrome",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 40
+  },
+  {
+    "problem": "Range Sum Query 2D - Immutable",
+    "link": "https://leetcode.com/problems/range-sum-query-2d-immutable",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Longest Subarray of 1's After Deleting One Element",
+    "link": "https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 40
+  },
+  {
+    "problem": "Nested List Weight Sum",
+    "link": "https://leetcode.com/problems/nested-list-weight-sum",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Binary Search Tree Iterator",
+    "link": "https://leetcode.com/problems/binary-search-tree-iterator",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 40
+  },
+  {
+    "problem": "Maximum Sum Circular Subarray",
+    "link": "https://leetcode.com/problems/maximum-sum-circular-subarray",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 40
+  },
+  {
+    "problem": "Maximum Sum of Distinct Subarrays With Length K",
+    "link": "https://leetcode.com/problems/maximum-sum-of-distinct-subarrays-with-length-k",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 40
+  },
+  {
+    "problem": "Final Prices With a Special Discount in a Shop",
+    "link": "https://leetcode.com/problems/final-prices-with-a-special-discount-in-a-shop",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Third Maximum Number",
+    "link": "https://leetcode.com/problems/third-maximum-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Greatest Common Divisor of Strings",
+    "link": "https://leetcode.com/problems/greatest-common-divisor-of-strings",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 40
+  },
+  {
+    "problem": "Shortest Unsorted Continuous Subarray",
+    "link": "https://leetcode.com/problems/shortest-unsorted-continuous-subarray",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 40
+  },
+  {
+    "problem": "Flatten Binary Tree to Linked List",
+    "link": "https://leetcode.com/problems/flatten-binary-tree-to-linked-list",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 40
+  },
+  {
+    "problem": "Partition Labels",
+    "link": "https://leetcode.com/problems/partition-labels",
+    "pattern": "Greedy",
+    "subPattern": "Sort + scan",
+    "difficulty": "Medium",
+    "coreIdea": "Sort by end/start then iterate with local optimal choice.",
+    "complexity": "O(n log n) | O(1)",
+    "frequency": 40
+  },
+  {
+    "problem": "Maximize Distance to Closest Person",
+    "link": "https://leetcode.com/problems/maximize-distance-to-closest-person",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Sum of Two Integers",
+    "link": "https://leetcode.com/problems/sum-of-two-integers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Shortest Subarray to be Removed to Make Array Sorted",
+    "link": "https://leetcode.com/problems/shortest-subarray-to-be-removed-to-make-array-sorted",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 40
+  },
+  {
+    "problem": "Product of the Last K Numbers",
+    "link": "https://leetcode.com/problems/product-of-the-last-k-numbers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Graph Valid Tree",
+    "link": "https://leetcode.com/problems/graph-valid-tree",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Medium",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 40
+  },
+  {
+    "problem": "Unique Paths III",
+    "link": "https://leetcode.com/problems/unique-paths-iii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Parallel Courses III",
+    "link": "https://leetcode.com/problems/parallel-courses-iii",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Hard",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 40
+  },
+  {
+    "problem": "Count Good Numbers",
+    "link": "https://leetcode.com/problems/count-good-numbers",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Medium",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 40
+  },
+  {
+    "problem": "Magnetic Force Between Two Balls",
+    "link": "https://leetcode.com/problems/magnetic-force-between-two-balls",
+    "pattern": "Binary Search",
+    "subPattern": "Monotonic predicate",
+    "difficulty": "Medium",
+    "coreIdea": "Binary search on answer or index space.",
+    "complexity": "O(n log U) | O(1)",
+    "frequency": 40
+  },
+  {
+    "problem": "Walking Robot Simulation",
+    "link": "https://leetcode.com/problems/walking-robot-simulation",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Monthly Transactions I",
+    "link": "https://leetcode.com/problems/monthly-transactions-i",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Medium",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 40
+  },
+  {
+    "problem": "Design Snake Game",
+    "link": "https://leetcode.com/problems/design-snake-game",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Medium",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Merge Two Binary Trees",
+    "link": "https://leetcode.com/problems/merge-two-binary-trees",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 40
+  },
+  {
+    "problem": "Rotating the Box",
+    "link": "https://leetcode.com/problems/rotating-the-box",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 40
+  },
+  {
+    "problem": "Valid Word Abbreviation",
+    "link": "https://leetcode.com/problems/valid-word-abbreviation",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Dungeon Game",
+    "link": "https://leetcode.com/problems/dungeon-game",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Hard",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 40
+  },
+  {
+    "problem": "Longest Arithmetic Subsequence",
+    "link": "https://leetcode.com/problems/longest-arithmetic-subsequence",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 40
+  },
+  {
+    "problem": "Rank Scores",
+    "link": "https://leetcode.com/problems/rank-scores",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Medium",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 40
+  },
+  {
+    "problem": "Custom Sort String",
+    "link": "https://leetcode.com/problems/custom-sort-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 40
+  },
+  {
+    "problem": "Best Time to Buy and Sell Stock IV",
+    "link": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Minimize Malware Spread",
+    "link": "https://leetcode.com/problems/minimize-malware-spread",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Rearrange Array Elements by Sign",
+    "link": "https://leetcode.com/problems/rearrange-array-elements-by-sign",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Rearranging Fruits",
+    "link": "https://leetcode.com/problems/rearranging-fruits",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Verifying an Alien Dictionary",
+    "link": "https://leetcode.com/problems/verifying-an-alien-dictionary",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Island Perimeter",
+    "link": "https://leetcode.com/problems/island-perimeter",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Easy",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 40
+  },
+  {
+    "problem": "Cherry Pickup",
+    "link": "https://leetcode.com/problems/cherry-pickup",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Hard",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 40
+  },
+  {
+    "problem": "Remove Boxes",
+    "link": "https://leetcode.com/problems/remove-boxes",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Hard",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 40
+  },
+  {
+    "problem": "Design a Stack With Increment Operation",
+    "link": "https://leetcode.com/problems/design-a-stack-with-increment-operation",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Medium",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Strange Printer",
+    "link": "https://leetcode.com/problems/strange-printer",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Hard",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 40
+  },
+  {
+    "problem": "Sort Array By Parity",
+    "link": "https://leetcode.com/problems/sort-array-by-parity",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 40
+  },
+  {
+    "problem": "Analyze User Website Visit Pattern",
+    "link": "https://leetcode.com/problems/analyze-user-website-visit-pattern",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Minesweeper",
+    "link": "https://leetcode.com/problems/minesweeper",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Consecutive Numbers",
+    "link": "https://leetcode.com/problems/consecutive-numbers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Binary Tree Paths",
+    "link": "https://leetcode.com/problems/binary-tree-paths",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 38
+  },
+  {
+    "problem": "Sum of Subarray Ranges",
+    "link": "https://leetcode.com/problems/sum-of-subarray-ranges",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 38
+  },
+  {
+    "problem": "Water Bottles",
+    "link": "https://leetcode.com/problems/water-bottles",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "User Activity for the Past 30 Days I",
+    "link": "https://leetcode.com/problems/user-activity-for-the-past-30-days-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Number of Matching Subsequences",
+    "link": "https://leetcode.com/problems/number-of-matching-subsequences",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Binary Subarrays With Sum",
+    "link": "https://leetcode.com/problems/binary-subarrays-with-sum",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 38
+  },
+  {
+    "problem": "Shortest Word Distance",
+    "link": "https://leetcode.com/problems/shortest-word-distance",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Count Number of Nice Subarrays",
+    "link": "https://leetcode.com/problems/count-number-of-nice-subarrays",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 38
+  },
+  {
+    "problem": "Number of Connected Components in an Undirected Graph",
+    "link": "https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph",
+    "pattern": "Union Find",
+    "subPattern": "Components",
+    "difficulty": "Medium",
+    "coreIdea": "Union connected elements; count or query components.",
+    "complexity": "O(α(n)) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Count Vowel Strings in Ranges",
+    "link": "https://leetcode.com/problems/count-vowel-strings-in-ranges",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 38
+  },
+  {
+    "problem": "Binary Tree Inorder Traversal",
+    "link": "https://leetcode.com/problems/binary-tree-inorder-traversal",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 38
+  },
+  {
+    "problem": "Jewels and Stones",
+    "link": "https://leetcode.com/problems/jewels-and-stones",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Robot Room Cleaner",
+    "link": "https://leetcode.com/problems/robot-room-cleaner",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Students and Examinations",
+    "link": "https://leetcode.com/problems/students-and-examinations",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Min Cost to Connect All Points",
+    "link": "https://leetcode.com/problems/min-cost-to-connect-all-points",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Count Elements With Maximum Frequency",
+    "link": "https://leetcode.com/problems/count-elements-with-maximum-frequency",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Invalid Tweets",
+    "link": "https://leetcode.com/problems/invalid-tweets",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Invalid Transactions",
+    "link": "https://leetcode.com/problems/invalid-transactions",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Medium",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 38
+  },
+  {
+    "problem": "Find Missing and Repeated Values",
+    "link": "https://leetcode.com/problems/find-missing-and-repeated-values",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Maximum Population Year",
+    "link": "https://leetcode.com/problems/maximum-population-year",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Number of Ways to Paint N × 3 Grid",
+    "link": "https://leetcode.com/problems/number-of-ways-to-paint-n-3-grid",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Hard",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 38
+  },
+  {
+    "problem": "Subtree of Another Tree",
+    "link": "https://leetcode.com/problems/subtree-of-another-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 38
+  },
+  {
+    "problem": "Partition to K Equal Sum Subsets",
+    "link": "https://leetcode.com/problems/partition-to-k-equal-sum-subsets",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Department Highest Salary",
+    "link": "https://leetcode.com/problems/department-highest-salary",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Medium",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 38
+  },
+  {
+    "problem": "Recover Binary Search Tree",
+    "link": "https://leetcode.com/problems/recover-binary-search-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 38
+  },
+  {
+    "problem": "Number of Atoms",
+    "link": "https://leetcode.com/problems/number-of-atoms",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "Expression Add Operators",
+    "link": "https://leetcode.com/problems/expression-add-operators",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 38
+  },
+  {
+    "problem": "House Robber IV",
+    "link": "https://leetcode.com/problems/house-robber-iv",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 36
+  },
+  {
+    "problem": "Transpose Matrix",
+    "link": "https://leetcode.com/problems/transpose-matrix",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Easy",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 36
+  },
+  {
+    "problem": "Time Needed to Buy Tickets",
+    "link": "https://leetcode.com/problems/time-needed-to-buy-tickets",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Ugly Number",
+    "link": "https://leetcode.com/problems/ugly-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Two Best Non-Overlapping Events",
+    "link": "https://leetcode.com/problems/two-best-non-overlapping-events",
+    "pattern": "Greedy",
+    "subPattern": "Sort + scan",
+    "difficulty": "Medium",
+    "coreIdea": "Sort by end/start then iterate with local optimal choice.",
+    "complexity": "O(n log n) | O(1)",
+    "frequency": 36
+  },
+  {
+    "problem": "Longest Happy String",
+    "link": "https://leetcode.com/problems/longest-happy-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 36
+  },
+  {
+    "problem": "Largest Divisible Subset",
+    "link": "https://leetcode.com/problems/largest-divisible-subset",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Encode and Decode TinyURL",
+    "link": "https://leetcode.com/problems/encode-and-decode-tinyurl",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Reverse String II",
+    "link": "https://leetcode.com/problems/reverse-string-ii",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 36
+  },
+  {
+    "problem": "Minimum Pair Removal to Sort Array I",
+    "link": "https://leetcode.com/problems/minimum-pair-removal-to-sort-array-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Maximum Performance of a Team",
+    "link": "https://leetcode.com/problems/maximum-performance-of-a-team",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Minimum Area Rectangle",
+    "link": "https://leetcode.com/problems/minimum-area-rectangle",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Single Number II",
+    "link": "https://leetcode.com/problems/single-number-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Shuffle the Array",
+    "link": "https://leetcode.com/problems/shuffle-the-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Count of Smaller Numbers After Self",
+    "link": "https://leetcode.com/problems/count-of-smaller-numbers-after-self",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Matchsticks to Square",
+    "link": "https://leetcode.com/problems/matchsticks-to-square",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Best Meeting Point",
+    "link": "https://leetcode.com/problems/best-meeting-point",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Minimum Falling Path Sum",
+    "link": "https://leetcode.com/problems/minimum-falling-path-sum",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Closest Binary Search Tree Value",
+    "link": "https://leetcode.com/problems/closest-binary-search-tree-value",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 36
+  },
+  {
+    "problem": "Set Mismatch",
+    "link": "https://leetcode.com/problems/set-mismatch",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "N-th Tribonacci Number",
+    "link": "https://leetcode.com/problems/n-th-tribonacci-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Best Time to Buy and Sell Stock with Transaction Fee",
+    "link": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Product Sales Analysis I",
+    "link": "https://leetcode.com/problems/product-sales-analysis-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Minimum Value to Get Positive Step by Step Sum",
+    "link": "https://leetcode.com/problems/minimum-value-to-get-positive-step-by-step-sum",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Number of Flowers in Full Bloom",
+    "link": "https://leetcode.com/problems/number-of-flowers-in-full-bloom",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Find Duplicate File in System",
+    "link": "https://leetcode.com/problems/find-duplicate-file-in-system",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Rabbits in Forest",
+    "link": "https://leetcode.com/problems/rabbits-in-forest",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Medium",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 36
+  },
+  {
+    "problem": "Minimum Operations to Write the Letter Y on a Grid",
+    "link": "https://leetcode.com/problems/minimum-operations-to-write-the-letter-y-on-a-grid",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 36
+  },
+  {
+    "problem": "Count the Number of Fair Pairs",
+    "link": "https://leetcode.com/problems/count-the-number-of-fair-pairs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Champagne Tower",
+    "link": "https://leetcode.com/problems/champagne-tower",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Arranging Coins",
+    "link": "https://leetcode.com/problems/arranging-coins",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Repeated Substring Pattern",
+    "link": "https://leetcode.com/problems/repeated-substring-pattern",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 36
+  },
+  {
+    "problem": "Repeated DNA Sequences",
+    "link": "https://leetcode.com/problems/repeated-dna-sequences",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Find the Difference",
+    "link": "https://leetcode.com/problems/find-the-difference",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Sum of Square Numbers",
+    "link": "https://leetcode.com/problems/sum-of-square-numbers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Remove Zero Sum Consecutive Nodes from Linked List",
+    "link": "https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 36
+  },
+  {
+    "problem": "Maximum Matrix Sum",
+    "link": "https://leetcode.com/problems/maximum-matrix-sum",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 36
+  },
+  {
+    "problem": "Minimum Swaps to Group All 1's Together II",
+    "link": "https://leetcode.com/problems/minimum-swaps-to-group-all-1s-together-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Find the Highest Altitude",
+    "link": "https://leetcode.com/problems/find-the-highest-altitude",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Number of Black Blocks",
+    "link": "https://leetcode.com/problems/number-of-black-blocks",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 36
+  },
+  {
+    "problem": "Customers Who Never Order",
+    "link": "https://leetcode.com/problems/customers-who-never-order",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 34
+  },
+  {
+    "problem": "Find the Closest Palindrome",
+    "link": "https://leetcode.com/problems/find-the-closest-palindrome",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 34
+  },
+  {
+    "problem": "Knight Dialer",
+    "link": "https://leetcode.com/problems/knight-dialer",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Divide Players Into Teams of Equal Skill",
+    "link": "https://leetcode.com/problems/divide-players-into-teams-of-equal-skill",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Nth Digit",
+    "link": "https://leetcode.com/problems/nth-digit",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Valid Number",
+    "link": "https://leetcode.com/problems/valid-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Arithmetic Slices",
+    "link": "https://leetcode.com/problems/arithmetic-slices",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Single-Threaded CPU",
+    "link": "https://leetcode.com/problems/single-threaded-cpu",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Number of Islands II",
+    "link": "https://leetcode.com/problems/number-of-islands-ii",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Hard",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 34
+  },
+  {
+    "problem": "Greatest Sum Divisible by Three",
+    "link": "https://leetcode.com/problems/greatest-sum-divisible-by-three",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "24 Game",
+    "link": "https://leetcode.com/problems/24-game",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Grumpy Bookstore Owner",
+    "link": "https://leetcode.com/problems/grumpy-bookstore-owner",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Check If Array Pairs Are Divisible by k",
+    "link": "https://leetcode.com/problems/check-if-array-pairs-are-divisible-by-k",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Reach a Number",
+    "link": "https://leetcode.com/problems/reach-a-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Find Customer Referee",
+    "link": "https://leetcode.com/problems/find-customer-referee",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Find Duplicate Subtrees",
+    "link": "https://leetcode.com/problems/find-duplicate-subtrees",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 34
+  },
+  {
+    "problem": "Find Eventual Safe States",
+    "link": "https://leetcode.com/problems/find-eventual-safe-states",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Find if Path Exists in Graph",
+    "link": "https://leetcode.com/problems/find-if-path-exists-in-graph",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Cinema Seat Allocation",
+    "link": "https://leetcode.com/problems/cinema-seat-allocation",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Find in Mountain Array",
+    "link": "https://leetcode.com/problems/find-in-mountain-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Combinations",
+    "link": "https://leetcode.com/problems/combinations",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Find Leaves of Binary Tree",
+    "link": "https://leetcode.com/problems/find-leaves-of-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 34
+  },
+  {
+    "problem": "Vowel Spellchecker",
+    "link": "https://leetcode.com/problems/vowel-spellchecker",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 34
+  },
+  {
+    "problem": "Number of Students Unable to Eat Lunch",
+    "link": "https://leetcode.com/problems/number-of-students-unable-to-eat-lunch",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Parallel Courses",
+    "link": "https://leetcode.com/problems/parallel-courses",
+    "pattern": "Graph",
+    "subPattern": "BFS / DFS / Union Find",
+    "difficulty": "Medium",
+    "coreIdea": "Model vertices and edges; traverse or merge components.",
+    "complexity": "O(V+E) | O(V+E)",
+    "frequency": 34
+  },
+  {
+    "problem": "Minimum Cost to Make at Least One Valid Path in a Grid",
+    "link": "https://leetcode.com/problems/minimum-cost-to-make-at-least-one-valid-path-in-a-grid",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Hard",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 34
+  },
+  {
+    "problem": "Minimum Cost to Cut a Stick",
+    "link": "https://leetcode.com/problems/minimum-cost-to-cut-a-stick",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Divisor Game",
+    "link": "https://leetcode.com/problems/divisor-game",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Maximum Nesting Depth of the Parentheses",
+    "link": "https://leetcode.com/problems/maximum-nesting-depth-of-the-parentheses",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Easy",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Longest Balanced Substring II",
+    "link": "https://leetcode.com/problems/longest-balanced-substring-ii",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 34
+  },
+  {
+    "problem": "Minimum Difficulty of a Job Schedule",
+    "link": "https://leetcode.com/problems/minimum-difficulty-of-a-job-schedule",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Meeting Scheduler",
+    "link": "https://leetcode.com/problems/meeting-scheduler",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Maximum Erasure Value",
+    "link": "https://leetcode.com/problems/maximum-erasure-value",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Frog Jump",
+    "link": "https://leetcode.com/problems/frog-jump",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Maximum Swap",
+    "link": "https://leetcode.com/problems/maximum-swap",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Two City Scheduling",
+    "link": "https://leetcode.com/problems/two-city-scheduling",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Stock Price Fluctuation",
+    "link": "https://leetcode.com/problems/stock-price-fluctuation",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Count Negative Numbers in a Sorted Matrix",
+    "link": "https://leetcode.com/problems/count-negative-numbers-in-a-sorted-matrix",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Easy",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 34
+  },
+  {
+    "problem": "Counting Bits",
+    "link": "https://leetcode.com/problems/counting-bits",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Easy",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 34
+  },
+  {
+    "problem": "Task Scheduler II",
+    "link": "https://leetcode.com/problems/task-scheduler-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 34
+  },
+  {
+    "problem": "Reverse Substrings Between Each Pair of Parentheses",
+    "link": "https://leetcode.com/problems/reverse-substrings-between-each-pair-of-parentheses",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 34
+  },
+  {
+    "problem": "How Many Numbers Are Smaller Than the Current Number",
+    "link": "https://leetcode.com/problems/how-many-numbers-are-smaller-than-the-current-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Maximum Running Time of N Computers",
+    "link": "https://leetcode.com/problems/maximum-running-time-of-n-computers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Cherry Pickup II",
+    "link": "https://leetcode.com/problems/cherry-pickup-ii",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Hard",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 32
+  },
+  {
+    "problem": "Step-By-Step Directions From a Binary Tree Node to Another",
+    "link": "https://leetcode.com/problems/step-by-step-directions-from-a-binary-tree-node-to-another",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 32
+  },
+  {
+    "problem": "Power of Four",
+    "link": "https://leetcode.com/problems/power-of-four",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Longest Duplicate Substring",
+    "link": "https://leetcode.com/problems/longest-duplicate-substring",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 32
+  },
+  {
+    "problem": "Count Square Submatrices with All Ones",
+    "link": "https://leetcode.com/problems/count-square-submatrices-with-all-ones",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Brick Wall",
+    "link": "https://leetcode.com/problems/brick-wall",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Determine if Two Strings Are Close",
+    "link": "https://leetcode.com/problems/determine-if-two-strings-are-close",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 32
+  },
+  {
+    "problem": "Pascal's Triangle II",
+    "link": "https://leetcode.com/problems/pascals-triangle-ii",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Easy",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 32
+  },
+  {
+    "problem": "Brightest Position on Street",
+    "link": "https://leetcode.com/problems/brightest-position-on-street",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 32
+  },
+  {
+    "problem": "Maximum Number of Events That Can Be Attended II",
+    "link": "https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Four Divisors",
+    "link": "https://leetcode.com/problems/four-divisors",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Remove Sub-Folders from the Filesystem",
+    "link": "https://leetcode.com/problems/remove-sub-folders-from-the-filesystem",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Max Number of K-Sum Pairs",
+    "link": "https://leetcode.com/problems/max-number-of-k-sum-pairs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Sum Root to Leaf Numbers",
+    "link": "https://leetcode.com/problems/sum-root-to-leaf-numbers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Can Make Arithmetic Progression From Sequence",
+    "link": "https://leetcode.com/problems/can-make-arithmetic-progression-from-sequence",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Maximize Greatness of an Array",
+    "link": "https://leetcode.com/problems/maximize-greatness-of-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Design Underground System",
+    "link": "https://leetcode.com/problems/design-underground-system",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Medium",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Maximum Gap",
+    "link": "https://leetcode.com/problems/maximum-gap",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Guess Number Higher or Lower",
+    "link": "https://leetcode.com/problems/guess-number-higher-or-lower",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Maximum Palindromes After Operations",
+    "link": "https://leetcode.com/problems/maximum-palindromes-after-operations",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 32
+  },
+  {
+    "problem": "Remove Outermost Parentheses",
+    "link": "https://leetcode.com/problems/remove-outermost-parentheses",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Easy",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Find Common Characters",
+    "link": "https://leetcode.com/problems/find-common-characters",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Redundant Connection",
+    "link": "https://leetcode.com/problems/redundant-connection",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Longest Strictly Increasing or Strictly Decreasing Subarray",
+    "link": "https://leetcode.com/problems/longest-strictly-increasing-or-strictly-decreasing-subarray",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 32
+  },
+  {
+    "problem": "Rank Transform of an Array",
+    "link": "https://leetcode.com/problems/rank-transform-of-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Shortest Path to Get All Keys",
+    "link": "https://leetcode.com/problems/shortest-path-to-get-all-keys",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Partition List",
+    "link": "https://leetcode.com/problems/partition-list",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Maximum Units on a Truck",
+    "link": "https://leetcode.com/problems/maximum-units-on-a-truck",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Parsing A Boolean Expression",
+    "link": "https://leetcode.com/problems/parsing-a-boolean-expression",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Number of Substrings Containing All Three Characters",
+    "link": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 32
+  },
+  {
+    "problem": "String Compression III",
+    "link": "https://leetcode.com/problems/string-compression-iii",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 32
+  },
+  {
+    "problem": "Unique Number of Occurrences",
+    "link": "https://leetcode.com/problems/unique-number-of-occurrences",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Valid Perfect Square",
+    "link": "https://leetcode.com/problems/valid-perfect-square",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Number of Adjacent Elements With the Same Color",
+    "link": "https://leetcode.com/problems/number-of-adjacent-elements-with-the-same-color",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Valid Word",
+    "link": "https://leetcode.com/problems/valid-word",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Divide Intervals Into Minimum Number of Groups",
+    "link": "https://leetcode.com/problems/divide-intervals-into-minimum-number-of-groups",
+    "pattern": "Greedy",
+    "subPattern": "Sort + scan",
+    "difficulty": "Medium",
+    "coreIdea": "Sort by end/start then iterate with local optimal choice.",
+    "complexity": "O(n log n) | O(1)",
+    "frequency": 32
+  },
+  {
+    "problem": "Length of Longest Subarray With at Most K Frequency",
+    "link": "https://leetcode.com/problems/length-of-longest-subarray-with-at-most-k-frequency",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 32
+  },
+  {
+    "problem": "Integer Break",
+    "link": "https://leetcode.com/problems/integer-break",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Number of Digit One",
+    "link": "https://leetcode.com/problems/number-of-digit-one",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Counter",
+    "link": "https://leetcode.com/problems/counter",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Find Resultant Array After Removing Anagrams",
+    "link": "https://leetcode.com/problems/find-resultant-array-after-removing-anagrams",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 32
+  },
+  {
+    "problem": "Find Smallest Letter Greater Than Target",
+    "link": "https://leetcode.com/problems/find-smallest-letter-greater-than-target",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Nearest Exit from Entrance in Maze",
+    "link": "https://leetcode.com/problems/nearest-exit-from-entrance-in-maze",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Minimum Cost Path with Edge Reversals",
+    "link": "https://leetcode.com/problems/minimum-cost-path-with-edge-reversals",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Defanging an IP Address",
+    "link": "https://leetcode.com/problems/defanging-an-ip-address",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Minimize Maximum Pair Sum in Array",
+    "link": "https://leetcode.com/problems/minimize-maximum-pair-sum-in-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Minimum Time Visiting All Points",
+    "link": "https://leetcode.com/problems/minimum-time-visiting-all-points",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Confirmation Rate",
+    "link": "https://leetcode.com/problems/confirmation-rate",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Minimum Moves to Equal Array Elements",
+    "link": "https://leetcode.com/problems/minimum-moves-to-equal-array-elements",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Bitwise ORs of Subarrays",
+    "link": "https://leetcode.com/problems/bitwise-ors-of-subarrays",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 32
+  },
+  {
+    "problem": "Find Largest Value in Each Tree Row",
+    "link": "https://leetcode.com/problems/find-largest-value-in-each-tree-row",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 32
+  },
+  {
+    "problem": "Count Pairs Whose Sum is Less than Target",
+    "link": "https://leetcode.com/problems/count-pairs-whose-sum-is-less-than-target",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Block Placement Queries",
+    "link": "https://leetcode.com/problems/block-placement-queries",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "K-diff Pairs in an Array",
+    "link": "https://leetcode.com/problems/k-diff-pairs-in-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 32
+  },
+  {
+    "problem": "Design Parking System",
+    "link": "https://leetcode.com/problems/design-parking-system",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Easy",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Factorial Trailing Zeroes",
+    "link": "https://leetcode.com/problems/factorial-trailing-zeroes",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Game Play Analysis IV",
+    "link": "https://leetcode.com/problems/game-play-analysis-iv",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Find the Largest Area of Square Inside Two Rectangles",
+    "link": "https://leetcode.com/problems/find-the-largest-area-of-square-inside-two-rectangles",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Distribute Coins in Binary Tree",
+    "link": "https://leetcode.com/problems/distribute-coins-in-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 30
+  },
+  {
+    "problem": "Find Numbers with Even Number of Digits",
+    "link": "https://leetcode.com/problems/find-numbers-with-even-number-of-digits",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Fair Candy Swap",
+    "link": "https://leetcode.com/problems/fair-candy-swap",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Find Winner on a Tic Tac Toe Game",
+    "link": "https://leetcode.com/problems/find-winner-on-a-tic-tac-toe-game",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Find the Town Judge",
+    "link": "https://leetcode.com/problems/find-the-town-judge",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Find a Peak Element II",
+    "link": "https://leetcode.com/problems/find-a-peak-element-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Different Ways to Add Parentheses",
+    "link": "https://leetcode.com/problems/different-ways-to-add-parentheses",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Convert Binary Search Tree to Sorted Doubly Linked List",
+    "link": "https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 30
+  },
+  {
+    "problem": "Elimination Game",
+    "link": "https://leetcode.com/problems/elimination-game",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Movie Rating",
+    "link": "https://leetcode.com/problems/movie-rating",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Single Number III",
+    "link": "https://leetcode.com/problems/single-number-iii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Power Grid Maintenance",
+    "link": "https://leetcode.com/problems/power-grid-maintenance",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 30
+  },
+  {
+    "problem": "Break a Palindrome",
+    "link": "https://leetcode.com/problems/break-a-palindrome",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 30
+  },
+  {
+    "problem": "Minimum Difference in Sums After Removal of Elements",
+    "link": "https://leetcode.com/problems/minimum-difference-in-sums-after-removal-of-elements",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Cache With Time Limit",
+    "link": "https://leetcode.com/problems/cache-with-time-limit",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Minimum Height Trees",
+    "link": "https://leetcode.com/problems/minimum-height-trees",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 30
+  },
+  {
+    "problem": "Minimum Number of Increments on Subarrays to Form a Target Array",
+    "link": "https://leetcode.com/problems/minimum-number-of-increments-on-subarrays-to-form-a-target-array",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 30
+  },
+  {
+    "problem": "Reverse Words in a String III",
+    "link": "https://leetcode.com/problems/reverse-words-in-a-string-iii",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 30
+  },
+  {
+    "problem": "Count Good Nodes in Binary Tree",
+    "link": "https://leetcode.com/problems/count-good-nodes-in-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 30
+  },
+  {
+    "problem": "Minimum Penalty for a Shop",
+    "link": "https://leetcode.com/problems/minimum-penalty-for-a-shop",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Rank Teams by Votes",
+    "link": "https://leetcode.com/problems/rank-teams-by-votes",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Spiral Matrix III",
+    "link": "https://leetcode.com/problems/spiral-matrix-iii",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 30
+  },
+  {
+    "problem": "Number of Closed Islands",
+    "link": "https://leetcode.com/problems/number-of-closed-islands",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 30
+  },
+  {
+    "problem": "Delete the Middle Node of a Linked List",
+    "link": "https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 30
+  },
+  {
+    "problem": "Number of Ways to Form a Target String Given a Dictionary",
+    "link": "https://leetcode.com/problems/number-of-ways-to-form-a-target-string-given-a-dictionary",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 30
+  },
+  {
+    "problem": "Project Employees I",
+    "link": "https://leetcode.com/problems/project-employees-i",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 30
+  },
+  {
+    "problem": "Product Price at a Given Date",
+    "link": "https://leetcode.com/problems/product-price-at-a-given-date",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Predict the Winner",
+    "link": "https://leetcode.com/problems/predict-the-winner",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Palindrome Permutation",
+    "link": "https://leetcode.com/problems/palindrome-permutation",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 30
+  },
+  {
+    "problem": "Patching Array",
+    "link": "https://leetcode.com/problems/patching-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Path with Maximum Gold",
+    "link": "https://leetcode.com/problems/path-with-maximum-gold",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Percentage of Users Attended a Contest",
+    "link": "https://leetcode.com/problems/percentage-of-users-attended-a-contest",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Smallest String With Swaps",
+    "link": "https://leetcode.com/problems/smallest-string-with-swaps",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 30
+  },
+  {
+    "problem": "Maximum Sum BST in Binary Tree",
+    "link": "https://leetcode.com/problems/maximum-sum-bst-in-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 30
+  },
+  {
+    "problem": "Populating Next Right Pointers in Each Node II",
+    "link": "https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "All Paths From Source to Target",
+    "link": "https://leetcode.com/problems/all-paths-from-source-to-target",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Longest Balanced Substring I",
+    "link": "https://leetcode.com/problems/longest-balanced-substring-i",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 30
+  },
+  {
+    "problem": "Longest Harmonious Subsequence",
+    "link": "https://leetcode.com/problems/longest-harmonious-subsequence",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Count Salary Categories",
+    "link": "https://leetcode.com/problems/count-salary-categories",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Make Sum Divisible by P",
+    "link": "https://leetcode.com/problems/make-sum-divisible-by-p",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Array Partition",
+    "link": "https://leetcode.com/problems/array-partition",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Sum of Left Leaves",
+    "link": "https://leetcode.com/problems/sum-of-left-leaves",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Sum of Beauty of All Substrings",
+    "link": "https://leetcode.com/problems/sum-of-beauty-of-all-substrings",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 30
+  },
+  {
+    "problem": "Maximum 69 Number",
+    "link": "https://leetcode.com/problems/maximum-69-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Water and Jug Problem",
+    "link": "https://leetcode.com/problems/water-and-jug-problem",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Wiggle Sort II",
+    "link": "https://leetcode.com/problems/wiggle-sort-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Successful Pairs of Spells and Potions",
+    "link": "https://leetcode.com/problems/successful-pairs-of-spells-and-potions",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Avoid Flood in The City",
+    "link": "https://leetcode.com/problems/avoid-flood-in-the-city",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Investments in 2016",
+    "link": "https://leetcode.com/problems/investments-in-2016",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 30
+  },
+  {
+    "problem": "Maximum Product of Splitted Binary Tree",
+    "link": "https://leetcode.com/problems/maximum-product-of-splitted-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 30
+  },
+  {
+    "problem": "Longest Balanced Subarray I",
+    "link": "https://leetcode.com/problems/longest-balanced-subarray-i",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 30
+  },
+  {
+    "problem": "Valid Mountain Array",
+    "link": "https://leetcode.com/problems/valid-mountain-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Time Needed to Rearrange a Binary String",
+    "link": "https://leetcode.com/problems/time-needed-to-rearrange-a-binary-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Web Crawler",
+    "link": "https://leetcode.com/problems/web-crawler",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Ugly Number II",
+    "link": "https://leetcode.com/problems/ugly-number-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Put Marbles in Bags",
+    "link": "https://leetcode.com/problems/put-marbles-in-bags",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Tree Diameter",
+    "link": "https://leetcode.com/problems/tree-diameter",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "Range Sum of BST",
+    "link": "https://leetcode.com/problems/range-sum-of-bst",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "Split Message Based on Limit",
+    "link": "https://leetcode.com/problems/split-message-based-on-limit",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Regions Cut By Slashes",
+    "link": "https://leetcode.com/problems/regions-cut-by-slashes",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Find Bottom Left Tree Value",
+    "link": "https://leetcode.com/problems/find-bottom-left-tree-value",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "The Number of Employees Which Report to Each Employee",
+    "link": "https://leetcode.com/problems/the-number-of-employees-which-report-to-each-employee",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Easy",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 28
+  },
+  {
+    "problem": "Swapping Nodes in a Linked List",
+    "link": "https://leetcode.com/problems/swapping-nodes-in-a-linked-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Sell Diminishing-Valued Colored Balls",
+    "link": "https://leetcode.com/problems/sell-diminishing-valued-colored-balls",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Set Intersection Size At Least Two",
+    "link": "https://leetcode.com/problems/set-intersection-size-at-least-two",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Shopping Offers",
+    "link": "https://leetcode.com/problems/shopping-offers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Sum of All Subset XOR Totals",
+    "link": "https://leetcode.com/problems/sum-of-all-subset-xor-totals",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Easy",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Shuffle an Array",
+    "link": "https://leetcode.com/problems/shuffle-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Sliding Puzzle",
+    "link": "https://leetcode.com/problems/sliding-puzzle",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Restaurant Growth",
+    "link": "https://leetcode.com/problems/restaurant-growth",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Height Checker",
+    "link": "https://leetcode.com/problems/height-checker",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Palindrome Pairs",
+    "link": "https://leetcode.com/problems/palindrome-pairs",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Longest Nice Subarray",
+    "link": "https://leetcode.com/problems/longest-nice-subarray",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 28
+  },
+  {
+    "problem": "Maximum Number of Occurrences of a Substring",
+    "link": "https://leetcode.com/problems/maximum-number-of-occurrences-of-a-substring",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "Maximum Number of Non-overlapping Palindrome Substrings",
+    "link": "https://leetcode.com/problems/maximum-number-of-non-overlapping-palindrome-substrings",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "Maximum Candies Allocated to K Children",
+    "link": "https://leetcode.com/problems/maximum-candies-allocated-to-k-children",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Flatten Deeply Nested Array",
+    "link": "https://leetcode.com/problems/flatten-deeply-nested-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Max Dot Product of Two Subsequences",
+    "link": "https://leetcode.com/problems/max-dot-product-of-two-subsequences",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Max Chunks To Make Sorted",
+    "link": "https://leetcode.com/problems/max-chunks-to-make-sorted",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Magic Squares In Grid",
+    "link": "https://leetcode.com/problems/magic-squares-in-grid",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 28
+  },
+  {
+    "problem": "Lexicographically Minimum String After Removing Stars",
+    "link": "https://leetcode.com/problems/lexicographically-minimum-string-after-removing-stars",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Find Lucky Integer in an Array",
+    "link": "https://leetcode.com/problems/find-lucky-integer-in-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Letter Case Permutation",
+    "link": "https://leetcode.com/problems/letter-case-permutation",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Length of Longest Fibonacci Subsequence",
+    "link": "https://leetcode.com/problems/length-of-longest-fibonacci-subsequence",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Lemonade Change",
+    "link": "https://leetcode.com/problems/lemonade-change",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Least Number of Unique Integers after K Removals",
+    "link": "https://leetcode.com/problems/least-number-of-unique-integers-after-k-removals",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Kids With the Greatest Number of Candies",
+    "link": "https://leetcode.com/problems/kids-with-the-greatest-number-of-candies",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "K-th Symbol in Grammar",
+    "link": "https://leetcode.com/problems/k-th-symbol-in-grammar",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "K-th Smallest in Lexicographical Order",
+    "link": "https://leetcode.com/problems/k-th-smallest-in-lexicographical-order",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Maximum Score From Removing Substrings",
+    "link": "https://leetcode.com/problems/maximum-score-from-removing-substrings",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "Finding Pairs With a Certain Sum",
+    "link": "https://leetcode.com/problems/finding-pairs-with-a-certain-sum",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Find Words Containing Character",
+    "link": "https://leetcode.com/problems/find-words-containing-character",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Maximum Side Length of a Square with Sum Less than or Equal to Threshold",
+    "link": "https://leetcode.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Painting the Walls",
+    "link": "https://leetcode.com/problems/painting-the-walls",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Number of Ways to Split Array",
+    "link": "https://leetcode.com/problems/number-of-ways-to-split-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Find N Unique Integers Sum up to Zero",
+    "link": "https://leetcode.com/problems/find-n-unique-integers-sum-up-to-zero",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Not Boring Movies",
+    "link": "https://leetcode.com/problems/not-boring-movies",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Nim Game",
+    "link": "https://leetcode.com/problems/nim-game",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "N-Repeated Element in Size 2N Array",
+    "link": "https://leetcode.com/problems/n-repeated-element-in-size-2n-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Most Profit Assigning Work",
+    "link": "https://leetcode.com/problems/most-profit-assigning-work",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Minimum Operations to Make Binary Array Elements Equal to One I",
+    "link": "https://leetcode.com/problems/minimum-operations-to-make-binary-array-elements-equal-to-one-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Minimum Genetic Mutation",
+    "link": "https://leetcode.com/problems/minimum-genetic-mutation",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Minimum Depth of Binary Tree",
+    "link": "https://leetcode.com/problems/minimum-depth-of-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "Minimize XOR",
+    "link": "https://leetcode.com/problems/minimize-xor",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Medium",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Find the Original Typed String I",
+    "link": "https://leetcode.com/problems/find-the-original-typed-string-i",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Min Cost Climbing Stairs",
+    "link": "https://leetcode.com/problems/min-cost-climbing-stairs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Maximum Twin Sum of a Linked List",
+    "link": "https://leetcode.com/problems/maximum-twin-sum-of-a-linked-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Maximum Size Subarray Sum Equals k",
+    "link": "https://leetcode.com/problems/maximum-size-subarray-sum-equals-k",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 28
+  },
+  {
+    "problem": "Number of Steps to Reduce a Number in Binary Representation to One",
+    "link": "https://leetcode.com/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Zuma Game",
+    "link": "https://leetcode.com/problems/zuma-game",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Cousins in Binary Tree",
+    "link": "https://leetcode.com/problems/cousins-in-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "Check if the Sentence Is Pangram",
+    "link": "https://leetcode.com/problems/check-if-the-sentence-is-pangram",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Count the Number of Good Subarrays",
+    "link": "https://leetcode.com/problems/count-the-number-of-good-subarrays",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 28
+  },
+  {
+    "problem": "2 Keys Keyboard",
+    "link": "https://leetcode.com/problems/2-keys-keyboard",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Construct Binary Search Tree from Preorder Traversal",
+    "link": "https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "Count Number of Maximum Bitwise-OR Subsets",
+    "link": "https://leetcode.com/problems/count-number-of-maximum-bitwise-or-subsets",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Medium",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Count Complete Tree Nodes",
+    "link": "https://leetcode.com/problems/count-complete-tree-nodes",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 28
+  },
+  {
+    "problem": "Create Maximum Number",
+    "link": "https://leetcode.com/problems/create-maximum-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Angle Between Hands of a Clock",
+    "link": "https://leetcode.com/problems/angle-between-hands-of-a-clock",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Construct String With Repeat Limit",
+    "link": "https://leetcode.com/problems/construct-string-with-repeat-limit",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 28
+  },
+  {
+    "problem": "Binary Watch",
+    "link": "https://leetcode.com/problems/binary-watch",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 28
+  },
+  {
+    "problem": "Minimum Time to Repair Cars",
+    "link": "https://leetcode.com/problems/minimum-time-to-repair-cars",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Count Number of Pairs With Absolute Difference K",
+    "link": "https://leetcode.com/problems/count-number-of-pairs-with-absolute-difference-k",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Clear Digits",
+    "link": "https://leetcode.com/problems/clear-digits",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Customers Who Bought All Products",
+    "link": "https://leetcode.com/problems/customers-who-bought-all-products",
+    "pattern": "SQL",
+    "subPattern": "Joins / aggregation",
+    "difficulty": "Medium",
+    "coreIdea": "Express filters, joins, and aggregates in SQL as specified.",
+    "complexity": "Varies | Varies",
+    "frequency": 26
+  },
+  {
+    "problem": "Minimum Time to Collect All Apples in a Tree",
+    "link": "https://leetcode.com/problems/minimum-time-to-collect-all-apples-in-a-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Power of Three",
+    "link": "https://leetcode.com/problems/power-of-three",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Maximum Number of Visible Points",
+    "link": "https://leetcode.com/problems/maximum-number-of-visible-points",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Maximum Number of Vowels in a Substring of Given Length",
+    "link": "https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Find the Prefix Common Array of Two Arrays",
+    "link": "https://leetcode.com/problems/find-the-prefix-common-array-of-two-arrays",
+    "pattern": "Prefix Sum",
+    "subPattern": "Hashmap of prefixes",
+    "difficulty": "Medium",
+    "coreIdea": "Track cumulative sums; count pairs with target difference.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Average Waiting Time",
+    "link": "https://leetcode.com/problems/average-waiting-time",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Design Linked List",
+    "link": "https://leetcode.com/problems/design-linked-list",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Medium",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Maximum Level Sum of a Binary Tree",
+    "link": "https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Combination Sum IV",
+    "link": "https://leetcode.com/problems/combination-sum-iv",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "As Far from Land as Possible",
+    "link": "https://leetcode.com/problems/as-far-from-land-as-possible",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Game Play Analysis I",
+    "link": "https://leetcode.com/problems/game-play-analysis-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Largest Odd Number in String",
+    "link": "https://leetcode.com/problems/largest-odd-number-in-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "Maximum Earnings From Taxi",
+    "link": "https://leetcode.com/problems/maximum-earnings-from-taxi",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Array Prototype Last",
+    "link": "https://leetcode.com/problems/array-prototype-last",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Super Egg Drop",
+    "link": "https://leetcode.com/problems/super-egg-drop",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Consecutive Numbers Sum",
+    "link": "https://leetcode.com/problems/consecutive-numbers-sum",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Move Pieces to Obtain a String",
+    "link": "https://leetcode.com/problems/move-pieces-to-obtain-a-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "One Edit Distance",
+    "link": "https://leetcode.com/problems/one-edit-distance",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Last Person to Fit in the Bus",
+    "link": "https://leetcode.com/problems/last-person-to-fit-in-the-bus",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Create a DataFrame from List",
+    "link": "https://leetcode.com/problems/create-a-dataframe-from-list",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Count Servers that Communicate",
+    "link": "https://leetcode.com/problems/count-servers-that-communicate",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Product Sales Analysis III",
+    "link": "https://leetcode.com/problems/product-sales-analysis-iii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Maximum Total Damage With Spell Casting",
+    "link": "https://leetcode.com/problems/maximum-total-damage-with-spell-casting",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Search in a Binary Search Tree",
+    "link": "https://leetcode.com/problems/search-in-a-binary-search-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Minimum Difference Between Highest and Lowest of K Scores",
+    "link": "https://leetcode.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Check Completeness of a Binary Tree",
+    "link": "https://leetcode.com/problems/check-completeness-of-a-binary-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Minimum Limit of Balls in a Bag",
+    "link": "https://leetcode.com/problems/minimum-limit-of-balls-in-a-bag",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Implement Rand10() Using Rand7()",
+    "link": "https://leetcode.com/problems/implement-rand10-using-rand7",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Find the Difference of Two Arrays",
+    "link": "https://leetcode.com/problems/find-the-difference-of-two-arrays",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Minimum Cost to Convert String I",
+    "link": "https://leetcode.com/problems/minimum-cost-to-convert-string-i",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "Richest Customer Wealth",
+    "link": "https://leetcode.com/problems/richest-customer-wealth",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Minimum Cost Path with Teleportations",
+    "link": "https://leetcode.com/problems/minimum-cost-path-with-teleportations",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Remove Digit From Number to Maximize Result",
+    "link": "https://leetcode.com/problems/remove-digit-from-number-to-maximize-result",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Delete Nodes From Linked List Present in Array",
+    "link": "https://leetcode.com/problems/delete-nodes-from-linked-list-present-in-array",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "Scramble String",
+    "link": "https://leetcode.com/problems/scramble-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "Calculate Amount Paid in Taxes",
+    "link": "https://leetcode.com/problems/calculate-amount-paid-in-taxes",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Buildings With an Ocean View",
+    "link": "https://leetcode.com/problems/buildings-with-an-ocean-view",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Sort Array By Parity II",
+    "link": "https://leetcode.com/problems/sort-array-by-parity-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Separate Squares I",
+    "link": "https://leetcode.com/problems/separate-squares-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Minimum Number of Operations to Move All Balls to Each Box",
+    "link": "https://leetcode.com/problems/minimum-number-of-operations-to-move-all-balls-to-each-box",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Insert into a Binary Search Tree",
+    "link": "https://leetcode.com/problems/insert-into-a-binary-search-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Rectangle Area",
+    "link": "https://leetcode.com/problems/rectangle-area",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Group Shifted Strings",
+    "link": "https://leetcode.com/problems/group-shifted-strings",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "Shortest Subarray with Sum at Least K",
+    "link": "https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 26
+  },
+  {
+    "problem": "Smallest Integer Divisible by K",
+    "link": "https://leetcode.com/problems/smallest-integer-divisible-by-k",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Find Minimum Time to Finish All Jobs",
+    "link": "https://leetcode.com/problems/find-minimum-time-to-finish-all-jobs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Range Module",
+    "link": "https://leetcode.com/problems/range-module",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Maximum XOR of Two Numbers in an Array",
+    "link": "https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Medium",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "Minimum Removals to Balance Array",
+    "link": "https://leetcode.com/problems/minimum-removals-to-balance-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Push Dominoes",
+    "link": "https://leetcode.com/problems/push-dominoes",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Last Substring in Lexicographical Order",
+    "link": "https://leetcode.com/problems/last-substring-in-lexicographical-order",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Hard",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Find Followers Count",
+    "link": "https://leetcode.com/problems/find-followers-count",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Construct Binary Tree from Inorder and Postorder Traversal",
+    "link": "https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Validate Stack Sequences",
+    "link": "https://leetcode.com/problems/validate-stack-sequences",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Trips and Users",
+    "link": "https://leetcode.com/problems/trips-and-users",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Unique Binary Search Trees II",
+    "link": "https://leetcode.com/problems/unique-binary-search-trees-ii",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Nth Magical Number",
+    "link": "https://leetcode.com/problems/nth-magical-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Matrix Diagonal Sum",
+    "link": "https://leetcode.com/problems/matrix-diagonal-sum",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Easy",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 26
+  },
+  {
+    "problem": "Lexicographical Numbers",
+    "link": "https://leetcode.com/problems/lexicographical-numbers",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Construct Quad Tree",
+    "link": "https://leetcode.com/problems/construct-quad-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 26
+  },
+  {
+    "problem": "Longest Univalue Path",
+    "link": "https://leetcode.com/problems/longest-univalue-path",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Number of People Aware of a Secret",
+    "link": "https://leetcode.com/problems/number-of-people-aware-of-a-secret",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Number of Ways to Arrive at Destination",
+    "link": "https://leetcode.com/problems/number-of-ways-to-arrive-at-destination",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Add to Array-Form of Integer",
+    "link": "https://leetcode.com/problems/add-to-array-form-of-integer",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Number of Longest Increasing Subsequence",
+    "link": "https://leetcode.com/problems/number-of-longest-increasing-subsequence",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Add Bold Tag in String",
+    "link": "https://leetcode.com/problems/add-bold-tag-in-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "Long Pressed Name",
+    "link": "https://leetcode.com/problems/long-pressed-name",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "First Unique Number",
+    "link": "https://leetcode.com/problems/first-unique-number",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Flip String to Monotone Increasing",
+    "link": "https://leetcode.com/problems/flip-string-to-monotone-increasing",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "Count Ways To Build Good Strings",
+    "link": "https://leetcode.com/problems/count-ways-to-build-good-strings",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 26
+  },
+  {
+    "problem": "Trionic Array II",
+    "link": "https://leetcode.com/problems/trionic-array-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Minimum Equal Sum of Two Arrays After Replacing Zeros",
+    "link": "https://leetcode.com/problems/minimum-equal-sum-of-two-arrays-after-replacing-zeros",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 26
+  },
+  {
+    "problem": "Maximize Area of Square Hole in Grid",
+    "link": "https://leetcode.com/problems/maximize-area-of-square-hole-in-grid",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 24
+  },
+  {
+    "problem": "Race Car",
+    "link": "https://leetcode.com/problems/race-car",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Hand of Straights",
+    "link": "https://leetcode.com/problems/hand-of-straights",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Minimum Bit Flips to Convert Number",
+    "link": "https://leetcode.com/problems/minimum-bit-flips-to-convert-number",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Easy",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 24
+  },
+  {
+    "problem": "Inorder Successor in BST",
+    "link": "https://leetcode.com/problems/inorder-successor-in-bst",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 24
+  },
+  {
+    "problem": "Separate Black and White Balls",
+    "link": "https://leetcode.com/problems/separate-black-and-white-balls",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Maximum Absolute Sum of Any Subarray",
+    "link": "https://leetcode.com/problems/maximum-absolute-sum-of-any-subarray",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Delete Nodes And Return Forest",
+    "link": "https://leetcode.com/problems/delete-nodes-and-return-forest",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Relative Sort Array",
+    "link": "https://leetcode.com/problems/relative-sort-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Last Day Where You Can Still Cross",
+    "link": "https://leetcode.com/problems/last-day-where-you-can-still-cross",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Minimum Number of Removals to Make Mountain Array",
+    "link": "https://leetcode.com/problems/minimum-number-of-removals-to-make-mountain-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Find the Minimum Amount of Time to Brew Potions",
+    "link": "https://leetcode.com/problems/find-the-minimum-amount-of-time-to-brew-potions",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Find the Minimum and Maximum Number of Nodes Between Critical Points",
+    "link": "https://leetcode.com/problems/find-the-minimum-and-maximum-number-of-nodes-between-critical-points",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Longest Subarray With Maximum Bitwise AND",
+    "link": "https://leetcode.com/problems/longest-subarray-with-maximum-bitwise-and",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Brace Expansion",
+    "link": "https://leetcode.com/problems/brace-expansion",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Find Original Array From Doubled Array",
+    "link": "https://leetcode.com/problems/find-original-array-from-doubled-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Delete Duplicate Folders in System",
+    "link": "https://leetcode.com/problems/delete-duplicate-folders-in-system",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Longest Substring Of All Vowels in Order",
+    "link": "https://leetcode.com/problems/longest-substring-of-all-vowels-in-order",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 24
+  },
+  {
+    "problem": "Leaf-Similar Trees",
+    "link": "https://leetcode.com/problems/leaf-similar-trees",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 24
+  },
+  {
+    "problem": "Shortest Word Distance II",
+    "link": "https://leetcode.com/problems/shortest-word-distance-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Minimize the Maximum Difference of Pairs",
+    "link": "https://leetcode.com/problems/minimize-the-maximum-difference-of-pairs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Bitwise AND of Numbers Range",
+    "link": "https://leetcode.com/problems/bitwise-and-of-numbers-range",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Medium",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 24
+  },
+  {
+    "problem": "Delete Characters to Make Fancy String",
+    "link": "https://leetcode.com/problems/delete-characters-to-make-fancy-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 24
+  },
+  {
+    "problem": "Defuse the Bomb",
+    "link": "https://leetcode.com/problems/defuse-the-bomb",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Triangle Judgement",
+    "link": "https://leetcode.com/problems/triangle-judgement",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Easy",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 24
+  },
+  {
+    "problem": "Merge Two 2D Arrays by Summing Values",
+    "link": "https://leetcode.com/problems/merge-two-2d-arrays-by-summing-values",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Fraction Addition and Subtraction",
+    "link": "https://leetcode.com/problems/fraction-addition-and-subtraction",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Smallest Missing Non-negative Integer After Operations",
+    "link": "https://leetcode.com/problems/smallest-missing-non-negative-integer-after-operations",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "IP to CIDR",
+    "link": "https://leetcode.com/problems/ip-to-cidr",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Toeplitz Matrix",
+    "link": "https://leetcode.com/problems/toeplitz-matrix",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Easy",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 24
+  },
+  {
+    "problem": "Equal Row and Column Pairs",
+    "link": "https://leetcode.com/problems/equal-row-and-column-pairs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Bulls and Cows",
+    "link": "https://leetcode.com/problems/bulls-and-cows",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Minimum Moves to Spread Stones Over Grid",
+    "link": "https://leetcode.com/problems/minimum-moves-to-spread-stones-over-grid",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 24
+  },
+  {
+    "problem": "Reordered Power of 2",
+    "link": "https://leetcode.com/problems/reordered-power-of-2",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "The Number of the Smallest Unoccupied Chair",
+    "link": "https://leetcode.com/problems/the-number-of-the-smallest-unoccupied-chair",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Detonate the Maximum Bombs",
+    "link": "https://leetcode.com/problems/detonate-the-maximum-bombs",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Replace Words",
+    "link": "https://leetcode.com/problems/replace-words",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Human Traffic of Stadium",
+    "link": "https://leetcode.com/problems/human-traffic-of-stadium",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Minimum Deletions to Make Character Frequencies Unique",
+    "link": "https://leetcode.com/problems/minimum-deletions-to-make-character-frequencies-unique",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Check If a Word Occurs As a Prefix of Any Word in a Sentence",
+    "link": "https://leetcode.com/problems/check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence",
+    "pattern": "Prefix Sum",
+    "subPattern": "Hashmap of prefixes",
+    "difficulty": "Easy",
+    "coreIdea": "Track cumulative sums; count pairs with target difference.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Return Length of Arguments Passed",
+    "link": "https://leetcode.com/problems/return-length-of-arguments-passed",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Continuous Subarrays",
+    "link": "https://leetcode.com/problems/continuous-subarrays",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Reverse Nodes in Even Length Groups",
+    "link": "https://leetcode.com/problems/reverse-nodes-in-even-length-groups",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Remove Letter To Equalize Frequency",
+    "link": "https://leetcode.com/problems/remove-letter-to-equalize-frequency",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Reverse Only Letters",
+    "link": "https://leetcode.com/problems/reverse-only-letters",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Next Greater Node In Linked List",
+    "link": "https://leetcode.com/problems/next-greater-node-in-linked-list",
+    "pattern": "Linked List",
+    "subPattern": "Pointer manipulation",
+    "difficulty": "Medium",
+    "coreIdea": "Use dummy node and rewire next pointers carefully.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 24
+  },
+  {
+    "problem": "Ways to Make a Fair Array",
+    "link": "https://leetcode.com/problems/ways-to-make-a-fair-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Minimum Cost to Make Array Equal",
+    "link": "https://leetcode.com/problems/minimum-cost-to-make-array-equal",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Longest Non-decreasing Subarray From Two Arrays",
+    "link": "https://leetcode.com/problems/longest-non-decreasing-subarray-from-two-arrays",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Fix Names in a Table",
+    "link": "https://leetcode.com/problems/fix-names-in-a-table",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Minimum Number of K Consecutive Bit Flips",
+    "link": "https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Hard",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 24
+  },
+  {
+    "problem": "Find the City With the Smallest Number of Neighbors at a Threshold Distance",
+    "link": "https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Root Equals Sum of Children",
+    "link": "https://leetcode.com/problems/root-equals-sum-of-children",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Minimum Cost to Connect Sticks",
+    "link": "https://leetcode.com/problems/minimum-cost-to-connect-sticks",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Rotated Digits",
+    "link": "https://leetcode.com/problems/rotated-digits",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Word Subsets",
+    "link": "https://leetcode.com/problems/word-subsets",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "3Sum Smaller",
+    "link": "https://leetcode.com/problems/3sum-smaller",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Score of a String",
+    "link": "https://leetcode.com/problems/score-of-a-string",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 24
+  },
+  {
+    "problem": "Find Subsequence of Length K With the Largest Sum",
+    "link": "https://leetcode.com/problems/find-subsequence-of-length-k-with-the-largest-sum",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Alice and Bob Playing Flower Game",
+    "link": "https://leetcode.com/problems/alice-and-bob-playing-flower-game",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Gray Code",
+    "link": "https://leetcode.com/problems/gray-code",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Count Sub Islands",
+    "link": "https://leetcode.com/problems/count-sub-islands",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Medium",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 24
+  },
+  {
+    "problem": "Distribute Candies Among Children II",
+    "link": "https://leetcode.com/problems/distribute-candies-among-children-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Maximum Number of Points From Grid Queries",
+    "link": "https://leetcode.com/problems/maximum-number-of-points-from-grid-queries",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Hard",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 24
+  },
+  {
+    "problem": "Find Beautiful Indices in the Given Array I",
+    "link": "https://leetcode.com/problems/find-beautiful-indices-in-the-given-array-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Divide Array Into Arrays With Max Difference",
+    "link": "https://leetcode.com/problems/divide-array-into-arrays-with-max-difference",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Max Difference You Can Get From Changing an Integer",
+    "link": "https://leetcode.com/problems/max-difference-you-can-get-from-changing-an-integer",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Fruits Into Baskets II",
+    "link": "https://leetcode.com/problems/fruits-into-baskets-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Count Subarrays Where Max Element Appears at Least K Times",
+    "link": "https://leetcode.com/problems/count-subarrays-where-max-element-appears-at-least-k-times",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Check if a Parentheses String Can Be Valid",
+    "link": "https://leetcode.com/problems/check-if-a-parentheses-string-can-be-valid",
+    "pattern": "Stack",
+    "subPattern": "Nested / monotonic",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to match nesting or maintain monotonic property.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Peeking Iterator",
+    "link": "https://leetcode.com/problems/peeking-iterator",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Course Schedule IV",
+    "link": "https://leetcode.com/problems/course-schedule-iv",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Construct K Palindrome Strings",
+    "link": "https://leetcode.com/problems/construct-k-palindrome-strings",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 24
+  },
+  {
+    "problem": "Strong Password Checker",
+    "link": "https://leetcode.com/problems/strong-password-checker",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Baseball Game",
+    "link": "https://leetcode.com/problems/baseball-game",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Count the Hidden Sequences",
+    "link": "https://leetcode.com/problems/count-the-hidden-sequences",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Maximum Length of Repeated Subarray",
+    "link": "https://leetcode.com/problems/maximum-length-of-repeated-subarray",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Design Skiplist",
+    "link": "https://leetcode.com/problems/design-skiplist",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Hard",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Subdomain Visit Count",
+    "link": "https://leetcode.com/problems/subdomain-visit-count",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Path with Maximum Probability",
+    "link": "https://leetcode.com/problems/path-with-maximum-probability",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Painting a Grid With Three Different Colors",
+    "link": "https://leetcode.com/problems/painting-a-grid-with-three-different-colors",
+    "pattern": "Matrix",
+    "subPattern": "Grid traversal",
+    "difficulty": "Hard",
+    "coreIdea": "Walk cells with BFS/DFS or directional simulation.",
+    "complexity": "O(mn) | O(mn)",
+    "frequency": 24
+  },
+  {
+    "problem": "Closest Prime Numbers in Range",
+    "link": "https://leetcode.com/problems/closest-prime-numbers-in-range",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Partition Array Into Three Parts With Equal Sum",
+    "link": "https://leetcode.com/problems/partition-array-into-three-parts-with-equal-sum",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Easy",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 24
+  },
+  {
+    "problem": "Partition Array for Maximum Sum",
+    "link": "https://leetcode.com/problems/partition-array-for-maximum-sum",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 24
+  },
+  {
+    "problem": "Sum of Absolute Differences in a Sorted Array",
+    "link": "https://leetcode.com/problems/sum-of-absolute-differences-in-a-sorted-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Max Sum of a Pair With Equal Sum of Digits",
+    "link": "https://leetcode.com/problems/max-sum-of-a-pair-with-equal-sum-of-digits",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Transformed Array",
+    "link": "https://leetcode.com/problems/transformed-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Trionic Array I",
+    "link": "https://leetcode.com/problems/trionic-array-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Find Closest Number to Zero",
+    "link": "https://leetcode.com/problems/find-closest-number-to-zero",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Most Profitable Path in a Tree",
+    "link": "https://leetcode.com/problems/most-profitable-path-in-a-tree",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 24
+  },
+  {
+    "problem": "Friend Requests II: Who Has the Most Friends",
+    "link": "https://leetcode.com/problems/friend-requests-ii-who-has-the-most-friends",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Maximum Difference Between Increasing Elements",
+    "link": "https://leetcode.com/problems/maximum-difference-between-increasing-elements",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Count the Number of Infection Sequences",
+    "link": "https://leetcode.com/problems/count-the-number-of-infection-sequences",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Best Sightseeing Pair",
+    "link": "https://leetcode.com/problems/best-sightseeing-pair",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Maximum Product of Two Elements in an Array",
+    "link": "https://leetcode.com/problems/maximum-product-of-two-elements-in-an-array",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Maximum Sum of 3 Non-Overlapping Subarrays",
+    "link": "https://leetcode.com/problems/maximum-sum-of-3-non-overlapping-subarrays",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Count Prefix and Suffix Pairs I",
+    "link": "https://leetcode.com/problems/count-prefix-and-suffix-pairs-i",
+    "pattern": "Prefix Sum",
+    "subPattern": "Hashmap of prefixes",
+    "difficulty": "Easy",
+    "coreIdea": "Track cumulative sums; count pairs with target difference.",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Make The String Great",
+    "link": "https://leetcode.com/problems/make-the-string-great",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Easy",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 24
+  },
+  {
+    "problem": "Design HashSet",
+    "link": "https://leetcode.com/problems/design-hashset",
+    "pattern": "Design",
+    "subPattern": "Mutable API",
+    "difficulty": "Easy",
+    "coreIdea": "Expose operations with correct time complexity using maps, lists, stacks, or trees.",
+    "complexity": "Varies | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Maximum Subarray Sum With Length Divisible by K",
+    "link": "https://leetcode.com/problems/maximum-subarray-sum-with-length-divisible-by-k",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Maximum Repeating Substring",
+    "link": "https://leetcode.com/problems/maximum-repeating-substring",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Easy",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 24
+  },
+  {
+    "problem": "Maximum Difference Between Even and Odd Frequency II",
+    "link": "https://leetcode.com/problems/maximum-difference-between-even-and-odd-frequency-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Special Array I",
+    "link": "https://leetcode.com/problems/special-array-i",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Special Array II",
+    "link": "https://leetcode.com/problems/special-array-ii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Number of Subarrays That Match a Pattern I",
+    "link": "https://leetcode.com/problems/number-of-subarrays-that-match-a-pattern-i",
+    "pattern": "Sliding Window",
+    "subPattern": "Two pointers",
+    "difficulty": "Medium",
+    "coreIdea": "Expand/shrink window while maintaining a valid invariant.",
+    "complexity": "O(n) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Number of Sub-arrays With Odd Sum",
+    "link": "https://leetcode.com/problems/number-of-sub-arrays-with-odd-sum",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Smallest Subtree with all the Deepest Nodes",
+    "link": "https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 24
+  },
+  {
+    "problem": "Last Stone Weight II",
+    "link": "https://leetcode.com/problems/last-stone-weight-ii",
+    "pattern": "Heap",
+    "subPattern": "Priority queue",
+    "difficulty": "Medium",
+    "coreIdea": "Push/pop to maintain order statistics or greedy choice.",
+    "complexity": "O(n log k) | O(k)",
+    "frequency": 24
+  },
+  {
+    "problem": "Count Square Sum Triples",
+    "link": "https://leetcode.com/problems/count-square-sum-triples",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "All Possible Full Binary Trees",
+    "link": "https://leetcode.com/problems/all-possible-full-binary-trees",
+    "pattern": "Tree",
+    "subPattern": "DFS / BFS",
+    "difficulty": "Medium",
+    "coreIdea": "Recursion or stack/queue to traverse subtrees and aggregate state.",
+    "complexity": "O(n) | O(h)",
+    "frequency": 24
+  },
+  {
+    "problem": "Divide Nodes Into the Maximum Number of Groups",
+    "link": "https://leetcode.com/problems/divide-nodes-into-the-maximum-number-of-groups",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Hard",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 24
+  },
+  {
+    "problem": "Combination Sum III",
+    "link": "https://leetcode.com/problems/combination-sum-iii",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 22
+  },
+  {
+    "problem": "Number of Dice Rolls With Target Sum",
+    "link": "https://leetcode.com/problems/number-of-dice-rolls-with-target-sum",
+    "pattern": "DP",
+    "subPattern": "Tabulation / memo",
+    "difficulty": "Medium",
+    "coreIdea": "Define recurrence over subproblems; avoid recomputation.",
+    "complexity": "O(n^2) | O(n^2)",
+    "frequency": 22
+  },
+  {
+    "problem": "Construct the Minimum Bitwise Array I",
+    "link": "https://leetcode.com/problems/construct-the-minimum-bitwise-array-i",
+    "pattern": "Bit Manipulation",
+    "subPattern": "Masks",
+    "difficulty": "Easy",
+    "coreIdea": "Use bitwise ops for O(1) checks or counting.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 22
+  },
+  {
+    "problem": "Number of Steps to Reduce a Number to Zero",
+    "link": "https://leetcode.com/problems/number-of-steps-to-reduce-a-number-to-zero",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Easy",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 22
+  },
+  {
+    "problem": "Minimum Insertion Steps to Make a String Palindrome",
+    "link": "https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome",
+    "pattern": "String",
+    "subPattern": "Scan / two pointers",
+    "difficulty": "Hard",
+    "coreIdea": "Process characters with counts or two pointers.",
+    "complexity": "O(n) | O(1)",
+    "frequency": 22
+  },
+  {
+    "problem": "Minimum Score Triangulation of Polygon",
+    "link": "https://leetcode.com/problems/minimum-score-triangulation-of-polygon",
+    "pattern": "General",
+    "subPattern": "Problem-specific",
+    "difficulty": "Medium",
+    "coreIdea": "Identify constraints and pick the right data structure (array, hash, sort).",
+    "complexity": "O(n) | O(n)",
+    "frequency": 22
+  }
+]
+;

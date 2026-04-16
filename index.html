@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>AlgoInsight | Senior DSA Tracker</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <!-- auth-config.js: committed defaults (empty); edit locally or let CI overwrite from secrets. -->
+    <script src="auth-config.js"></script>
+    <script>
+      window.__DSA_AUTH__ = window.__DSA_AUTH__ || { enabled: false, mode: "none" };
+      window.__DSA_CONFIG__ = window.__DSA_CONFIG__ || { googleClientId: "", syncWebAppUrl: "" };
+    </script>
+
+    <div
+      id="loginOverlay"
+      class="login-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="loginTitle"
+      hidden
+    >
+      <div class="login-card">
+        <h2 id="loginTitle" class="login-title">Sign in</h2>
+        <p class="login-hint">
+          Legacy password gate (optional). For Google sign-in and cross-device sync, use the toolbar
+          <strong>Sign in</strong> control (top of the table).
+          the sidebar instead — see <code>auth-config.example.js</code>.
+        </p>
+        <form id="loginForm" class="login-form" autocomplete="on">
+          <label class="login-field">
+            <span>Username</span>
+            <input id="loginUser" name="username" type="text" required autocomplete="username" />
+          </label>
+          <label class="login-field">
+            <span>Password</span>
+            <input id="loginPass" name="password" type="password" required autocomplete="current-password" />
+          </label>
+          <p id="loginError" class="login-error" role="alert" hidden></p>
+          <button type="submit" class="login-submit" id="loginSubmit">Continue</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="appRoot" class="app-root">
+    <div class="dashboard-shell">
+      <aside class="sidebar">
+        <div class="brand-row">
+          <div>
+            <h1>AlgoInsight</h1>
+            <p>Mastering Patterns</p>
+          </div>
+          <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+          <button type="button" id="logoutBtn" class="logout-btn" hidden aria-label="Sign out">Sign out</button>
+        </div>
+
+        <section class="sidebar-card">
+          <h2>Mastery Progress</h2>
+          <div class="stat-line">
+            <span>Total Solved</span>
+            <strong id="solvedCount">0 / 0</strong>
+          </div>
+          <div class="difficulty-rings">
+            <div class="ring-wrap">
+              <div id="easyRing" class="ring ring-easy">0%</div>
+              <span>Easy</span>
+            </div>
+            <div class="ring-wrap">
+              <div id="mediumRing" class="ring ring-medium">0%</div>
+              <span>Medium</span>
+            </div>
+            <div class="ring-wrap">
+              <div id="hardRing" class="ring ring-hard">0%</div>
+              <span>Hard</span>
+            </div>
+          </div>
+          <div id="sidebarBreakdown" class="sidebar-breakdown"></div>
+        </section>
+
+        <div id="timerDock" class="timer-dock">
+          <section class="sidebar-card timer-panel" id="timerPanel" aria-label="Timer">
+            <button
+              type="button"
+              id="timerDragHandle"
+              class="timer-drag-handle"
+              aria-label="Drag timer"
+            >
+              ⠿
+            </button>
+            <div class="timer-compact-top">
+              <div class="timer-display-wrap">
+                <input
+                  id="timerTimeInput"
+                  class="timer-time-input"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  spellcheck="false"
+                  aria-label="Time MM:SS or H:MM:SS"
+                  title="e.g. 20:00 or 1:30:00"
+                  value="20:00"
+                />
+                <div class="timer-progress-track" aria-hidden="true">
+                  <div id="timerProgressFill" class="timer-progress-fill"></div>
+                </div>
+              </div>
+              <div class="timer-inline-actions">
+                <button type="button" id="timerPrimaryBtn" class="timer-primary-icon" aria-label="Start timer">▶</button>
+                <button type="button" id="timerResetBtn" class="timer-reset-icon" title="Reset" aria-label="Reset timer">↻</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <main class="main-pane">
+        <header class="filter-bar" aria-label="Global filters">
+          <label class="search-wrap" for="searchInput">
+            <span>🔍</span>
+            <input id="searchInput" type="text" placeholder="Search by name, pattern, or logic..." />
+          </label>
+
+          <select id="patternFilter" aria-label="Filter by pattern"></select>
+          <select id="difficultyFilter" aria-label="Filter by difficulty">
+            <option value="all">Difficulty: All</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+
+          <select id="companyFilter" aria-label="Filter by company (interview data)">
+            <option value="all">Company: All</option>
+          </select>
+
+          <button
+            type="button"
+            onclick="pickRandom()"
+            class="random-btn"
+            title="Pick a random unmastered problem"
+          >
+            🎲 Random
+          </button>
+
+          <div class="filter-bar-split">
+            <button
+              type="button"
+              id="timerMobileToggle"
+              class="timer-mobile-toggle"
+              aria-controls="timerDock"
+              aria-expanded="false"
+              aria-label="Show timer"
+            >
+              ⏱
+            </button>
+            <div id="googleSyncSection" class="toolbar-sync" aria-label="Account and sync">
+              <div class="toolbar-sync__main">
+                <span id="syncToolbarLabel" class="toolbar-sync__label" hidden>Sign in</span>
+                <div id="googleSignInBtn" class="google-signin-host google-signin-host--toolbar"></div>
+                <div id="googleSignedIn" class="google-signed-in" hidden>
+                  <div class="user-chip">
+                    <span class="user-chip__avatar" id="googleUserAvatar" aria-hidden="true">?</span>
+                    <span class="user-chip__name" id="googleAccountEmail"></span>
+                  </div>
+                  <button
+                    type="button"
+                    id="googleSignOutBtn"
+                    class="sync-signout-btn"
+                    aria-label="Sign out of Google account"
+                  >
+                    <svg
+                      class="sync-signout-btn__icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Sign out</span>
+                  </button>
+                </div>
+                <span id="syncActivity" class="toolbar-sync__activity" aria-live="polite" hidden></span>
+              </div>
+              <p id="syncStatusText" class="toolbar-sync__error sync-status" role="alert" hidden></p>
+            </div>
+          </div>
+        </header>
+
+        <section class="table-shell">
+          <table>
+            <thead>
+              <tr>
+                <th class="check-col">Done</th>
+                <th>Problem</th>
+                <th>Frequency</th>
+                <th>Concept</th>
+                <th>Complexity</th>
+                <th>Difficulty</th>
+                <th class="actions-col">Notes</th>
+              </tr>
+            </thead>
+            <tbody id="problemsBody">
+              <tr><td colspan="7" class="loading-state">Initializing tracker...</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <nav class="pagination-bar" aria-label="Problems pagination">
+          <div class="pagination-group">
+            <label for="pageSizeInput" class="pagination-label">Size</label>
+            <input
+              id="pageSizeInput"
+              class="pagination-num-input"
+              type="number"
+              min="5"
+              max="500"
+              step="1"
+              inputmode="numeric"
+              aria-label="Problems per page"
+            />
+          </div>
+          <div class="pagination-group pagination-group--page">
+            <span class="pagination-label">Page</span>
+            <button id="prevPageBtn" type="button" class="pagination-nav-btn">Prev</button>
+            <div class="pagination-page-field">
+              <input
+                id="pageJumpInput"
+                class="pagination-num-input pagination-num-input--page"
+                type="number"
+                min="1"
+                max="1"
+                value="1"
+                step="1"
+                inputmode="numeric"
+                aria-label="Current page number"
+              />
+              <span id="pageTotalHint" class="pagination-page-of" aria-hidden="true"></span>
+            </div>
+            <button id="nextPageBtn" type="button" class="pagination-nav-btn">Next</button>
+          </div>
+        </nav>
+      </main>
+    </div>
+
+    <aside id="notesSheet" class="notes-sheet" aria-hidden="true">
+      <div class="sheet-header">
+        <h3 id="sheetTitle">Problem Notes</h3>
+        <button type="button" id="sheetCloseBtn" class="icon-btn">✕</button>
+      </div>
+      <div class="sheet-meta">
+        <span id="autoSaveStatus" class="autosave-tag">Saved</span>
+      </div>
+      
+      <div class="notes-container">
+        <textarea id="sheetNotesInput" placeholder="Capture intuition, pitfalls, or code snippets (Markdown supported)..."></textarea>
+        <div id="notesPreview" class="notes-preview hidden"></div>
+      </div>
+
+      <div class="sheet-footer">
+        <button type="button" id="togglePreviewBtn" class="secondary-btn">Preview</button>
+        <button type="button" id="sheetSaveBtn" class="save-btn">Close & Save</button>
+      </div>
+    </aside>
+
+    <template id="problemRowTemplate">
+      <tr>
+        <td class="check-cell"><input type="checkbox" class="mastered-check"></td>
+        <td class="problem-cell"></td>
+        <td class="frequency-cell"></td>
+        <td class="concept-cell"></td>
+        <td class="complexity-cell"></td>
+        <td class="difficulty-cell"></td>
+        <td class="actions-cell"></td>
+      </tr>
+    </template>
+    </div>
+    <!-- /#appRoot -->
+
+    <!-- data.js: same data as data.json, for file:// (fetch cannot load local files). Regenerate: node scripts/build-data-js.mjs -->
+    <script src="data.js" defer></script>
+    <!-- interview-data.js: from data/sheets/interview-tracker.json — run: node scripts/generate-interview-sheets.mjs && node scripts/build-interview-data-js.mjs -->
+    <script src="interview-data.js" defer></script>
+    <script src="sync.js" defer></script>
+    <script src="app.js" defer></script>
+    <script src="auth.js" defer></script>
+  </body>
+</html>
