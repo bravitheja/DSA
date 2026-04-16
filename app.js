@@ -29,6 +29,7 @@ let allProblems = [];
 let trackerState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 let activeNotesId = null;
 let saveTimeout;
+let previewMode = false;
 
 init();
 
@@ -57,6 +58,8 @@ function bindControls() {
     elements.difficultyFilter.addEventListener("change", applyAndRender);
     elements.sheetCloseBtn.addEventListener("click", closeNotesSheet);
     elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
+    elements.sheetNotesInput.addEventListener("input", onNotesInput);
+    elements.togglePreviewBtn.addEventListener("click", toggleNotesPreview);
     elements.themeToggle.addEventListener("click", () => {
         const next = document.body.classList.contains("dark") ? "light" : "dark";
         applyTheme(next);
@@ -164,13 +167,66 @@ window.pickRandom = () => {
 
 window.openNotesSheet = (id) => {
     const p = allProblems.find(i => i.id === id);
+    if (!p) return;
     activeNotesId = id;
     elements.sheetTitle.textContent = p.problem;
     elements.sheetNotesInput.value = p.notes;
+    setAutoSaveStatus("Saved");
+    setPreviewMode(false);
     elements.notesSheet.classList.add("open");
 };
 
-function closeNotesSheet() { elements.notesSheet.classList.remove("open"); activeNotesId = null; }
+function closeNotesSheet() {
+    saveNotesNow();
+    elements.notesSheet.classList.remove("open");
+    activeNotesId = null;
+}
+
+function onNotesInput() {
+    if (!activeNotesId) return;
+    setAutoSaveStatus("Saving...");
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(saveNotesNow, 250);
+    if (previewMode) renderNotesPreview();
+}
+
+function saveNotesNow() {
+    if (!activeNotesId) return;
+    const notes = elements.sheetNotesInput.value;
+    patchProblemState(activeNotesId, { notes });
+    const idx = allProblems.findIndex(i => i.id === activeNotesId);
+    if (idx !== -1) allProblems[idx].notes = notes;
+    setAutoSaveStatus("Saved");
+}
+
+function setAutoSaveStatus(text) {
+    elements.autoSaveStatus.textContent = text;
+}
+
+function toggleNotesPreview() {
+    setPreviewMode(!previewMode);
+}
+
+function setPreviewMode(nextPreviewMode) {
+    previewMode = nextPreviewMode;
+    elements.togglePreviewBtn.textContent = previewMode ? "Edit" : "Preview";
+    elements.sheetNotesInput.classList.toggle("hidden", previewMode);
+    elements.notesPreview.classList.toggle("hidden", !previewMode);
+    if (previewMode) renderNotesPreview();
+}
+
+function renderNotesPreview() {
+    const markdown = elements.sheetNotesInput.value.trim();
+    if (!markdown) {
+        elements.notesPreview.innerHTML = `<p class="preview-placeholder">Nothing to preview yet.</p>`;
+        return;
+    }
+    if (window.marked?.parse) {
+        elements.notesPreview.innerHTML = window.marked.parse(markdown);
+        return;
+    }
+    elements.notesPreview.textContent = markdown;
+}
 function patchProblemState(id, partial) {
     trackerState[id] = { ...trackerState[id], ...partial };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trackerState));
