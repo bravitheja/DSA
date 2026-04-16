@@ -64,6 +64,7 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color
   color: var(--muted);
   margin: 0 0 0.75rem;
   line-height: 1.35;
+  white-space: pre-line;
 }
 .sync-status--error {
   color: #dc2626;

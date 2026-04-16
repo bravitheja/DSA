@@ -217,10 +217,12 @@
             const missing = [];
             if (!clientId) missing.push("googleClientId");
             if (!cfg.syncWebAppUrl) missing.push("syncWebAppUrl");
-            setSyncStatus(
-                `Missing ${missing.join(" and ")}. Add auth-config.js locally (see auth-config.example.js) or set GitHub Secrets GOOGLE_CLIENT_ID + DSA_SYNC_WEB_APP_URL and redeploy.`,
-                true
-            );
+            let msg = `Missing ${missing.join(" and ")}. Edit auth-config.js locally (see auth-config.example.js), or add repo secrets GOOGLE_CLIENT_ID + DSA_SYNC_WEB_APP_URL and deploy via Actions.`;
+            if (typeof location !== "undefined" && /\.github\.io$/i.test(location.hostname)) {
+                msg +=
+                    "\n\nIf secrets are already set: open the repo → Settings → Pages → Build and deployment, and set Source to “GitHub Actions” (not “Deploy from a branch”). Branch deploy serves the empty auth-config.js from git. Then Actions → re-run the latest “Deploy GitHub Pages” workflow.";
+            }
+            setSyncStatus(msg, true);
             return;
         }
 

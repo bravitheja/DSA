@@ -3,6 +3,12 @@
  * Edit auth-config.js for local Google sync, or set GitHub Secrets and let CI overwrite on deploy.
  * index.html loads: <script src="auth-config.js"></script>
  *
+ * ── Secrets set but site still shows “Missing googleClientId”? ────────────────
+ * GitHub Pages must be published from the Actions workflow, not from the branch.
+ * Repo → Settings → Pages → Build and deployment → Source: “GitHub Actions”.
+ * If it says “Deploy from a branch”, the live site uses the committed empty auth-config.js.
+ * Then Actions → re-run “Deploy GitHub Pages”.
+ *
  * ── Google Cloud ─────────────────────────────────────────────────────────────
  * 1. Google Cloud Console → APIs & Services → OAuth consent screen (External or Internal).
  * 2. Credentials → Create OAuth client ID → Web application.
