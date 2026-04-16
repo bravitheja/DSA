@@ -12,8 +12,46 @@
     />
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
+    <!-- Local dev: copy auth-config.example.js → auth-config.js. CI generates auth-config.js on deploy. -->
+    <script src="auth-config.js"></script>
+    <script>
+      window.__DSA_AUTH__ = window.__DSA_AUTH__ || { enabled: false, mode: "none" };
+      window.__DSA_CONFIG__ = window.__DSA_CONFIG__ || { googleClientId: "", syncWebAppUrl: "" };
+    </script>
+
+    <div
+      id="loginOverlay"
+      class="login-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="loginTitle"
+      hidden
+    >
+      <div class="login-card">
+        <h2 id="loginTitle" class="login-title">Sign in</h2>
+        <p class="login-hint">
+          Legacy password gate (optional). For Google sign-in and cross-device sync, use <strong>Cloud sync</strong> in
+          the sidebar instead — see <code>auth-config.example.js</code>.
+        </p>
+        <form id="loginForm" class="login-form" autocomplete="on">
+          <label class="login-field">
+            <span>Username</span>
+            <input id="loginUser" name="username" type="text" required autocomplete="username" />
+          </label>
+          <label class="login-field">
+            <span>Password</span>
+            <input id="loginPass" name="password" type="password" required autocomplete="current-password" />
+          </label>
+          <p id="loginError" class="login-error" role="alert" hidden></p>
+          <button type="submit" class="login-submit" id="loginSubmit">Continue</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="appRoot" class="app-root">
     <div class="dashboard-shell">
       <aside class="sidebar">
         <div class="brand-row">
@@ -22,7 +60,20 @@
             <p>Mastering Patterns</p>
           </div>
           <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+          <button type="button" id="logoutBtn" class="logout-btn" hidden aria-label="Sign out">Sign out</button>
         </div>
+
+        <section id="googleSyncSection" class="sidebar-card sync-section" hidden>
+          <h2>Cloud sync</h2>
+          <p id="syncStatusText" class="sync-status">Configure auth-config.js to enable.</p>
+          <div id="googleSignInBtn" class="google-signin-host"></div>
+          <div id="googleSignedIn" class="google-signed-in" hidden>
+            <p class="sync-email" id="googleAccountEmail"></p>
+            <button type="button" id="googleSignOutBtn" class="logout-btn sync-signout">
+              Sign out of Google
+            </button>
+          </div>
+        </section>
 
         <section class="sidebar-card">
           <h2>Mastery Progress</h2>
@@ -209,11 +260,15 @@
         <td class="actions-cell"></td>
       </tr>
     </template>
+    </div>
+    <!-- /#appRoot -->
 
     <!-- data.js: same data as data.json, for file:// (fetch cannot load local files). Regenerate: node scripts/build-data-js.mjs -->
     <script src="data.js" defer></script>
     <!-- interview-data.js: from data/sheets/interview-tracker.json — run: node scripts/generate-interview-sheets.mjs && node scripts/build-interview-data-js.mjs -->
     <script src="interview-data.js" defer></script>
+    <script src="sync.js" defer></script>
     <script src="app.js" defer></script>
+    <script src="auth.js" defer></script>
   </body>
 </html>
