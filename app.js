@@ -164,7 +164,9 @@ function createProblemRow(p) {
     const noteBtn = document.createElement("button");
     noteBtn.className = "note-btn";
     noteBtn.textContent = "📝 Notes";
-    noteBtn.addEventListener("click", () => openNotesSheet(p.id));
+
+    noteBtn.addEventListener("click", () => window.openNotesSheet(p.id));
+
     actionCell.appendChild(noteBtn);
     return row;
 }
