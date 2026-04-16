@@ -10,7 +10,7 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, oauth_enabled]
   workflow_dispatch: # manual run: Actions → Deploy GitHub Pages → Run workflow
 
 permissions:
