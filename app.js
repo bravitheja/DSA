@@ -61,7 +61,7 @@ const elements = {
 };
 
 let allProblems = [];
-let trackerState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+let trackerState = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") || {};
 let activeNotesId = null;
 let filteredProblems = [];
 let currentPage = 1;
@@ -90,15 +90,24 @@ const appPageTitle = document.title;
 /** @type {Map<string, number>} problem id -> index in data.json order */
 let curatedOrderIndex = new Map();
 
-init();
+/** Started once after optional login (see auth.js). */
+window.__DSA_START_APP__ = init;
+
+let __dsaAppStarted = false;
 
 async function init() {
+    if (__dsaAppStarted) return;
+    __dsaAppStarted = true;
     applyTheme(localStorage.getItem(THEME_KEY) || "light");
     try {
         bindControls();
         initPaginationControls();
         initSessionTimer();
         const raw = await loadData();
+        if (typeof window.dsaMergeCloudBeforeNormalize === "function") {
+            await window.dsaMergeCloudBeforeNormalize();
+        }
+        trackerState = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") || {};
         let items = normalizeProblemData(raw);
         const interviewSheets = await loadInterviewSheets();
         if (interviewSheets?.tracker?.byUrl) {
@@ -951,10 +960,18 @@ function renderNotesPreview() {
     elements.notesPreview.textContent = markdown;
 }
 function patchProblemState(id, partial) {
-    trackerState[id] = { ...trackerState[id], ...partial };
+    const next = {
+        ...trackerState[id],
+        ...partial,
+        updatedAt: new Date().toISOString(),
+    };
+    trackerState[id] = next;
     const problem = allProblems.find((item) => item.id === id);
     if (problem) Object.assign(problem, partial);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trackerState));
+    if (typeof window.dsaSchedulePush === "function") {
+        window.dsaSchedulePush(id);
+    }
 }
 function populatePatternFilter(items) {
     const ps = [...new Set(items.map(i => i.pattern))].sort();
