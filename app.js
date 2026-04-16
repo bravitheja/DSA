@@ -9,6 +9,20 @@ const TIMER_MAX_DURATION_SEC = 24 * 3600;
 
 const getEl = (id) => document.getElementById(id);
 
+/**
+ * Directory URL containing app.js (and data.json). Using this for fetch() fixes GitHub Pages
+ * project sites where `./data.json` resolves against the wrong path (e.g. repo root vs /repo/).
+ */
+function getAssetBaseUrl() {
+    const el = Array.from(document.scripts).find(
+        (s) => s.src && /\/app\.js([?#].*)?$/i.test(s.src)
+    );
+    if (el) {
+        return new URL(".", el.src).href;
+    }
+    return new URL("./", window.location.href).href;
+}
+
 const elements = {
     body: getEl("problemsBody"),
     rowTemplate: getEl("problemRowTemplate"),
@@ -112,9 +126,10 @@ async function loadData() {
     if (window.location.protocol === "file:" && Array.isArray(window.__DSA_DATA)) {
         return window.__DSA_DATA;
     }
+    const dataUrl = new URL("data.json", getAssetBaseUrl()).href;
     try {
-        const res = await fetch("./data.json", { cache: "no-cache" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const res = await fetch(dataUrl, { cache: "no-cache" });
+        if (!res.ok) throw new Error(`HTTP ${res.status} ${dataUrl}`);
         return await res.json();
     } catch (e) {
         if (Array.isArray(window.__DSA_DATA)) {
@@ -133,10 +148,11 @@ async function loadInterviewSheets() {
     if (window.location.protocol === "file:" && window.__INTERVIEW_SHEETS?.tracker) {
         return window.__INTERVIEW_SHEETS;
     }
+    const interviewUrl = new URL("data/sheets/interview-tracker.json", getAssetBaseUrl()).href;
     try {
-        const res = await fetch("./data/sheets/interview-tracker.json", { cache: "no-cache" });
+        const res = await fetch(interviewUrl, { cache: "no-cache" });
         if (!res.ok) {
-            console.warn("interview-tracker.json missing; interview columns empty");
+            console.warn("interview-tracker.json missing; interview columns empty", interviewUrl);
             return window.__INTERVIEW_SHEETS || null;
         }
         return { tracker: await res.json() };
