@@ -36,6 +36,7 @@ let currentPage = 1;
 const ITEMS_PER_PAGE_DESKTOP = 12;
 const ITEMS_PER_PAGE_MOBILE = 6;
 let saveTimeout;
+let previewMode = false;
 
 init();
 
@@ -64,6 +65,8 @@ function bindControls() {
     elements.difficultyFilter.addEventListener("change", applyAndRender);
     elements.sheetCloseBtn.addEventListener("click", closeNotesSheet);
     elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
+    elements.sheetNotesInput.addEventListener("input", onNotesInput);
+    elements.togglePreviewBtn.addEventListener("click", toggleNotesPreview);
     elements.prevPageBtn.addEventListener("click", () => changePage(-1));
     elements.nextPageBtn.addEventListener("click", () => changePage(1));
     elements.themeToggle.addEventListener("click", () => {
@@ -161,7 +164,9 @@ function createProblemRow(p) {
     const noteBtn = document.createElement("button");
     noteBtn.className = "note-btn";
     noteBtn.textContent = "📝 Notes";
-    noteBtn.addEventListener("click", () => openNotesSheet(p.id));
+
+    noteBtn.addEventListener("click", () => window.openNotesSheet(p.id));
+
     actionCell.appendChild(noteBtn);
     return row;
 }
@@ -238,13 +243,66 @@ window.pickRandom = () => {
 
 window.openNotesSheet = (id) => {
     const p = allProblems.find(i => i.id === id);
+    if (!p) return;
     activeNotesId = id;
     elements.sheetTitle.textContent = p.problem;
     elements.sheetNotesInput.value = p.notes;
+    setAutoSaveStatus("Saved");
+    setPreviewMode(false);
     elements.notesSheet.classList.add("open");
 };
 
-function closeNotesSheet() { elements.notesSheet.classList.remove("open"); activeNotesId = null; }
+function closeNotesSheet() {
+    saveNotesNow();
+    elements.notesSheet.classList.remove("open");
+    activeNotesId = null;
+}
+
+function onNotesInput() {
+    if (!activeNotesId) return;
+    setAutoSaveStatus("Saving...");
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(saveNotesNow, 250);
+    if (previewMode) renderNotesPreview();
+}
+
+function saveNotesNow() {
+    if (!activeNotesId) return;
+    const notes = elements.sheetNotesInput.value;
+    patchProblemState(activeNotesId, { notes });
+    const idx = allProblems.findIndex(i => i.id === activeNotesId);
+    if (idx !== -1) allProblems[idx].notes = notes;
+    setAutoSaveStatus("Saved");
+}
+
+function setAutoSaveStatus(text) {
+    elements.autoSaveStatus.textContent = text;
+}
+
+function toggleNotesPreview() {
+    setPreviewMode(!previewMode);
+}
+
+function setPreviewMode(nextPreviewMode) {
+    previewMode = nextPreviewMode;
+    elements.togglePreviewBtn.textContent = previewMode ? "Edit" : "Preview";
+    elements.sheetNotesInput.classList.toggle("hidden", previewMode);
+    elements.notesPreview.classList.toggle("hidden", !previewMode);
+    if (previewMode) renderNotesPreview();
+}
+
+function renderNotesPreview() {
+    const markdown = elements.sheetNotesInput.value.trim();
+    if (!markdown) {
+        elements.notesPreview.innerHTML = `<p class="preview-placeholder">Nothing to preview yet.</p>`;
+        return;
+    }
+    if (window.marked?.parse) {
+        elements.notesPreview.innerHTML = window.marked.parse(markdown);
+        return;
+    }
+    elements.notesPreview.textContent = markdown;
+}
 function patchProblemState(id, partial) {
     trackerState[id] = { ...trackerState[id], ...partial };
     const problem = allProblems.find((item) => item.id === id);
