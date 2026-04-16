@@ -1,4 +1,7 @@
 const STORAGE_KEY = "dsa-tracker-state-v4";
+const PAGE_SIZE_KEY = "dsa-items-per-page-v1";
+const PAGE_SIZE_MIN = 5;
+const PAGE_SIZE_MAX = 500;
 const THEME_KEY = "dsa-tracker-theme";
 const TIMER_PREFS_KEY = "dsa-session-timer-prefs-v1";
 const TIMER_FLOAT_POS_KEY = "dsa-timer-float-pos-v1";
@@ -12,6 +15,8 @@ const elements = {
     searchInput: getEl("searchInput"),
     patternFilter: getEl("patternFilter"),
     difficultyFilter: getEl("difficultyFilter"),
+    companyFilter: getEl("companyFilter"),
+    sortOrderSelect: getEl("sortOrderSelect"),
     themeToggle: getEl("themeToggle"),
     solvedCount: getEl("solvedCount"),
     easyRing: getEl("easyRing"),
@@ -28,7 +33,9 @@ const elements = {
     togglePreviewBtn: getEl("togglePreviewBtn"),
     prevPageBtn: getEl("prevPageBtn"),
     nextPageBtn: getEl("nextPageBtn"),
-    pageInfo: getEl("pageInfo"),
+    pageSizeInput: getEl("pageSizeInput"),
+    pageJumpInput: getEl("pageJumpInput"),
+    pageTotalHint: getEl("pageTotalHint"),
     timerPanel: getEl("timerPanel"),
     timerTimeInput: getEl("timerTimeInput"),
     timerProgressFill: getEl("timerProgressFill"),
@@ -46,6 +53,15 @@ let filteredProblems = [];
 let currentPage = 1;
 const ITEMS_PER_PAGE_DESKTOP = 12;
 const ITEMS_PER_PAGE_MOBILE = 6;
+/** @type {boolean} */
+let pageSizeUserSet = false;
+try {
+    pageSizeUserSet = localStorage.getItem(PAGE_SIZE_KEY) != null;
+} catch (_) {
+    /* ignore */
+}
+/** @type {number} */
+let itemsPerPageOverride = loadStoredPageSize();
 let saveTimeout;
 let previewMode = false;
 
@@ -57,16 +73,29 @@ let timerIntervalId = null;
 let timerTitleFlashId = null;
 const appPageTitle = document.title;
 
+/** @type {Map<string, number>} problem id -> index in data.json order */
+let curatedOrderIndex = new Map();
+
 init();
 
 async function init() {
     applyTheme(localStorage.getItem(THEME_KEY) || "light");
     try {
         bindControls();
+        initPaginationControls();
         initSessionTimer();
         const raw = await loadData();
-        allProblems = normalizeProblemData(raw);
+        let items = normalizeProblemData(raw);
+        const interviewSheets = await loadInterviewSheets();
+        if (interviewSheets?.tracker?.byUrl) {
+            items = mergeInterviewFromSheets(items, interviewSheets.tracker.byUrl);
+        } else {
+            items = mergeInterviewFromSheets(items, {});
+        }
+        allProblems = items;
+        refreshCuratedOrderIndex();
         populatePatternFilter(allProblems);
+        populateCompanyFilter(allProblems);
         applyAndRender();
     } catch (err) {
         console.error(err);
@@ -96,16 +125,151 @@ async function loadData() {
     }
 }
 
+/**
+ * Slim sheet: data/sheets/interview-tracker.json (from company_questions_by_url.json + data.json).
+ * file:// uses window.__INTERVIEW_SHEETS from interview-data.js.
+ */
+async function loadInterviewSheets() {
+    if (window.location.protocol === "file:" && window.__INTERVIEW_SHEETS?.tracker) {
+        return window.__INTERVIEW_SHEETS;
+    }
+    try {
+        const res = await fetch("./data/sheets/interview-tracker.json", { cache: "no-cache" });
+        if (!res.ok) {
+            console.warn("interview-tracker.json missing; interview columns empty");
+            return window.__INTERVIEW_SHEETS || null;
+        }
+        return { tracker: await res.json() };
+    } catch (e) {
+        if (window.__INTERVIEW_SHEETS?.tracker) {
+            console.warn("fetch interview sheet failed; using interview-data.js", e);
+            return window.__INTERVIEW_SHEETS;
+        }
+        console.warn("Interview data not available", e);
+        return null;
+    }
+}
+
+function normalizeUrlKey(url) {
+    let u = String(url ?? "")
+        .trim()
+        .replace(/\[|\]|\(.*\)/g, "")
+        .trim();
+    for (const sep of ["#", "?"]) {
+        if (u.includes(sep)) u = u.split(sep, 1)[0];
+    }
+    return u.replace(/\/+$/, "");
+}
+
+function mergeInterviewFromSheets(items, byUrl) {
+    return items.map((p) => {
+        const key = normalizeUrlKey(p.link);
+        const iv = byUrl[key];
+        if (!iv) {
+            return {
+                ...p,
+                interviewMatched: false,
+                interviewCompanies: [],
+                interviewAppearanceCount: 0,
+                interviewCompanyCount: 0,
+                interviewFrequencyPct: 0,
+            };
+        }
+        return {
+            ...p,
+            interviewMatched: !!iv.matched,
+            interviewCompanies: Array.isArray(iv.companies) ? iv.companies : [],
+            interviewAppearanceCount: iv.appearance_count ?? 0,
+            interviewCompanyCount: iv.company_count ?? 0,
+            interviewFrequencyPct: iv.appearance_frequency_pct ?? 0,
+        };
+    });
+}
+
+function refreshCuratedOrderIndex() {
+    curatedOrderIndex = new Map(allProblems.map((p, i) => [p.id, i]));
+}
+
+function getDefaultPageSize() {
+    return window.innerWidth <= 850 ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP;
+}
+
+function loadStoredPageSize() {
+    try {
+        const raw = localStorage.getItem(PAGE_SIZE_KEY);
+        if (raw == null) return getDefaultPageSize();
+        const n = parseInt(raw, 10);
+        if (Number.isFinite(n)) {
+            return Math.min(PAGE_SIZE_MAX, Math.max(PAGE_SIZE_MIN, n));
+        }
+    } catch (_) {
+        /* ignore */
+    }
+    return getDefaultPageSize();
+}
+
+function syncPageSizeFromViewportIfAuto() {
+    if (!pageSizeUserSet) {
+        itemsPerPageOverride = getDefaultPageSize();
+        if (elements.pageSizeInput) {
+            elements.pageSizeInput.value = String(itemsPerPageOverride);
+        }
+    }
+}
+
+function onPageSizeChange() {
+    const raw = elements.pageSizeInput.value;
+    const n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) return;
+    const v = Math.min(PAGE_SIZE_MAX, Math.max(PAGE_SIZE_MIN, n));
+    itemsPerPageOverride = v;
+    elements.pageSizeInput.value = String(v);
+    pageSizeUserSet = true;
+    try {
+        localStorage.setItem(PAGE_SIZE_KEY, String(v));
+    } catch (_) {
+        /* ignore */
+    }
+    const totalPages = getTotalPages(filteredProblems.length);
+    currentPage = Math.min(currentPage, totalPages);
+    renderProblems();
+    renderPagination(totalPages);
+}
+
+function initPaginationControls() {
+    elements.pageSizeInput.min = String(PAGE_SIZE_MIN);
+    elements.pageSizeInput.max = String(PAGE_SIZE_MAX);
+    elements.pageSizeInput.value = String(itemsPerPageOverride);
+    elements.pageSizeInput.addEventListener("change", onPageSizeChange);
+    elements.pageSizeInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            onPageSizeChange();
+        }
+    });
+}
+
 function bindControls() {
     elements.searchInput.addEventListener("input", applyAndRender);
     elements.patternFilter.addEventListener("change", applyAndRender);
     elements.difficultyFilter.addEventListener("change", applyAndRender);
+    elements.companyFilter.addEventListener("change", applyAndRender);
+    elements.sortOrderSelect.addEventListener("change", applyAndRender);
     elements.sheetCloseBtn.addEventListener("click", closeNotesSheet);
     elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
     elements.sheetNotesInput.addEventListener("input", onNotesInput);
     elements.togglePreviewBtn.addEventListener("click", toggleNotesPreview);
     elements.prevPageBtn.addEventListener("click", () => changePage(-1));
     elements.nextPageBtn.addEventListener("click", () => changePage(1));
+    elements.pageJumpInput.addEventListener("change", () => {
+        goToPage(elements.pageJumpInput.value);
+    });
+    elements.pageJumpInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            goToPage(elements.pageJumpInput.value);
+        }
+    });
     elements.themeToggle.addEventListener("click", () => {
         const next = document.body.classList.contains("dark") ? "light" : "dark";
         applyTheme(next);
@@ -121,6 +285,7 @@ function bindControls() {
     window.addEventListener("resize", () => {
         if (window.innerWidth > 850) closeMobileTimerDock();
         else clampTimerFloatToViewport();
+        syncPageSizeFromViewportIfAuto();
         const totalPages = getTotalPages(filteredProblems.length);
         currentPage = Math.min(currentPage, totalPages);
         renderProblems();
@@ -480,7 +645,7 @@ function normalizeProblemData(items) {
         return {
             id,
             problem: item.problem || "Untitled",
-            link: (item.link || "").replace(/\[|\]|\(.*\)/g, '').trim(),
+            link: (item.link || "").replace(/\[|\]|\(.*\)/g, "").trim(),
             pattern: item.pattern || "General",
             subPattern: item.subPattern || "",
             difficulty: item.difficulty || "Medium",
@@ -528,11 +693,23 @@ function createProblemRow(p) {
     problemCell.appendChild(toggleBtn);
 
     const heat = Math.min((p.frequency / 650) * 100, 100);
+    const ivPct = typeof p.interviewFrequencyPct === "number" ? p.interviewFrequencyPct : 0;
+    const ivHeat = Math.min(ivPct, 100);
+    const interviewLine =
+        p.interviewMatched && (p.interviewAppearanceCount > 0 || p.interviewCompanyCount > 0)
+            ? `<div class="interview-freq" title="From company_questions_by_url aggregate">
+            <span class="interview-pct">${ivPct.toFixed(1)}%</span> exposure
+            <span class="interview-meta"> · ${p.interviewCompanyCount} companies · ${p.interviewAppearanceCount} listings</span>
+          </div>
+          <div class="heat-bar-bg interview-heat" style="width:100px;"><div class="heat-bar-fill heat-bar-fill--interview" style="width: ${ivHeat}%"></div></div>`
+            : `<div class="interview-freq interview-freq--empty">No interview sheet match</div>`;
     row.querySelector(".frequency-cell").innerHTML = `
         <div class="freq-container">
             <span class="freq-num">${p.frequency}</span>
+            <span class="freq-label">curated</span>
             <div class="heat-bar-bg" style="width:100px;"><div class="heat-bar-fill" style="width: ${heat}%"></div></div>
-        </div>`;
+        </div>
+        <div class="freq-interview-block">${interviewLine}</div>`;
 
     row.querySelector(".concept-cell").innerHTML = `
         <div class="concept-stack">
@@ -571,17 +748,58 @@ function applyAndRender() {
     const query = elements.searchInput.value.toLowerCase();
     const pattern = elements.patternFilter.value;
     const diff = elements.difficultyFilter.value;
+    const company = elements.companyFilter.value;
+    const sortOrder = elements.sortOrderSelect.value;
 
-    filteredProblems = allProblems.filter(p => {
-        return (p.problem.toLowerCase().includes(query)) &&
-               (pattern === "all" || p.pattern === pattern) &&
-               (diff === "all" || p.difficulty === diff);
+    let list = allProblems.filter((p) => {
+        const textOk =
+            p.problem.toLowerCase().includes(query) ||
+            p.pattern.toLowerCase().includes(query) ||
+            p.coreIdea.toLowerCase().includes(query);
+        const companyOk =
+            company === "all" ||
+            (p.interviewCompanies && p.interviewCompanies.includes(company));
+        return (
+            textOk &&
+            (pattern === "all" || p.pattern === pattern) &&
+            (diff === "all" || p.difficulty === diff) &&
+            companyOk
+        );
     });
+
+    list = sortProblemsForDisplay(list, sortOrder);
+
+    filteredProblems = list;
 
     currentPage = 1;
     renderProblems();
     renderPagination(getTotalPages(filteredProblems.length));
     updateSidebarStats(allProblems);
+}
+
+/**
+ * @param {typeof allProblems} list
+ * @param {string} sortOrder
+ */
+function sortProblemsForDisplay(list, sortOrder) {
+    const copy = [...list];
+    if (sortOrder === "interview") {
+        copy.sort(
+            (a, b) => (b.interviewFrequencyPct || 0) - (a.interviewFrequencyPct || 0)
+        );
+    } else if (sortOrder === "companies") {
+        copy.sort(
+            (a, b) =>
+                (b.interviewCompanyCount || 0) - (a.interviewCompanyCount || 0)
+        );
+    } else {
+        copy.sort(
+            (a, b) =>
+                (curatedOrderIndex.get(a.id) ?? 0) -
+                (curatedOrderIndex.get(b.id) ?? 0)
+        );
+    }
+    return copy;
 }
 
 function renderProblems() {
@@ -599,24 +817,35 @@ function renderProblems() {
 }
 
 function getItemsPerPage() {
-    return window.innerWidth <= 850 ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP;
+    return itemsPerPageOverride;
 }
 
 function getTotalPages(totalItems) {
     return Math.max(1, Math.ceil(totalItems / getItemsPerPage()));
 }
 
-function changePage(delta) {
+function goToPage(rawPage) {
     const totalPages = getTotalPages(filteredProblems.length);
-    currentPage = Math.min(totalPages, Math.max(1, currentPage + delta));
+    const n = Math.floor(Number(rawPage));
+    const target = Number.isFinite(n) ? n : currentPage;
+    currentPage = Math.min(totalPages, Math.max(1, target));
     renderProblems();
     renderPagination(totalPages);
 }
 
+function changePage(delta) {
+    goToPage(currentPage + delta);
+}
+
 function renderPagination(totalPages) {
-    elements.pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
     elements.prevPageBtn.disabled = currentPage === 1;
     elements.nextPageBtn.disabled = currentPage === totalPages;
+    const jumpDisabled = totalPages <= 1;
+    elements.pageJumpInput.disabled = jumpDisabled;
+    elements.pageJumpInput.min = "1";
+    elements.pageJumpInput.max = String(totalPages);
+    elements.pageJumpInput.value = String(currentPage);
+    elements.pageTotalHint.textContent = totalPages > 0 ? ` / ${totalPages}` : "";
 }
 
 function updateSidebarStats(items) {
@@ -714,5 +943,25 @@ function patchProblemState(id, partial) {
 function populatePatternFilter(items) {
     const ps = [...new Set(items.map(i => i.pattern))].sort();
     elements.patternFilter.innerHTML = `<option value="all">Pattern: All</option>` + ps.map(p => `<option value="${p}">${p}</option>`).join("");
+}
+
+function populateCompanyFilter(items) {
+    const sel = elements.companyFilter;
+    const set = new Set();
+    items.forEach((p) => {
+        (p.interviewCompanies || []).forEach((c) => set.add(c));
+    });
+    const companies = [...set].sort();
+    sel.innerHTML = "";
+    const allOpt = document.createElement("option");
+    allOpt.value = "all";
+    allOpt.textContent = "Company: All";
+    sel.appendChild(allOpt);
+    companies.forEach((c) => {
+        const o = document.createElement("option");
+        o.value = c;
+        o.textContent = c.length ? c.charAt(0).toUpperCase() + c.slice(1) : c;
+        sel.appendChild(o);
+    });
 }
 function applyTheme(t) { document.body.classList.toggle("dark", t === "dark"); elements.themeToggle.textContent = t === "dark" ? "☀️" : "🌙"; }

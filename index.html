@@ -97,6 +97,16 @@
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
+
+          <select id="companyFilter" aria-label="Filter by company (interview data)">
+            <option value="all">Company: All</option>
+          </select>
+
+          <select id="sortOrderSelect" aria-label="Sort problems">
+            <option value="curated">Sort: Curated frequency</option>
+            <option value="interview">Sort: Interview exposure</option>
+            <option value="companies">Sort: Company count</option>
+          </select>
           
           <div class="filter-bar-split">
             <button onclick="pickRandom()" class="random-btn" title="Pick a random unmastered problem">🎲 Random</button>
@@ -132,9 +142,38 @@
           </table>
         </section>
         <nav class="pagination-bar" aria-label="Problems pagination">
-          <button id="prevPageBtn" class="secondary-btn" type="button">← Prev</button>
-          <span id="pageInfo" class="page-info">Page 1 of 1</span>
-          <button id="nextPageBtn" class="secondary-btn" type="button">Next →</button>
+          <div class="pagination-group">
+            <label for="pageSizeInput" class="pagination-label">Size</label>
+            <input
+              id="pageSizeInput"
+              class="pagination-num-input"
+              type="number"
+              min="5"
+              max="500"
+              step="1"
+              inputmode="numeric"
+              aria-label="Problems per page"
+            />
+          </div>
+          <div class="pagination-group pagination-group--page">
+            <span class="pagination-label">Page</span>
+            <button id="prevPageBtn" type="button" class="pagination-nav-btn">Prev</button>
+            <div class="pagination-page-field">
+              <input
+                id="pageJumpInput"
+                class="pagination-num-input pagination-num-input--page"
+                type="number"
+                min="1"
+                max="1"
+                value="1"
+                step="1"
+                inputmode="numeric"
+                aria-label="Current page number"
+              />
+              <span id="pageTotalHint" class="pagination-page-of" aria-hidden="true"></span>
+            </div>
+            <button id="nextPageBtn" type="button" class="pagination-nav-btn">Next</button>
+          </div>
         </nav>
       </main>
     </div>
@@ -173,6 +212,8 @@
 
     <!-- data.js: same data as data.json, for file:// (fetch cannot load local files). Regenerate: node scripts/build-data-js.mjs -->
     <script src="data.js" defer></script>
+    <!-- interview-data.js: from data/sheets/interview-tracker.json — run: node scripts/generate-interview-sheets.mjs && node scripts/build-interview-data-js.mjs -->
+    <script src="interview-data.js" defer></script>
     <script src="app.js" defer></script>
   </body>
 </html>
