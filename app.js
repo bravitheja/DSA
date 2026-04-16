@@ -153,8 +153,16 @@ function createProblemRow(p) {
 
     row.querySelector(".complexity-cell").innerHTML = `<span>${p.complexity}</span>`;
     row.querySelector(".difficulty-cell").innerHTML = `<div><span class="badge difficulty-${p.difficulty.toLowerCase()}">${p.difficulty}</span></div>`;
-    row.querySelector(".actions-cell").innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="note-btn">📝 Notes</button>`;
-
+    // row.querySelector(".actions-cell").innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="note-btn">📝 Notes</button>`;
+        
+    // --- FIXED NOTES BUTTON ---
+    const actionCell = row.querySelector(".actions-cell");
+    actionCell.innerHTML = ""; // Clear any template junk
+    const noteBtn = document.createElement("button");
+    noteBtn.className = "note-btn";
+    noteBtn.textContent = "📝 Notes";
+    noteBtn.addEventListener("click", () => openNotesSheet(p.id));
+    actionCell.appendChild(noteBtn);
     return row;
 }
 
