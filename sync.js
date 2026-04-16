@@ -212,11 +212,17 @@
         const emailEl = document.getElementById("googleAccountEmail");
         const outBtn = document.getElementById("googleSignOutBtn");
 
+        if (wrap) wrap.hidden = false;
         if (!clientId || !cfg.syncWebAppUrl) {
-            if (wrap) wrap.hidden = true;
+            const missing = [];
+            if (!clientId) missing.push("googleClientId");
+            if (!cfg.syncWebAppUrl) missing.push("syncWebAppUrl");
+            setSyncStatus(
+                `Missing ${missing.join(" and ")}. Add auth-config.js locally (see auth-config.example.js) or set GitHub Secrets GOOGLE_CLIENT_ID + DSA_SYNC_WEB_APP_URL and redeploy.`,
+                true
+            );
             return;
         }
-        if (wrap) wrap.hidden = false;
 
         await waitForGsi();
         if (!window.google?.accounts?.id) {
