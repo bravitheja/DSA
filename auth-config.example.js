@@ -1,6 +1,7 @@
 /**
- * Copy to auth-config.js (gitignored) and add as the FIRST script in index.html:
- *   <script src="auth-config.js"></script>
+ * The repo includes auth-config.js (empty placeholders) so the app loads without 404s.
+ * Edit auth-config.js for local Google sync, or set GitHub Secrets and let CI overwrite on deploy.
+ * index.html loads: <script src="auth-config.js"></script>
  *
  * ── Google Cloud ─────────────────────────────────────────────────────────────
  * 1. Google Cloud Console → APIs & Services → OAuth consent screen (External or Internal).

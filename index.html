@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>AlgoInsight | Senior DSA Tracker</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,7 +16,7 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
-    <!-- Local dev: copy auth-config.example.js → auth-config.js. CI generates auth-config.js on deploy. -->
+    <!-- auth-config.js: committed defaults (empty); edit locally or let CI overwrite from secrets. -->
     <script src="auth-config.js"></script>
     <script>
       window.__DSA_AUTH__ = window.__DSA_AUTH__ || { enabled: false, mode: "none" };
