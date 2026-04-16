@@ -30,7 +30,6 @@ const elements = {
     patternFilter: getEl("patternFilter"),
     difficultyFilter: getEl("difficultyFilter"),
     companyFilter: getEl("companyFilter"),
-    sortOrderSelect: getEl("sortOrderSelect"),
     themeToggle: getEl("themeToggle"),
     solvedCount: getEl("solvedCount"),
     easyRing: getEl("easyRing"),
@@ -279,7 +278,6 @@ function bindControls() {
     elements.patternFilter.addEventListener("change", applyAndRender);
     elements.difficultyFilter.addEventListener("change", applyAndRender);
     elements.companyFilter.addEventListener("change", applyAndRender);
-    elements.sortOrderSelect.addEventListener("change", applyAndRender);
     elements.sheetCloseBtn.addEventListener("click", closeNotesSheet);
     elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
     elements.sheetNotesInput.addEventListener("input", onNotesInput);
@@ -774,7 +772,8 @@ function applyAndRender() {
     const pattern = elements.patternFilter.value;
     const diff = elements.difficultyFilter.value;
     const company = elements.companyFilter.value;
-    const sortOrder = elements.sortOrderSelect.value;
+    /** @type {"curated"} */
+    const sortOrder = "curated";
 
     let list = allProblems.filter((p) => {
         const textOk =

@@ -34,7 +34,8 @@
       <div class="login-card">
         <h2 id="loginTitle" class="login-title">Sign in</h2>
         <p class="login-hint">
-          Legacy password gate (optional). For Google sign-in and cross-device sync, use <strong>Cloud sync</strong> in
+          Legacy password gate (optional). For Google sign-in and cross-device sync, use the toolbar
+          <strong>Sign in</strong> control (top of the table).
           the sidebar instead — see <code>auth-config.example.js</code>.
         </p>
         <form id="loginForm" class="login-form" autocomplete="on">
@@ -63,18 +64,6 @@
           <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
           <button type="button" id="logoutBtn" class="logout-btn" hidden aria-label="Sign out">Sign out</button>
         </div>
-
-        <section id="googleSyncSection" class="sidebar-card sync-section">
-          <h2>Cloud sync</h2>
-          <p id="syncStatusText" class="sync-status">Loading…</p>
-          <div id="googleSignInBtn" class="google-signin-host"></div>
-          <div id="googleSignedIn" class="google-signed-in" hidden>
-            <p class="sync-email" id="googleAccountEmail"></p>
-            <button type="button" id="googleSignOutBtn" class="logout-btn sync-signout">
-              Sign out of Google
-            </button>
-          </div>
-        </section>
 
         <section class="sidebar-card">
           <h2>Mastery Progress</h2>
@@ -154,14 +143,16 @@
             <option value="all">Company: All</option>
           </select>
 
-          <select id="sortOrderSelect" aria-label="Sort problems">
-            <option value="curated">Sort: Curated frequency</option>
-            <option value="interview">Sort: Interview exposure</option>
-            <option value="companies">Sort: Company count</option>
-          </select>
-          
+          <button
+            type="button"
+            onclick="pickRandom()"
+            class="random-btn"
+            title="Pick a random unmastered problem"
+          >
+            🎲 Random
+          </button>
+
           <div class="filter-bar-split">
-            <button onclick="pickRandom()" class="random-btn" title="Pick a random unmastered problem">🎲 Random</button>
             <button
               type="button"
               id="timerMobileToggle"
@@ -172,6 +163,45 @@
             >
               ⏱
             </button>
+            <div id="googleSyncSection" class="toolbar-sync" aria-label="Account and sync">
+              <div class="toolbar-sync__main">
+                <span id="syncToolbarLabel" class="toolbar-sync__label" hidden>Sign in</span>
+                <div id="googleSignInBtn" class="google-signin-host google-signin-host--toolbar"></div>
+                <div id="googleSignedIn" class="google-signed-in" hidden>
+                  <div class="user-chip">
+                    <span class="user-chip__avatar" id="googleUserAvatar" aria-hidden="true">?</span>
+                    <span class="user-chip__name" id="googleAccountEmail"></span>
+                  </div>
+                  <button
+                    type="button"
+                    id="googleSignOutBtn"
+                    class="sync-signout-btn"
+                    aria-label="Sign out of Google account"
+                  >
+                    <svg
+                      class="sync-signout-btn__icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Sign out</span>
+                  </button>
+                </div>
+                <span id="syncActivity" class="toolbar-sync__activity" aria-live="polite" hidden></span>
+              </div>
+              <p id="syncStatusText" class="toolbar-sync__error sync-status" role="alert" hidden></p>
+            </div>
           </div>
         </header>
 

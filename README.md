@@ -15,8 +15,8 @@ A static GitHub Pages-ready web app to track DSA preparation with richer intervi
   - Status
   - Notes
 - Tooltip with core idea/intuition when hovering problem name
-- Search + filters for pattern, sub pattern, difficulty, frequency
-- Sort modes: default, difficulty, frequency, alphabetical
+- Search + filters for pattern, difficulty, company (interview data)
+- Problems listed in curated frequency order (from the dataset)
 - Progress dashboard with completion bar
 - Dark mode toggle
 - Column visibility toggles (show/hide selected columns)
@@ -72,3 +72,13 @@ Then open `http://localhost:8000`.
    - **Branch:** `main`
    - **Folder:** `/ (root)`
 4. Save and wait for deployment URL.
+
+## Dev Notes:
+
+### Apps Script changes:
+After you edit SyncWebApp.gs, use Deploy → Manage deployments → Edit → New version → Deploy so the web app URL keeps using the latest code.
+### OAuth origins:
+If you ever change the site URL (custom domain, different repo path), add that origin under the Web client’s Authorized JavaScript origins in Google Cloud.
+### Sheet:
+Your progress is in localStorage first; sync pushes/pulls against the sheet—useful to know if you clear browser data or use another device.
+

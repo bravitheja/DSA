@@ -26,6 +26,51 @@
         }
     }
 
+    function parseJwtPayload(token) {
+        try {
+            const p = token.split(".")[1];
+            if (!p) return null;
+            const b64 = p.replace(/-/g, "+").replace(/_/g, "/");
+            return JSON.parse(atob(b64));
+        } catch (_) {
+            return null;
+        }
+    }
+
+    /** Returns stored ID token only if it looks valid and not expired; otherwise removes it. */
+    function getUsableToken() {
+        const t = getToken();
+        if (!t || typeof t !== "string") return null;
+        const parts = t.split(".");
+        if (parts.length !== 3) {
+            try {
+                localStorage.removeItem(TOKEN_KEY);
+            } catch (_) {
+                /* ignore */
+            }
+            return null;
+        }
+        const payload = parseJwtPayload(t);
+        if (!payload || typeof payload.exp !== "number") {
+            try {
+                localStorage.removeItem(TOKEN_KEY);
+            } catch (_) {
+                /* ignore */
+            }
+            return null;
+        }
+        const now = Math.floor(Date.now() / 1000);
+        if (payload.exp <= now + 30) {
+            try {
+                localStorage.removeItem(TOKEN_KEY);
+            } catch (_) {
+                /* ignore */
+            }
+            return null;
+        }
+        return t;
+    }
+
     function mergeCloudIntoLocalStorage(rows) {
         if (!Array.isArray(rows) || !rows.length) return;
         let state = {};
@@ -83,7 +128,7 @@
      * Called from app.js init before normalizeProblemData — reloads trackerState from disk after merge.
      */
     window.dsaMergeCloudBeforeNormalize = async function dsaMergeCloudBeforeNormalize() {
-        const token = getToken();
+        const token = getUsableToken();
         if (!token || !cfg.syncWebAppUrl) return;
         try {
             const data = await api({ action: "pullProgress", idToken: token });
@@ -118,7 +163,7 @@
 
     async function flushPush() {
         pushTimer = null;
-        const token = getToken();
+        const token = getUsableToken();
         if (!token || !cfg.syncWebAppUrl || dirty.size === 0) return;
         const rows = buildRowsFromDirty();
         if (!rows.length) {
@@ -129,16 +174,16 @@
         dirty.clear();
         try {
             await api({ action: "pushProgress", idToken: token, rows });
-            setSyncStatus("Synced", false);
+            setSyncActivity("Saved");
         } catch (e) {
             console.warn("[DSA sync] Push failed:", e);
             keys.forEach((k) => dirty.add(k));
-            setSyncStatus("Sync failed — will retry", true);
+            setSyncStatus("Sync error · retrying", true);
         }
     }
 
     function flushPushKeepalive() {
-        const token = getToken();
+        const token = getUsableToken();
         if (!token || !cfg.syncWebAppUrl || dirty.size === 0) return;
         const rows = buildRowsFromDirty();
         if (!rows.length) return;
@@ -157,9 +202,9 @@
     }
 
     window.dsaSchedulePush = function dsaSchedulePush(problemKey) {
-        if (!getToken() || !cfg.syncWebAppUrl) return;
+        if (!getUsableToken() || !cfg.syncWebAppUrl) return;
         dirty.add(problemKey);
-        setSyncStatus("Saving…", false);
+        setSyncActivity("Saving…");
         clearTimeout(pushTimer);
         pushTimer = setTimeout(() => {
             flushPush();
@@ -171,8 +216,29 @@
     function setSyncStatus(text, isError) {
         const el = document.getElementById("syncStatusText");
         if (!el) return;
+        if (!text) {
+            el.hidden = true;
+            el.textContent = "";
+            el.classList.remove("sync-status--error", "sync-status--fullwidth");
+            return;
+        }
+        el.hidden = false;
         el.textContent = text;
         el.classList.toggle("sync-status--error", !!isError);
+        const fullWidth = text.includes("\n") || text.length > 90;
+        el.classList.toggle("sync-status--fullwidth", fullWidth);
+    }
+
+    function setSyncActivity(text) {
+        const el = document.getElementById("syncActivity");
+        if (!el) return;
+        if (!text) {
+            el.hidden = true;
+            el.textContent = "";
+            return;
+        }
+        el.hidden = false;
+        el.textContent = text;
     }
 
     function waitForGsi() {
@@ -206,24 +272,28 @@
 
     window.dsaInitGoogleSync = async function dsaInitGoogleSync() {
         const clientId = cfg.googleClientId;
-        const wrap = document.getElementById("googleSyncSection");
+        const labelEl = document.getElementById("syncToolbarLabel");
         const btnHost = document.getElementById("googleSignInBtn");
         const signedInEl = document.getElementById("googleSignedIn");
         const emailEl = document.getElementById("googleAccountEmail");
         const outBtn = document.getElementById("googleSignOutBtn");
 
-        if (wrap) wrap.hidden = false;
+        if (labelEl) labelEl.hidden = true;
+        setSyncActivity("");
         if (!clientId || !cfg.syncWebAppUrl) {
-            const missing = [];
-            if (!clientId) missing.push("googleClientId");
-            if (!cfg.syncWebAppUrl) missing.push("syncWebAppUrl");
-            let msg = `Missing ${missing.join(" and ")}. Edit auth-config.js locally (see auth-config.example.js), or add repo secrets GOOGLE_CLIENT_ID + DSA_SYNC_WEB_APP_URL and deploy via Actions.`;
-            if (typeof location !== "undefined" && /\.github\.io$/i.test(location.hostname)) {
-                msg +=
-                    "\n\nIf secrets are already set: open the repo → Settings → Pages → Build and deployment, and set Source to “GitHub Actions” (not “Deploy from a branch”). Branch deploy serves the empty auth-config.js from git. Then Actions → re-run the latest “Deploy GitHub Pages” workflow.";
-            }
-            setSyncStatus(msg, true);
+            const section = document.getElementById("googleSyncSection");
+            if (section) section.hidden = true;
+            setSyncStatus("", false);
+            console.warn(
+                "[DSA sync] Skipped: set googleClientId and syncWebAppUrl (auth-config.js or CI secrets)."
+            );
             return;
+        }
+
+        setSyncStatus("", false);
+        {
+            const section = document.getElementById("googleSyncSection");
+            if (section) section.hidden = false;
         }
 
         await waitForGsi();
@@ -239,28 +309,45 @@
             cancel_on_tap_outside: true,
         });
 
-        const token = getToken();
+        const token = getUsableToken();
         if (token) {
             try {
-                const p = token.split(".")[1];
-                const b64 = p.replace(/-/g, "+").replace(/_/g, "/");
-                const payload = JSON.parse(atob(b64));
-                if (emailEl) emailEl.textContent = payload.email || payload.sub || "Signed in";
+                const payload = parseJwtPayload(token);
+                if (!payload) throw new Error("bad payload");
+                const avatarEl = document.getElementById("googleUserAvatar");
+                const chipEl = document.querySelector(".user-chip");
+                if (emailEl) {
+                    const em = payload.email || payload.sub || "Signed in";
+                    const local = em.includes("@") ? em.split("@")[0] : em;
+                    emailEl.textContent = local;
+                    emailEl.title = em.includes("@") ? em : "";
+                    if (chipEl) chipEl.title = em.includes("@") ? em : "";
+                    if (avatarEl) {
+                        const letters = local.replace(/[^a-zA-Z0-9]/g, "").slice(0, 2);
+                        avatarEl.textContent =
+                            letters.length >= 2
+                                ? letters.toUpperCase()
+                                : (local.slice(0, 2) || "?").toUpperCase();
+                    }
+                }
             } catch (_) {
                 if (emailEl) emailEl.textContent = "Signed in";
             }
+            if (labelEl) labelEl.hidden = true;
             if (btnHost) btnHost.innerHTML = "";
             if (signedInEl) signedInEl.hidden = false;
         } else {
+            if (labelEl) labelEl.hidden = true;
             if (signedInEl) signedInEl.hidden = true;
             if (btnHost) {
                 btnHost.innerHTML = "";
                 google.accounts.id.renderButton(btnHost, {
                     type: "standard",
                     theme: "outline",
-                    size: "large",
+                    size: "medium",
                     text: "signin_with",
-                    width: 240,
+                    width: 220,
+                    locale: "en",
                 });
             }
         }
@@ -277,10 +364,6 @@
             };
         }
 
-        if (token) {
-            setSyncStatus("Cloud sync on", false);
-        } else {
-            setSyncStatus("Sign in to sync across devices", false);
-        }
+        setSyncActivity("");
     };
 })();
