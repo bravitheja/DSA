@@ -22,12 +22,19 @@ const elements = {
     autoSaveStatus: getEl("autoSaveStatus"),
     sheetSaveBtn: getEl("sheetSaveBtn"),
     sheetCloseBtn: getEl("sheetCloseBtn"),
-    togglePreviewBtn: getEl("togglePreviewBtn")
+    togglePreviewBtn: getEl("togglePreviewBtn"),
+    prevPageBtn: getEl("prevPageBtn"),
+    nextPageBtn: getEl("nextPageBtn"),
+    pageInfo: getEl("pageInfo")
 };
 
 let allProblems = [];
 let trackerState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 let activeNotesId = null;
+let filteredProblems = [];
+let currentPage = 1;
+const ITEMS_PER_PAGE_DESKTOP = 12;
+const ITEMS_PER_PAGE_MOBILE = 6;
 let saveTimeout;
 let previewMode = false;
 
@@ -60,10 +67,19 @@ function bindControls() {
     elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
     elements.sheetNotesInput.addEventListener("input", onNotesInput);
     elements.togglePreviewBtn.addEventListener("click", toggleNotesPreview);
+    elements.prevPageBtn.addEventListener("click", () => changePage(-1));
+    elements.nextPageBtn.addEventListener("click", () => changePage(1));
     elements.themeToggle.addEventListener("click", () => {
         const next = document.body.classList.contains("dark") ? "light" : "dark";
         applyTheme(next);
         localStorage.setItem(THEME_KEY, next);
+    });
+
+    window.addEventListener("resize", () => {
+        const totalPages = getTotalPages(filteredProblems.length);
+        currentPage = Math.min(currentPage, totalPages);
+        renderProblems();
+        renderPagination(totalPages);
     });
 }
 
@@ -89,18 +105,27 @@ function normalizeProblemData(items) {
 
 function createProblemRow(p) {
     const row = elements.rowTemplate.content.firstElementChild.cloneNode(true);
+    const exploreUrl = `https://www.google.com/search?q=Explain+Leetcode+${encodeURIComponent(p.problem)}+solution+chatGPT`;
     if (p.status === "Mastered") row.classList.add("is-mastered");
 
     const cells = row.querySelectorAll('td');
     const labels = ['Done', 'Problem', 'Frequency', 'Concept', 'Complexity', 'Difficulty', 'Actions'];
     cells.forEach((cell, i) => cell.setAttribute('data-label', labels[i]));
 
-    // Accordion Toggle
-    row.addEventListener("click", (e) => {
+    // Accordion toggle button (single tap, explicit target)
+    const toggleBtn = document.createElement("button");
+    toggleBtn.type = "button";
+    toggleBtn.className = "accordion-toggle";
+    toggleBtn.setAttribute("aria-label", "Toggle problem details");
+    toggleBtn.setAttribute("aria-expanded", "false");
+    toggleBtn.textContent = "▼";
+    toggleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
         if (window.innerWidth > 850) return;
-        if (e.target.closest('a') || e.target.closest('input') || e.target.closest('button')) return;
-        row.classList.toggle("is-expanded");
+        const expanded = row.classList.toggle("is-expanded");
+        toggleBtn.setAttribute("aria-expanded", expanded ? "true" : "false");
     });
+    row.appendChild(toggleBtn);
 
     const check = row.querySelector(".mastered-check");
     check.checked = p.status === "Mastered";
@@ -122,12 +147,25 @@ function createProblemRow(p) {
         <div class="concept-stack">
             <div><span class="badge pattern-default">${p.pattern}</span></div>
             <div class="sub-pattern">${p.subPattern}</div>
+            <div class="idea-row">
+              <span class="idea-icon" aria-hidden="true">💡</span>
+              <a href="${exploreUrl}" target="_blank" rel="noopener noreferrer" class="explore-link">Explore 🔍</a>
+            </div>
+            <div class="core-idea">${p.coreIdea}</div>
         </div>`;
 
     row.querySelector(".complexity-cell").innerHTML = `<span>${p.complexity}</span>`;
     row.querySelector(".difficulty-cell").innerHTML = `<div><span class="badge difficulty-${p.difficulty.toLowerCase()}">${p.difficulty}</span></div>`;
-    row.querySelector(".actions-cell").innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="note-btn">📝 Notes</button>`;
-
+    // row.querySelector(".actions-cell").innerHTML = `<button onclick="openNotesSheet('${p.id}')" class="note-btn">📝 Notes</button>`;
+        
+    // --- FIXED NOTES BUTTON ---
+    const actionCell = row.querySelector(".actions-cell");
+    actionCell.innerHTML = ""; // Clear any template junk
+    const noteBtn = document.createElement("button");
+    noteBtn.className = "note-btn";
+    noteBtn.textContent = "📝 Notes";
+    noteBtn.addEventListener("click", () => openNotesSheet(p.id));
+    actionCell.appendChild(noteBtn);
     return row;
 }
 
@@ -136,15 +174,51 @@ function applyAndRender() {
     const pattern = elements.patternFilter.value;
     const diff = elements.difficultyFilter.value;
 
-    const filtered = allProblems.filter(p => {
+    filteredProblems = allProblems.filter(p => {
         return (p.problem.toLowerCase().includes(query)) &&
                (pattern === "all" || p.pattern === pattern) &&
                (diff === "all" || p.difficulty === diff);
     });
 
-    elements.body.innerHTML = "";
-    filtered.forEach(p => elements.body.appendChild(createProblemRow(p)));
+    currentPage = 1;
+    renderProblems();
+    renderPagination(getTotalPages(filteredProblems.length));
     updateSidebarStats(allProblems);
+}
+
+function renderProblems() {
+    const perPage = getItemsPerPage();
+    const start = (currentPage - 1) * perPage;
+    const pageItems = filteredProblems.slice(start, start + perPage);
+
+    elements.body.innerHTML = "";
+    if (!pageItems.length) {
+        elements.body.innerHTML = `<tr><td colspan="7" class="loading-state">No problems match current filters.</td></tr>`;
+        return;
+    }
+
+    pageItems.forEach(p => elements.body.appendChild(createProblemRow(p)));
+}
+
+function getItemsPerPage() {
+    return window.innerWidth <= 850 ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP;
+}
+
+function getTotalPages(totalItems) {
+    return Math.max(1, Math.ceil(totalItems / getItemsPerPage()));
+}
+
+function changePage(delta) {
+    const totalPages = getTotalPages(filteredProblems.length);
+    currentPage = Math.min(totalPages, Math.max(1, currentPage + delta));
+    renderProblems();
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    elements.pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+    elements.prevPageBtn.disabled = currentPage === 1;
+    elements.nextPageBtn.disabled = currentPage === totalPages;
 }
 
 function updateSidebarStats(items) {
@@ -229,6 +303,8 @@ function renderNotesPreview() {
 }
 function patchProblemState(id, partial) {
     trackerState[id] = { ...trackerState[id], ...partial };
+    const problem = allProblems.find((item) => item.id === id);
+    if (problem) Object.assign(problem, partial);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trackerState));
 }
 function populatePatternFilter(items) {
