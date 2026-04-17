@@ -8,7 +8,10 @@
  * @see scripts/google-apps-script/SyncWebApp.gs
  */
 (function () {
-    const TRACKER_KEY = "dsa-tracker-state-v4";
+    /** Pre-per-user installs; migrated into per-user key on first Google sign-in. */
+    const LEGACY_TRACKER_KEY = "dsa-tracker-state-v4";
+    /** Progress when not signed in with Google (cleared on Google sign-out). */
+    const SIGNED_OUT_TRACKER_KEY = LEGACY_TRACKER_KEY + ":signed-out";
     const TOKEN_KEY = "dsa-google-id-token";
     const DEBOUNCE_MS = 4000;
 
@@ -71,17 +74,99 @@
         return t;
     }
 
+    function getTrackerStorageKey() {
+        const t = getUsableToken();
+        if (!t) return SIGNED_OUT_TRACKER_KEY;
+        const p = parseJwtPayload(t);
+        const sub = p && p.sub != null ? String(p.sub) : "";
+        if (!sub) return SIGNED_OUT_TRACKER_KEY;
+        return LEGACY_TRACKER_KEY + ":user:" + sub;
+    }
+
+    function migrateLegacyTrackerIfNeeded() {
+        const t = getUsableToken();
+        if (!t) return;
+        const key = getTrackerStorageKey();
+        if (key === SIGNED_OUT_TRACKER_KEY) return;
+        try {
+            let existing = {};
+            try {
+                existing = JSON.parse(localStorage.getItem(key) || "{}") || {};
+            } catch (_) {
+                existing = {};
+            }
+            if (Object.keys(existing).length > 0) return;
+            const legRaw = localStorage.getItem(LEGACY_TRACKER_KEY);
+            if (!legRaw || legRaw === "{}") return;
+            let leg;
+            try {
+                leg = JSON.parse(legRaw);
+            } catch (_) {
+                return;
+            }
+            if (!leg || typeof leg !== "object" || Object.keys(leg).length === 0) return;
+            localStorage.setItem(key, legRaw);
+            localStorage.removeItem(LEGACY_TRACKER_KEY);
+        } catch (_) {
+            /* ignore */
+        }
+    }
+
+    /** Before storing new token: copy signed-out progress into this account's bucket (user wins on key clash). */
+    function mergeSignedOutIntoUserKey_(userKey) {
+        if (!userKey) return;
+        try {
+            let user = {};
+            try {
+                user = JSON.parse(localStorage.getItem(userKey) || "{}") || {};
+            } catch (_) {
+                user = {};
+            }
+            let so = {};
+            try {
+                so = JSON.parse(localStorage.getItem(SIGNED_OUT_TRACKER_KEY) || "{}") || {};
+            } catch (_) {
+                so = {};
+            }
+            if (Object.keys(so).length === 0) return;
+            const merged = { ...so, ...user };
+            localStorage.setItem(userKey, JSON.stringify(merged));
+        } catch (_) {
+            /* ignore */
+        }
+    }
+
+    function userTrackerKeyFromCredentialJwt_(credentialJwt) {
+        const p = parseJwtPayload(credentialJwt);
+        const sub = p && p.sub != null ? String(p.sub) : "";
+        if (!sub) return null;
+        return LEGACY_TRACKER_KEY + ":user:" + sub;
+    }
+
+    window.dsaGetTrackerStorageKey = getTrackerStorageKey;
+    window.dsaMigrateLegacyTrackerIfNeeded = migrateLegacyTrackerIfNeeded;
+
+    /** Google `sub` must never be used as a problem key (corrupt merge / bad sheet row). */
+    function getGoogleSubFromUsableToken() {
+        const t = getUsableToken();
+        if (!t) return "";
+        const p = parseJwtPayload(t);
+        return p && p.sub != null ? String(p.sub) : "";
+    }
+
     function mergeCloudIntoLocalStorage(rows) {
         if (!Array.isArray(rows) || !rows.length) return;
+        const selfSub = getGoogleSubFromUsableToken();
         let state = {};
         try {
-            state = JSON.parse(localStorage.getItem(TRACKER_KEY) || "{}");
+            state = JSON.parse(localStorage.getItem(getTrackerStorageKey()) || "{}");
         } catch (_) {
             state = {};
         }
         for (const r of rows) {
             const key = String(r.problemKey || "").trim();
             if (!key) continue;
+            if (selfSub && key === selfSub) continue;
             const prev = state[key] || {};
             const prevTs = prev.updatedAt ? Date.parse(prev.updatedAt) : 0;
             const remoteTs = r.updatedAt ? Date.parse(r.updatedAt) : 0;
@@ -93,11 +178,21 @@
                 };
             }
         }
+        if (selfSub && Object.prototype.hasOwnProperty.call(state, selfSub)) {
+            delete state[selfSub];
+        }
         try {
-            localStorage.setItem(TRACKER_KEY, JSON.stringify(state));
+            localStorage.setItem(getTrackerStorageKey(), JSON.stringify(state));
         } catch (_) {
             /* ignore */
         }
+    }
+
+    try {
+        sessionStorage.removeItem("dsa-gas-sync-final-url");
+        sessionStorage.removeItem("dsa-gas-sync-final-base");
+    } catch (_) {
+        /* ignore */
     }
 
     async function api(payload) {
@@ -105,18 +200,32 @@
         if (!url || typeof url !== "string") {
             throw new Error("syncWebAppUrl missing");
         }
+        const bodyStr = JSON.stringify(payload);
+        const headers = { "Content-Type": "text/plain;charset=utf-8" };
+        /**
+         * Always POST to the deployed /exec URL from config. Do not cache Response.url — after redirects
+         * it may point at a GET-only endpoint (e.g. script.googleusercontent.com), which returns 405 for POST.
+         */
         const res = await fetch(url, {
             method: "POST",
             mode: "cors",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(payload),
+            redirect: "follow",
+            headers,
+            body: bodyStr,
         });
         const text = await res.text();
+        if (!res.ok) {
+            console.warn("[DSA sync] HTTP", res.status, text.slice(0, 400));
+        }
         let data;
         try {
             data = JSON.parse(text);
         } catch {
-            throw new Error("Sync server returned non-JSON");
+            throw new Error(
+                res.ok
+                    ? "Sync server returned non-JSON"
+                    : `HTTP ${res.status}: ${text.slice(0, 120)}`
+            );
         }
         if (!data.ok) {
             throw new Error(data.error || "Sync request failed");
@@ -130,6 +239,7 @@
     window.dsaMergeCloudBeforeNormalize = async function dsaMergeCloudBeforeNormalize() {
         const token = getUsableToken();
         if (!token || !cfg.syncWebAppUrl) return;
+        migrateLegacyTrackerIfNeeded();
         try {
             const data = await api({ action: "pullProgress", idToken: token });
             if (data.rows && data.rows.length) {
@@ -141,14 +251,21 @@
     };
 
     function buildRowsFromDirty() {
+        const selfSub = getGoogleSubFromUsableToken();
         let state = {};
         try {
-            state = JSON.parse(localStorage.getItem(TRACKER_KEY) || "{}");
+            state = JSON.parse(localStorage.getItem(getTrackerStorageKey()) || "{}");
         } catch (_) {
             state = {};
         }
+        let purgedSubKey = false;
+        if (selfSub && Object.prototype.hasOwnProperty.call(state, selfSub)) {
+            delete state[selfSub];
+            purgedSubKey = true;
+        }
         const rows = [];
         for (const id of dirty) {
+            if (selfSub && String(id) === selfSub) continue;
             const row = state[id];
             if (!row) continue;
             rows.push({
@@ -157,6 +274,13 @@
                 notes: row.notes != null ? String(row.notes) : "",
                 updatedAt: row.updatedAt || new Date().toISOString(),
             });
+        }
+        if (purgedSubKey) {
+            try {
+                localStorage.setItem(getTrackerStorageKey(), JSON.stringify(state));
+            } catch (_) {
+                /* ignore */
+            }
         }
         return rows;
     }
@@ -192,6 +316,7 @@
             fetch(cfg.syncWebAppUrl, {
                 method: "POST",
                 mode: "cors",
+                redirect: "follow",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify({ action: "pushProgress", idToken: token, rows }),
                 keepalive: true,
@@ -262,6 +387,8 @@
     }
 
     function handleCredentialResponse(response) {
+        const uk = userTrackerKeyFromCredentialJwt_(response.credential);
+        if (uk) mergeSignedOutIntoUserKey_(uk);
         try {
             localStorage.setItem(TOKEN_KEY, response.credential);
         } catch (_) {
@@ -354,8 +481,14 @@
 
         if (outBtn) {
             outBtn.onclick = () => {
+                dirty.clear();
                 try {
                     localStorage.removeItem(TOKEN_KEY);
+                } catch (_) {
+                    /* ignore */
+                }
+                try {
+                    localStorage.setItem(SIGNED_OUT_TRACKER_KEY, "{}");
                 } catch (_) {
                     /* ignore */
                 }

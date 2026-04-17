@@ -1,4 +1,14 @@
-const STORAGE_KEY = "dsa-tracker-state-v4";
+const LEGACY_TRACKER_KEY = "dsa-tracker-state-v4";
+
+function getTrackerLocalStorageKey() {
+    return typeof window.dsaGetTrackerStorageKey === "function"
+        ? window.dsaGetTrackerStorageKey()
+        : LEGACY_TRACKER_KEY;
+}
+
+if (typeof window.dsaMigrateLegacyTrackerIfNeeded === "function") {
+    window.dsaMigrateLegacyTrackerIfNeeded();
+}
 const PAGE_SIZE_KEY = "dsa-items-per-page-v1";
 const PAGE_SIZE_MIN = 5;
 const PAGE_SIZE_MAX = 500;
@@ -60,7 +70,8 @@ const elements = {
 };
 
 let allProblems = [];
-let trackerState = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") || {};
+let trackerState =
+    JSON.parse(localStorage.getItem(getTrackerLocalStorageKey()) || "{}") || {};
 let activeNotesId = null;
 let filteredProblems = [];
 let currentPage = 1;
@@ -106,7 +117,8 @@ async function init() {
         if (typeof window.dsaMergeCloudBeforeNormalize === "function") {
             await window.dsaMergeCloudBeforeNormalize();
         }
-        trackerState = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") || {};
+        trackerState =
+            JSON.parse(localStorage.getItem(getTrackerLocalStorageKey()) || "{}") || {};
         let items = normalizeProblemData(raw);
         const interviewSheets = await loadInterviewSheets();
         if (interviewSheets?.tracker?.byUrl) {
@@ -708,7 +720,7 @@ function createProblemRow(p) {
     check.checked = p.status === "Mastered";
     check.addEventListener("change", (e) => {
         patchProblemState(p.id, { status: e.target.checked ? "Mastered" : "Not Started" });
-        applyAndRender();
+        applyAndRender({ resetPage: false });
     });
 
     const problemCell = row.querySelector(".problem-cell");
@@ -767,7 +779,12 @@ function createProblemRow(p) {
     return row;
 }
 
-function applyAndRender() {
+/**
+ * Recompute filters and re-render the table.
+ * @param {{ resetPage?: boolean }} [opts] — pass `{ resetPage: false }` when filters did not change (e.g. mastered checkbox) so the current page is kept.
+ */
+function applyAndRender(opts) {
+    const resetPage = !opts || opts.resetPage !== false;
     const query = elements.searchInput.value.toLowerCase();
     const pattern = elements.patternFilter.value;
     const diff = elements.difficultyFilter.value;
@@ -795,7 +812,12 @@ function applyAndRender() {
 
     filteredProblems = list;
 
-    currentPage = 1;
+    if (resetPage) {
+        currentPage = 1;
+    } else {
+        const totalPages = getTotalPages(filteredProblems.length);
+        currentPage = Math.min(currentPage, totalPages);
+    }
     renderProblems();
     renderPagination(getTotalPages(filteredProblems.length));
     updateSidebarStats(allProblems);
@@ -907,6 +929,9 @@ window.openNotesSheet = openNotesSheet;
 
 function closeNotesSheet() {
     saveNotesNow();
+    if (document.activeElement && elements.notesSheet.contains(document.activeElement)) {
+        document.activeElement.blur();
+    }
     elements.notesSheet.classList.remove("open");
     elements.notesSheet.setAttribute("aria-hidden", "true");
     document.body.classList.remove("notes-sheet-open");
@@ -967,7 +992,7 @@ function patchProblemState(id, partial) {
     trackerState[id] = next;
     const problem = allProblems.find((item) => item.id === id);
     if (problem) Object.assign(problem, partial);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(trackerState));
+    localStorage.setItem(getTrackerLocalStorageKey(), JSON.stringify(trackerState));
     if (typeof window.dsaSchedulePush === "function") {
         window.dsaSchedulePush(id);
     }
