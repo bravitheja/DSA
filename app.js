@@ -907,6 +907,9 @@ window.openNotesSheet = openNotesSheet;
 
 function closeNotesSheet() {
     saveNotesNow();
+    if (document.activeElement && elements.notesSheet.contains(document.activeElement)) {
+        document.activeElement.blur();
+    }
     elements.notesSheet.classList.remove("open");
     elements.notesSheet.setAttribute("aria-hidden", "true");
     document.body.classList.remove("notes-sheet-open");

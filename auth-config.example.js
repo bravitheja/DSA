@@ -27,6 +27,10 @@
  * 4. Deploy → New deployment → Web app → Execute as: Me, Who has access: Anyone
  * 5. Copy the Web app URL into syncWebAppUrl below.
  *
+ * ── Local dev (http://localhost) + CORS ───────────────────────────────────────
+ * Add http://localhost:PORT to OAuth “Authorized JavaScript origins” for your dev server.
+ * Use the Web app URL from Deploy → Manage deployments (ends with /exec) as syncWebAppUrl.
+ *
  * ── Legacy optional password gate (blocks entire app until login) ────────────
  * Set window.__DSA_AUTH__ = { enabled: true, mode: "demo", ... } — see older docs.
  */
