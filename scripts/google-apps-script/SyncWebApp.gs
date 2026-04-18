@@ -1,8 +1,8 @@
 /**
  * Google Apps Script — verify Google ID tokens + read/write Progress sheet.
  *
- * Sheet "Progress" columns: googleSub | problemKey | status | notes | updatedAt
- * Row 1 = headers (exact strings above).
+ * Sheet "Progress" columns: googleSub | problemKey | status | notes | updatedAt | noteFlag
+ * Row 1 = headers (exact strings above). Legacy 5-column sheets: add column F with header noteFlag.
  *
  * Script properties (Project Settings → Script properties):
  *   GOOGLE_CLIENT_ID — OAuth Web client ID (same as frontend; used to validate token aud).
@@ -19,8 +19,43 @@
  */
 
 var PROGRESS_SHEET = "Progress";
+/** Columns A–F */
+var PROGRESS_NUM_COLS = 6;
 /** Google Sheets max characters per cell */
 var MAX_NOTE_CHARS = 50000;
+/** Allowed noteFlag slugs (must match client); empty string = none */
+var ALLOWED_NOTE_FLAGS_ = {
+  blue: true,
+  green: true,
+  grey: true,
+  orange: true,
+  purple: true,
+  red: true,
+  yellow: true,
+};
+var MAX_NOTE_FLAG_CHARS = 32;
+
+/** Normalize noteFlag from client; unknown or too-long values become "". */
+function sanitizeNoteFlag_(raw) {
+  var s = String(raw != null ? raw : "").trim().toLowerCase();
+  if (s.length > MAX_NOTE_FLAG_CHARS) return "";
+  if (s === "") return "";
+  return ALLOWED_NOTE_FLAGS_[s] ? s : "";
+}
+
+/** Ensure row 1 has noteFlag in column F (extends sheet if needed). */
+function ensureProgressSheetShape_(sh) {
+  var lastCol = sh.getLastColumn();
+  var need = PROGRESS_NUM_COLS;
+  if (lastCol < need) {
+    sh.getRange(1, need).setValue("noteFlag");
+  } else {
+    var h = sh.getRange(1, need, 1, need).getValue();
+    if (String(h).trim() === "") {
+      sh.getRange(1, need).setValue("noteFlag");
+    }
+  }
+}
 
 /** Structured log for Apps Script Executions + View → Logs (does not log tokens or full notes). */
 function syncLog_(message, detail) {
@@ -178,6 +213,7 @@ function pullProgress_(googleSub) {
     syncLog_("pullProgress", { sub: redactSub_(googleSub), sheetMissing: true, rowsReturned: 0 });
     return { ok: true, rows: [] };
   }
+  ensureProgressSheetShape_(sh);
   var values = sh.getDataRange().getValues();
   var rows = [];
   var skippedSubAsKey = 0;
@@ -188,11 +224,17 @@ function pullProgress_(googleSub) {
       skippedSubAsKey++;
       continue;
     }
+    var rowVals = values[r];
+    var nf = "";
+    if (rowVals.length > 5) {
+      nf = sanitizeNoteFlag_(rowVals[5]);
+    }
     rows.push({
       problemKey: pkPull,
       status: String(values[r][2] || "Not Started"),
       notes: String(values[r][3] || ""),
       updatedAt: String(values[r][4] || ""),
+      noteFlag: nf,
     });
   }
   syncLog_("pullProgress done", {
@@ -208,7 +250,16 @@ function pushProgress_(googleSub, incoming) {
   var sh = getSh_().getSheetByName(PROGRESS_SHEET);
   if (!sh) {
     sh = getSh_().insertSheet(PROGRESS_SHEET);
-    sh.appendRow(["googleSub", "problemKey", "status", "notes", "updatedAt"]);
+    sh.appendRow([
+      "googleSub",
+      "problemKey",
+      "status",
+      "notes",
+      "updatedAt",
+      "noteFlag",
+    ]);
+  } else {
+    ensureProgressSheetShape_(sh);
   }
   var values = sh.getDataRange().getValues();
   var rowIndexByKey = {};
@@ -247,6 +298,7 @@ function pushProgress_(googleSub, incoming) {
       );
     }
     var updatedAt = String(row.updatedAt || new Date().toISOString());
+    var noteFlag = sanitizeNoteFlag_(row.noteFlag);
     var existingRow = rowIndexByKey[pk];
     var safeRow = [
       escapeSheetCell_(googleSub),
@@ -254,15 +306,16 @@ function pushProgress_(googleSub, incoming) {
       escapeSheetCell_(status),
       escapeSheetCell_(notes),
       escapeSheetCell_(updatedAt),
+      escapeSheetCell_(noteFlag),
     ];
     if (existingRow) {
-      setRowPlainTextFormat_(sh, existingRow, 5);
-      getOneRowRange_(sh, existingRow, 5).setValues([safeRow]);
+      setRowPlainTextFormat_(sh, existingRow, PROGRESS_NUM_COLS);
+      getOneRowRange_(sh, existingRow, PROGRESS_NUM_COLS).setValues([safeRow]);
       updated++;
     } else {
       var newRowNum = sh.getLastRow() + 1;
-      setRowPlainTextFormat_(sh, newRowNum, 5);
-      getOneRowRange_(sh, newRowNum, 5).setValues([safeRow]);
+      setRowPlainTextFormat_(sh, newRowNum, PROGRESS_NUM_COLS);
+      getOneRowRange_(sh, newRowNum, PROGRESS_NUM_COLS).setValues([safeRow]);
       inserted++;
     }
   }

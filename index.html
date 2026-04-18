@@ -143,6 +143,18 @@
             <option value="all">Company: All</option>
           </select>
 
+          <select id="flagFilter" aria-label="Filter by notes flag">
+            <option value="all">Flag: All</option>
+            <option value="none">No flag</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="grey">Grey</option>
+            <option value="orange">Orange</option>
+            <option value="purple">Purple</option>
+            <option value="red">Red</option>
+            <option value="yellow">Yellow</option>
+          </select>
+
           <button
             type="button"
             onclick="pickRandom()"
@@ -267,8 +279,21 @@
       </div>
       <div class="sheet-meta">
         <span id="autoSaveStatus" class="autosave-tag">Saved</span>
+        <div class="notes-flag-field">
+          <label for="notesFlagSelect" class="notes-flag-label">Flag</label>
+          <select id="notesFlagSelect" aria-label="Notes flag (optional)">
+            <option value="">None</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="grey">Grey</option>
+            <option value="orange">Orange</option>
+            <option value="purple">Purple</option>
+            <option value="red">Red</option>
+            <option value="yellow">Yellow</option>
+          </select>
+        </div>
       </div>
-      
+
       <div class="notes-container">
         <textarea id="sheetNotesInput" placeholder="Capture intuition, pitfalls, or code snippets (Markdown supported)..."></textarea>
         <div id="notesPreview" class="notes-preview hidden"></div>
