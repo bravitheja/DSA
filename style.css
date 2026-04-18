@@ -593,6 +593,19 @@ tr.is-mastered .problem-link { text-decoration: line-through; color: var(--muted
 .complexity-cell { font-family: monospace; color: var(--brand); font-weight: 600; }
 .accordion-toggle { display: none; }
 
+.problem-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+  width: 100%;
+}
+.problem-title-row .problem-link {
+  flex: 1;
+  min-width: 0;
+}
+
 .note-btn {
   cursor: pointer;
   font: inherit;
@@ -777,12 +790,86 @@ body.notes-sheet-open { overflow: hidden; }
     table, tbody, tr, td { display: block; width: 100%; box-sizing: border-box; }
     thead { display: none; }
 
-    /* overflow: visible so expanded controls (e.g. Notes) are not clipped; ::before labels must not steal taps */
-    tr { border-bottom: 1px solid var(--border); padding: 1rem; position: relative; overflow: visible; cursor: default; }
-    
+    tbody {
+      padding: 0 0.65rem 0.5rem;
+    }
+
+    /* Card row (Option B): rounded surface + shadow; flag tint on tr */
+    tr {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+      background: var(--panel);
+      box-shadow:
+        0 1px 3px rgba(15, 23, 42, 0.06),
+        0 1px 2px rgba(15, 23, 42, 0.04);
+      position: relative;
+      overflow: visible;
+      cursor: default;
+    }
+    body.dark tr {
+      box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.35),
+        0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+
+    tr.problem-row--flag--blue { background: #eff6ff; }
+    tr.problem-row--flag--green { background: #ecfdf5; }
+    tr.problem-row--flag--grey { background: #f3f4f6; }
+    tr.problem-row--flag--orange { background: #fff7ed; }
+    tr.problem-row--flag--purple { background: #f5f3ff; }
+    tr.problem-row--flag--red { background: #fef2f2; }
+    tr.problem-row--flag--yellow { background: #fefce8; }
+
+    body.dark tr.problem-row--flag--blue { background: rgba(30, 58, 138, 0.45); }
+    body.dark tr.problem-row--flag--green { background: rgba(6, 78, 59, 0.45); }
+    body.dark tr.problem-row--flag--grey { background: rgba(55, 65, 81, 0.55); }
+    body.dark tr.problem-row--flag--orange { background: rgba(124, 45, 18, 0.45); }
+    body.dark tr.problem-row--flag--purple { background: rgba(76, 29, 149, 0.45); }
+    body.dark tr.problem-row--flag--red { background: rgba(127, 29, 29, 0.45); }
+    body.dark tr.problem-row--flag--yellow { background: rgba(113, 63, 18, 0.45); }
+
+    /* Readable mastered cards on mobile (global opacity 0.5 is too faint on tinted rows) */
+    tr.is-mastered {
+      opacity: 1;
+      background: var(--panel-soft);
+    }
+    tr.is-mastered.problem-row--flag--blue { background: #e0e7ff; }
+    tr.is-mastered.problem-row--flag--green { background: #d1fae5; }
+    tr.is-mastered.problem-row--flag--grey { background: #e5e7eb; }
+    tr.is-mastered.problem-row--flag--orange { background: #ffedd5; }
+    tr.is-mastered.problem-row--flag--purple { background: #ede9fe; }
+    tr.is-mastered.problem-row--flag--red { background: #fee2e2; }
+    tr.is-mastered.problem-row--flag--yellow { background: #fef9c3; }
+    body.dark tr.is-mastered:not([class*="problem-row--flag--"]) {
+      background: var(--panel-soft);
+    }
+    body.dark tr.is-mastered.problem-row--flag--blue { background: rgba(30, 58, 138, 0.55); }
+    body.dark tr.is-mastered.problem-row--flag--green { background: rgba(6, 78, 59, 0.55); }
+    body.dark tr.is-mastered.problem-row--flag--grey { background: rgba(55, 65, 81, 0.65); }
+    body.dark tr.is-mastered.problem-row--flag--orange { background: rgba(124, 45, 18, 0.55); }
+    body.dark tr.is-mastered.problem-row--flag--purple { background: rgba(76, 29, 149, 0.55); }
+    body.dark tr.is-mastered.problem-row--flag--red { background: rgba(127, 29, 29, 0.55); }
+    body.dark tr.is-mastered.problem-row--flag--yellow { background: rgba(113, 63, 18, 0.55); }
+
     /* Header Line: Checkbox + Problem Title */
-    .check-cell { display: inline-block !important; width: 32px !important; border: none !important; padding: 0 !important; vertical-align: top; }
-    .problem-cell { display: inline-block !important; width: calc(100% - 56px) !important; border: none !important; padding: 0 !important; padding-right: 1.5rem !important; vertical-align: top; position: relative; }
+    .check-cell {
+      display: inline-block !important;
+      width: 32px !important;
+      border: none !important;
+      padding: 0 !important;
+      padding-top: 0.35rem !important;
+      vertical-align: top;
+    }
+    .problem-cell {
+      display: inline-block !important;
+      width: calc(100% - 44px) !important;
+      border: none !important;
+      padding: 0 !important;
+      vertical-align: top;
+      position: relative;
+    }
     /* Checkbox + title are self-explanatory — hide repeating column labels */
     .check-cell::before,
     .problem-cell::before {
@@ -812,10 +899,16 @@ body.notes-sheet-open { overflow: hidden; }
         flex-direction: column;
         align-items: flex-start;
         padding: 0.8rem 0;
-        border-bottom: 1px solid var(--panel-soft);
+        border-bottom: 1px solid var(--border);
     }
 
     tr.is-expanded td:not(.check-cell):not(.problem-cell) { display: flex !important; }
+
+    tr.is-expanded .frequency-cell {
+      border-top: 1px solid var(--border);
+      margin-top: 0.35rem;
+      padding-top: 0.9rem;
+    }
 
     /* Label on Top, Content Below */
     td::before {
@@ -849,28 +942,30 @@ body.notes-sheet-open { overflow: hidden; }
     body.dark .note-btn.note-btn--flag--red { background: #7f1d1d !important; color: #fecaca !important; }
     body.dark .note-btn.note-btn--flag--yellow { background: #713f12 !important; color: #fef9c3 !important; }
 
-    /* Explicit accordion button */
-    .accordion-toggle {
-      display: grid;
-      place-items: center;
-      position: absolute;
-      right: 0.65rem;
-      top: 0.95rem;
-      z-index: 2;
-      width: 1.35rem;
-      height: 1.35rem;
+    /* Accordion: inline with title (flex row); rounded like desktop .note-btn */
+    .problem-title-row .accordion-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: static;
+      flex-shrink: 0;
+      width: auto;
+      min-width: 2.25rem;
+      min-height: 2.25rem;
+      padding: 0 0.35rem;
       border: 1px solid var(--border);
-      border-radius: 999px;
+      border-radius: 8px;
       background: var(--panel-soft);
       color: var(--muted);
-      font-size: 0.6rem;
+      font-size: 0.65rem;
       line-height: 1;
       cursor: pointer;
       transition: transform 0.2s ease;
-      padding: 0;
+      z-index: 2;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    tr.is-expanded .accordion-toggle { transform: rotate(180deg); }
+    tr.is-expanded .problem-title-row .accordion-toggle { transform: rotate(180deg); }
 
     .pagination-bar {
       margin: 1rem;

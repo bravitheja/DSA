@@ -737,6 +737,11 @@ function createProblemRow(p) {
     const labels = ['Done', 'Problem', 'Frequency', 'Concept', 'Complexity', 'Difficulty', 'Actions'];
     cells.forEach((cell, i) => cell.setAttribute('data-label', labels[i]));
 
+    const nf = sanitizeNoteFlag(p.noteFlag);
+    if (nf) {
+        row.classList.add("problem-row--flag", `problem-row--flag--${nf}`);
+    }
+
     // Accordion toggle button (single tap, explicit target)
     const toggleBtn = document.createElement("button");
     toggleBtn.type = "button";
@@ -759,8 +764,17 @@ function createProblemRow(p) {
     });
 
     const problemCell = row.querySelector(".problem-cell");
-    problemCell.innerHTML = `<a href="${p.link}" target="_blank" class="problem-link">${p.problem}</a>`;
-    problemCell.appendChild(toggleBtn);
+    const titleRow = document.createElement("div");
+    titleRow.className = "problem-title-row";
+    const linkEl = document.createElement("a");
+    linkEl.href = p.link;
+    linkEl.target = "_blank";
+    linkEl.rel = "noopener noreferrer";
+    linkEl.className = "problem-link";
+    linkEl.textContent = p.problem;
+    titleRow.appendChild(linkEl);
+    titleRow.appendChild(toggleBtn);
+    problemCell.appendChild(titleRow);
 
     const heat = Math.min((p.frequency / 650) * 100, 100);
     const ivPct = typeof p.interviewFrequencyPct === "number" ? p.interviewFrequencyPct : 0;
@@ -802,7 +816,6 @@ function createProblemRow(p) {
     const noteBtn = document.createElement("button");
     noteBtn.type = "button";
     noteBtn.className = "note-btn";
-    const nf = sanitizeNoteFlag(p.noteFlag);
     if (nf) {
         noteBtn.classList.add("note-btn--flag", `note-btn--flag--${nf}`);
         noteBtn.setAttribute(
