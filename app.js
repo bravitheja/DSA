@@ -17,6 +17,34 @@ const TIMER_PREFS_KEY = "dsa-session-timer-prefs-v1";
 const TIMER_FLOAT_POS_KEY = "dsa-timer-float-pos-v1";
 const TIMER_MAX_DURATION_SEC = 24 * 3600;
 
+/** Must match SyncWebApp.gs ALLOWED_NOTE_FLAGS_ and sync payload. */
+const NOTE_FLAG_SLUGS = new Set([
+    "blue",
+    "green",
+    "grey",
+    "orange",
+    "purple",
+    "red",
+    "yellow",
+]);
+
+const NOTE_FLAG_LABELS = {
+    blue: "Blue",
+    green: "Green",
+    grey: "Grey",
+    orange: "Orange",
+    purple: "Purple",
+    red: "Red",
+    yellow: "Yellow",
+};
+
+function sanitizeNoteFlag(raw) {
+    const s = String(raw ?? "")
+        .trim()
+        .toLowerCase();
+    return NOTE_FLAG_SLUGS.has(s) ? s : "";
+}
+
 const getEl = (id) => document.getElementById(id);
 
 /**
@@ -40,6 +68,7 @@ const elements = {
     patternFilter: getEl("patternFilter"),
     difficultyFilter: getEl("difficultyFilter"),
     companyFilter: getEl("companyFilter"),
+    flagFilter: getEl("flagFilter"),
     themeToggle: getEl("themeToggle"),
     solvedCount: getEl("solvedCount"),
     easyRing: getEl("easyRing"),
@@ -49,6 +78,7 @@ const elements = {
     notesSheet: getEl("notesSheet"),
     sheetTitle: getEl("sheetTitle"),
     sheetNotesInput: getEl("sheetNotesInput"),
+    notesFlagSelect: getEl("notesFlagSelect"),
     notesPreview: getEl("notesPreview"),
     autoSaveStatus: getEl("autoSaveStatus"),
     sheetSaveBtn: getEl("sheetSaveBtn"),
@@ -290,9 +320,13 @@ function bindControls() {
     elements.patternFilter.addEventListener("change", applyAndRender);
     elements.difficultyFilter.addEventListener("change", applyAndRender);
     elements.companyFilter.addEventListener("change", applyAndRender);
+    if (elements.flagFilter) elements.flagFilter.addEventListener("change", applyAndRender);
     elements.sheetCloseBtn.addEventListener("click", closeNotesSheet);
     elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
     elements.sheetNotesInput.addEventListener("input", onNotesInput);
+    if (elements.notesFlagSelect) {
+        elements.notesFlagSelect.addEventListener("change", onNotesFlagChange);
+    }
     elements.togglePreviewBtn.addEventListener("click", toggleNotesPreview);
     elements.prevPageBtn.addEventListener("click", () => changePage(-1));
     elements.nextPageBtn.addEventListener("click", () => changePage(1));
@@ -688,7 +722,8 @@ function normalizeProblemData(items) {
             complexity: item.complexity || "-",
             frequency: parseInt(item.frequency) || 0,
             status: stored.status || "Not Started",
-            notes: stored.notes || ""
+            notes: stored.notes || "",
+            noteFlag: sanitizeNoteFlag(stored.noteFlag),
         };
     });
 }
@@ -701,6 +736,11 @@ function createProblemRow(p) {
     const cells = row.querySelectorAll('td');
     const labels = ['Done', 'Problem', 'Frequency', 'Concept', 'Complexity', 'Difficulty', 'Actions'];
     cells.forEach((cell, i) => cell.setAttribute('data-label', labels[i]));
+
+    const nf = sanitizeNoteFlag(p.noteFlag);
+    if (nf) {
+        row.classList.add("problem-row--flag", `problem-row--flag--${nf}`);
+    }
 
     // Accordion toggle button (single tap, explicit target)
     const toggleBtn = document.createElement("button");
@@ -724,8 +764,17 @@ function createProblemRow(p) {
     });
 
     const problemCell = row.querySelector(".problem-cell");
-    problemCell.innerHTML = `<a href="${p.link}" target="_blank" class="problem-link">${p.problem}</a>`;
-    problemCell.appendChild(toggleBtn);
+    const titleRow = document.createElement("div");
+    titleRow.className = "problem-title-row";
+    const linkEl = document.createElement("a");
+    linkEl.href = p.link;
+    linkEl.target = "_blank";
+    linkEl.rel = "noopener noreferrer";
+    linkEl.className = "problem-link";
+    linkEl.textContent = p.problem;
+    titleRow.appendChild(linkEl);
+    titleRow.appendChild(toggleBtn);
+    problemCell.appendChild(titleRow);
 
     const heat = Math.min((p.frequency / 650) * 100, 100);
     const ivPct = typeof p.interviewFrequencyPct === "number" ? p.interviewFrequencyPct : 0;
@@ -767,6 +816,15 @@ function createProblemRow(p) {
     const noteBtn = document.createElement("button");
     noteBtn.type = "button";
     noteBtn.className = "note-btn";
+    if (nf) {
+        noteBtn.classList.add("note-btn--flag", `note-btn--flag--${nf}`);
+        noteBtn.setAttribute(
+            "title",
+            `Notes (flag: ${NOTE_FLAG_LABELS[nf] || nf})`
+        );
+    } else {
+        noteBtn.setAttribute("title", "Notes");
+    }
     noteBtn.textContent = "📝 Notes";
     noteBtn.setAttribute("data-problem-id", p.id);
     noteBtn.addEventListener("click", (e) => {
@@ -789,6 +847,7 @@ function applyAndRender(opts) {
     const pattern = elements.patternFilter.value;
     const diff = elements.difficultyFilter.value;
     const company = elements.companyFilter.value;
+    const flag = elements.flagFilter ? elements.flagFilter.value : "all";
     /** @type {"curated"} */
     const sortOrder = "curated";
 
@@ -800,11 +859,16 @@ function applyAndRender(opts) {
         const companyOk =
             company === "all" ||
             (p.interviewCompanies && p.interviewCompanies.includes(company));
+        const pf = sanitizeNoteFlag(p.noteFlag);
+        let flagOk = true;
+        if (flag === "none") flagOk = !pf;
+        else if (flag !== "all") flagOk = pf === flag;
         return (
             textOk &&
             (pattern === "all" || p.pattern === pattern) &&
             (diff === "all" || p.difficulty === diff) &&
-            companyOk
+            companyOk &&
+            flagOk
         );
     });
 
@@ -918,6 +982,9 @@ function openNotesSheet(id) {
     activeNotesId = id;
     elements.sheetTitle.textContent = p.problem;
     elements.sheetNotesInput.value = p.notes;
+    if (elements.notesFlagSelect) {
+        elements.notesFlagSelect.value = sanitizeNoteFlag(p.noteFlag) || "";
+    }
     setAutoSaveStatus("Saved");
     setPreviewMode(false);
     elements.notesSheet.classList.add("open");
@@ -929,6 +996,7 @@ window.openNotesSheet = openNotesSheet;
 
 function closeNotesSheet() {
     saveNotesNow();
+    applyAndRender({ resetPage: false });
     if (document.activeElement && elements.notesSheet.contains(document.activeElement)) {
         document.activeElement.blur();
     }
@@ -946,12 +1014,25 @@ function onNotesInput() {
     if (previewMode) renderNotesPreview();
 }
 
+function onNotesFlagChange() {
+    if (!activeNotesId) return;
+    setAutoSaveStatus("Saving...");
+    saveNotesNow();
+    applyAndRender({ resetPage: false });
+}
+
 function saveNotesNow() {
     if (!activeNotesId) return;
     const notes = elements.sheetNotesInput.value;
-    patchProblemState(activeNotesId, { notes });
+    const noteFlag = elements.notesFlagSelect
+        ? sanitizeNoteFlag(elements.notesFlagSelect.value)
+        : "";
+    patchProblemState(activeNotesId, { notes, noteFlag });
     const idx = allProblems.findIndex(i => i.id === activeNotesId);
-    if (idx !== -1) allProblems[idx].notes = notes;
+    if (idx !== -1) {
+        allProblems[idx].notes = notes;
+        allProblems[idx].noteFlag = noteFlag;
+    }
     setAutoSaveStatus("Saved");
 }
 

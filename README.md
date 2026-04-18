@@ -15,7 +15,7 @@ A static GitHub Pages-ready web app to track DSA preparation with richer intervi
   - Status
   - Notes
 - Tooltip with core idea/intuition when hovering problem name
-- Search + filters for pattern, difficulty, company (interview data)
+- Search + filters for pattern, difficulty, company (interview data), and optional **notes flag** (color)
 - Problems listed in curated frequency order (from the dataset)
 - Progress dashboard with completion bar
 - Dark mode toggle
@@ -23,6 +23,7 @@ A static GitHub Pages-ready web app to track DSA preparation with richer intervi
 - Local persistence using `localStorage` for:
   - status
   - notes
+  - optional per-problem **note flag** (color for confidence / triage)
   - theme
   - column visibility
 
@@ -81,4 +82,6 @@ After you edit SyncWebApp.gs, use Deploy → Manage deployments → Edit → New
 If you ever change the site URL (custom domain, different repo path), add that origin under the Web client’s Authorized JavaScript origins in Google Cloud.
 ### Sheet:
 Your progress is in localStorage first; sync pushes/pulls against the sheet—useful to know if you clear browser data or use another device.
+
+The **Progress** tab uses columns: `googleSub`, `problemKey`, `status`, `notes`, `updatedAt`, `noteFlag` (optional color slug). If you created the sheet before `noteFlag` existed, add column **F** with header `noteFlag`, or deploy the latest [`SyncWebApp.gs`](scripts/google-apps-script/SyncWebApp.gs) and run a sync so the script can extend the sheet.
 

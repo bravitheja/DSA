@@ -175,6 +175,7 @@
                     status: r.status || "Not Started",
                     notes: r.notes != null ? String(r.notes) : "",
                     updatedAt: r.updatedAt || new Date().toISOString(),
+                    noteFlag: r.noteFlag != null ? String(r.noteFlag) : "",
                 };
             }
         }
@@ -273,6 +274,7 @@
                 status: row.status || "Not Started",
                 notes: row.notes != null ? String(row.notes) : "",
                 updatedAt: row.updatedAt || new Date().toISOString(),
+                noteFlag: row.noteFlag != null ? String(row.noteFlag) : "",
             });
         }
         if (purgedSubKey) {
