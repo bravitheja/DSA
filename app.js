@@ -77,7 +77,7 @@ const elements = {
     breakdown: getEl("sidebarBreakdown"),
     notesSheet: getEl("notesSheet"),
     sheetTitle: getEl("sheetTitle"),
-    sheetNotesInput: getEl("sheetNotesInput"),
+    sheetNotesEditorHost: getEl("sheetNotesEditorHost"),
     notesFlagSelect: getEl("notesFlagSelect"),
     notesPreview: getEl("notesPreview"),
     autoSaveStatus: getEl("autoSaveStatus"),
@@ -118,6 +118,83 @@ try {
 let itemsPerPageOverride = loadStoredPageSize();
 let saveTimeout;
 let previewMode = false;
+
+let notesEditorModPromise = null;
+/** @type {null | { getText: () => string; setText: (t: string) => void; focus: () => void; setDark: (d: boolean) => void; destroy: () => void }} */
+let notesEditorHandle = null;
+/** When the sheet is open but CodeMirror has not mounted yet (or failed), read/write this string so saves never wipe notes. */
+let notesOpenFallbackText = /** @type {string | null} */ (null);
+/** Bumped on each `openNotesSheet` so stale async mounts are ignored. */
+let notesSheetMountGeneration = 0;
+
+function loadNotesEditorModule() {
+    if (!notesEditorModPromise) {
+        notesEditorModPromise = import("./notes-editor.mjs");
+    }
+    return notesEditorModPromise;
+}
+
+function destroyNotesEditor() {
+    if (notesEditorHandle) {
+        notesEditorHandle.destroy();
+        notesEditorHandle = null;
+    }
+    if (elements.sheetNotesEditorHost) {
+        elements.sheetNotesEditorHost.replaceChildren();
+    }
+}
+
+function getActiveNotesText() {
+    if (notesEditorHandle) return notesEditorHandle.getText();
+    if (notesOpenFallbackText !== null) return notesOpenFallbackText;
+    return "";
+}
+
+function syncHljsThemeForNotes() {
+    const light = document.getElementById("hljs-theme-github-light");
+    const dark = document.getElementById("hljs-theme-github-dark");
+    if (!light || !dark) return;
+    const isDark = document.body.classList.contains("dark");
+    light.disabled = isDark;
+    dark.disabled = !isDark;
+}
+
+/**
+ * Plain textarea when CodeMirror cannot load (file://, offline, or esm.sh blocked).
+ * Same handle shape as `mountNotesEditor` from notes-editor.mjs.
+ * @param {HTMLElement} host
+ * @param {{ initial: string; onChange: () => void; placeholder?: string; hint: string }} opts
+ */
+function mountPlainNotesEditor(host, opts) {
+    host.replaceChildren();
+    const wrap = document.createElement("div");
+    wrap.className = "notes-plain-editor-wrap";
+    const hint = document.createElement("p");
+    hint.className = "notes-editor-fallback";
+    hint.textContent = opts.hint;
+    const ta = document.createElement("textarea");
+    ta.className = "notes-plain-editor";
+    ta.value = opts.initial ?? "";
+    ta.placeholder =
+        opts.placeholder ??
+        "Capture intuition, pitfalls, or code snippets (Markdown supported).";
+    ta.setAttribute("aria-label", "Problem notes");
+    ta.addEventListener("input", () => opts.onChange?.());
+    wrap.appendChild(hint);
+    wrap.appendChild(ta);
+    host.appendChild(wrap);
+    return {
+        getText: () => ta.value,
+        setText: (t) => {
+            ta.value = t;
+        },
+        focus: () => ta.focus(),
+        setDark: () => {},
+        destroy: () => {
+            wrap.remove();
+        },
+    };
+}
 
 let timerTotalSeconds = 20 * 60;
 let timerRemainingSeconds = 20 * 60;
@@ -323,7 +400,6 @@ function bindControls() {
     if (elements.flagFilter) elements.flagFilter.addEventListener("change", applyAndRender);
     elements.sheetCloseBtn.addEventListener("click", closeNotesSheet);
     elements.sheetSaveBtn.addEventListener("click", closeNotesSheet);
-    elements.sheetNotesInput.addEventListener("input", onNotesInput);
     if (elements.notesFlagSelect) {
         elements.notesFlagSelect.addEventListener("change", onNotesFlagChange);
     }
@@ -730,7 +806,7 @@ function normalizeProblemData(items) {
 
 function createProblemRow(p) {
     const row = elements.rowTemplate.content.firstElementChild.cloneNode(true);
-    const exploreUrl = `https://www.google.com/search?q=Hey+Genini+Explain+Leetcode+${encodeURIComponent(p.problem)}+solution+in+python`;
+    const exploreUrl = `https://www.google.com/search?q=Hey+Gemini+Explain+Leetcode+${encodeURIComponent(p.problem)}+problem+and+solution+in+python+like+chatGpt`;
     if (p.status === "Mastered") row.classList.add("is-mastered");
 
     const cells = row.querySelectorAll('td');
@@ -976,26 +1052,70 @@ window.pickRandom = () => {
     if (todo.length) window.open(todo[Math.floor(Math.random() * todo.length)].link, '_blank');
 };
 
-function openNotesSheet(id) {
+async function openNotesSheet(id) {
     const p = allProblems.find(i => i.id === id);
     if (!p) return;
     activeNotesId = id;
     elements.sheetTitle.textContent = p.problem;
-    elements.sheetNotesInput.value = p.notes;
     if (elements.notesFlagSelect) {
         elements.notesFlagSelect.value = sanitizeNoteFlag(p.noteFlag) || "";
     }
     setAutoSaveStatus("Saved");
-    setPreviewMode(false);
+    notesOpenFallbackText = p.notes ?? "";
     elements.notesSheet.classList.add("open");
     elements.notesSheet.setAttribute("aria-hidden", "false");
     document.body.classList.add("notes-sheet-open");
+
+    const mountGen = ++notesSheetMountGeneration;
+    destroyNotesEditor();
+    setPreviewMode(true);
+    try {
+        const mod = await loadNotesEditorModule();
+        if (mountGen !== notesSheetMountGeneration || activeNotesId !== id) {
+            return;
+        }
+        notesEditorHandle = mod.mountNotesEditor(elements.sheetNotesEditorHost, {
+            initial: p.notes || "",
+            isDark: document.body.classList.contains("dark"),
+            placeholder:
+                "Capture intuition, pitfalls, or code snippets (Markdown supported). Use fenced ```python (etc.) blocks for syntax colors.",
+            onChange: onNotesInput,
+        });
+        notesOpenFallbackText = null;
+        if (!previewMode) {
+            notesEditorHandle.focus();
+        }
+    } catch (err) {
+        console.error("Notes editor load failed:", err);
+        if (mountGen !== notesSheetMountGeneration || activeNotesId !== id) {
+            return;
+        }
+        const msg = err instanceof Error ? err.message : String(err);
+        const fileHint =
+            window.location.protocol === "file:"
+                ? "This page was opened as a file (file://). Browsers often block or break ES module loading. Run a local server in the project folder, for example: python3 -m http.server 8080 — then open http://localhost:8080/ instead of double-clicking index.html. "
+                : "";
+        const hint = `${fileHint}The syntax-highlighting editor loads CodeMirror from the network (esm.sh). If you are already on http(s), check your connection, VPN, corporate firewall, or ad/privacy blockers. (${msg}) You can still edit notes below without colors.`;
+        notesEditorHandle = mountPlainNotesEditor(elements.sheetNotesEditorHost, {
+            initial: p.notes || "",
+            placeholder:
+                "Capture intuition, pitfalls, or code snippets (Markdown supported). Use fenced ```python blocks for colors after the rich editor loads.",
+            onChange: onNotesInput,
+            hint,
+        });
+        notesOpenFallbackText = null;
+        if (!previewMode) {
+            notesEditorHandle.focus();
+        }
+    }
 }
 
 window.openNotesSheet = openNotesSheet;
 
 function closeNotesSheet() {
     saveNotesNow();
+    destroyNotesEditor();
+    notesOpenFallbackText = null;
     applyAndRender({ resetPage: false });
     if (document.activeElement && elements.notesSheet.contains(document.activeElement)) {
         document.activeElement.blur();
@@ -1023,7 +1143,7 @@ function onNotesFlagChange() {
 
 function saveNotesNow() {
     if (!activeNotesId) return;
-    const notes = elements.sheetNotesInput.value;
+    const notes = getActiveNotesText();
     const noteFlag = elements.notesFlagSelect
         ? sanitizeNoteFlag(elements.notesFlagSelect.value)
         : "";
@@ -1047,19 +1167,28 @@ function toggleNotesPreview() {
 function setPreviewMode(nextPreviewMode) {
     previewMode = nextPreviewMode;
     elements.togglePreviewBtn.textContent = previewMode ? "Edit" : "Preview";
-    elements.sheetNotesInput.classList.toggle("hidden", previewMode);
+    elements.sheetNotesEditorHost.classList.toggle("hidden", previewMode);
     elements.notesPreview.classList.toggle("hidden", !previewMode);
     if (previewMode) renderNotesPreview();
 }
 
 function renderNotesPreview() {
-    const markdown = elements.sheetNotesInput.value.trim();
+    const markdown = getActiveNotesText().trim();
     if (!markdown) {
         elements.notesPreview.innerHTML = `<p class="preview-placeholder">Nothing to preview yet.</p>`;
         return;
     }
     if (window.marked?.parse) {
         elements.notesPreview.innerHTML = window.marked.parse(markdown);
+        if (window.hljs?.highlightElement) {
+            elements.notesPreview.querySelectorAll("pre code").forEach((block) => {
+                try {
+                    window.hljs.highlightElement(block);
+                } catch (_) {
+                    /* ignore unknown grammar */
+                }
+            });
+        }
         return;
     }
     elements.notesPreview.textContent = markdown;
@@ -1102,4 +1231,11 @@ function populateCompanyFilter(items) {
         sel.appendChild(o);
     });
 }
-function applyTheme(t) { document.body.classList.toggle("dark", t === "dark"); elements.themeToggle.textContent = t === "dark" ? "☀️" : "🌙"; }
+function applyTheme(t) {
+    document.body.classList.toggle("dark", t === "dark");
+    elements.themeToggle.textContent = t === "dark" ? "☀️" : "🌙";
+    syncHljsThemeForNotes();
+    if (notesEditorHandle) {
+        notesEditorHandle.setDark(t === "dark");
+    }
+}

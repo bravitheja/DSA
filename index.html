@@ -12,7 +12,19 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
+    <link
+      id="hljs-theme-github-light"
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css"
+    />
+    <link
+      id="hljs-theme-github-dark"
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css"
+      disabled
+    />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
@@ -295,7 +307,13 @@
       </div>
 
       <div class="notes-container">
-        <textarea id="sheetNotesInput" placeholder="Capture intuition, pitfalls, or code snippets (Markdown supported)..."></textarea>
+        <div
+          id="sheetNotesEditorHost"
+          class="notes-editor-host"
+          role="textbox"
+          aria-multiline="true"
+          aria-label="Problem notes (Markdown)"
+        ></div>
         <div id="notesPreview" class="notes-preview hidden"></div>
       </div>
 
@@ -324,7 +342,7 @@
     <!-- interview-data.js: from data/sheets/interview-tracker.json — run: node scripts/generate-interview-sheets.mjs && node scripts/build-interview-data-js.mjs -->
     <script src="interview-data.js" defer></script>
     <script src="sync.js" defer></script>
-    <script src="app.js" defer></script>
+    <script type="module" src="app.js"></script>
     <script src="auth.js" defer></script>
   </body>
 </html>
