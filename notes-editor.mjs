@@ -109,7 +109,7 @@ const lightChrome = EditorView.theme(
                 "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace",
             overflow: "auto",
         },
-        ".cm-content": { caretColor: "var(--text)", minHeight: "58vh" },
+        ".cm-content": { caretColor: "var(--text)" },
         ".cm-gutters": {
             backgroundColor: "var(--panel-soft)",
             color: "var(--muted)",

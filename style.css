@@ -641,21 +641,60 @@ body.dark .note-btn.note-btn--flag--yellow { background: #713f12; border-color: 
 
 /* Notes Drawer */
 .notes-sheet {
+  --notes-sheet-w: 400px;
   position: fixed;
   top: 0;
-  right: -420px;
-  width: 400px;
+  right: calc(-1 * (var(--notes-sheet-w) + 20px));
+  width: var(--notes-sheet-w);
   height: 100vh;
   max-height: 100dvh;
   background: var(--panel);
   border-left: 1px solid var(--border);
   padding: 1.5rem;
+  padding-left: calc(1.5rem + 10px);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   transition: right 0.3s ease;
   z-index: 100000;
   box-shadow: -10px 0 30px rgba(0,0,0,0.05);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+.notes-sheet.notes-sheet--dragging {
+  transition: none;
+}
+body.notes-sheet-resizing {
+  cursor: ew-resize !important;
+  user-select: none;
+}
+/* Left-edge hit target: drag toward viewport center to widen the panel */
+.notes-sheet-resize {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  z-index: 3;
+  cursor: ew-resize;
+  touch-action: none;
+  background: transparent;
+}
+.notes-sheet-resize::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+.notes-sheet-resize:hover::after,
+.notes-sheet-resize:focus-visible::after {
+  background: rgba(99, 102, 241, 0.35);
 }
 /* Closed drawer must not intercept taps meant for the page (helps touch browsers) */
 .notes-sheet:not(.open) { pointer-events: none; }
@@ -665,9 +704,20 @@ body.dark .note-btn.note-btn--flag--yellow { background: #713f12; border-color: 
   touch-action: pan-y;
 }
 body.notes-sheet-open { overflow: hidden; }
-.notes-container { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.75rem; }
+.notes-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  overflow: hidden;
+}
 .notes-editor-host {
-  min-height: 58vh;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--panel-soft);
@@ -675,8 +725,19 @@ body.notes-sheet-open { overflow: hidden; }
   overflow: hidden;
 }
 .notes-editor-host .cm-editor {
-  min-height: 58vh;
+  flex: 1;
+  min-height: 0;
   border-radius: 10px;
+  display: flex !important;
+  flex-direction: column;
+}
+.notes-editor-host .cm-scroller {
+  flex: 1;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+.notes-editor-host .cm-content {
+  min-height: auto !important;
 }
 .notes-editor-host .cm-focused {
   outline: none;
@@ -688,15 +749,16 @@ body.notes-sheet-open { overflow: hidden; }
   font-size: 0.9rem;
 }
 .notes-plain-editor-wrap {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-height: 58vh;
 }
 .notes-plain-editor {
   flex: 1;
-  min-height: 52vh;
-  resize: vertical;
+  min-height: 8rem;
+  resize: none;
   box-sizing: border-box;
   width: 100%;
   margin: 0;
@@ -709,13 +771,17 @@ body.notes-sheet-open { overflow: hidden; }
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
   font-size: 0.85rem;
   line-height: 1.45;
+  overflow-y: auto;
 }
 .notes-preview {
-  min-height: 58vh;
+  flex: 1;
+  min-height: 0;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.75rem;
+  overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--panel-soft);
   color: var(--text);
   line-height: 1.55;
@@ -752,9 +818,22 @@ body.notes-sheet-open { overflow: hidden; }
 .notes-preview ol { margin: 0.5rem 0; padding-left: 1.35rem; }
 .notes-preview a { color: var(--brand); }
 .preview-placeholder { color: var(--muted); font-style: italic; }
-.sheet-footer { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 0.8rem; }
-.sheet-header { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; }
+.sheet-footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+.sheet-header {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
 .sheet-meta {
+  flex-shrink: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1065,6 +1144,9 @@ body.notes-sheet-open { overflow: hidden; }
      * Mobile / iOS / in-app WebViews: negative viewport widths (e.g. right: -100vw) often break
      * position:fixed. Use a full-viewport layer + translate3d slide instead of animating "right".
      */
+    .notes-sheet-resize {
+      display: none;
+    }
     .notes-sheet {
       left: 0 !important;
       right: 0 !important;
@@ -1076,6 +1158,7 @@ body.notes-sheet-open { overflow: hidden; }
       border-left: none;
       border-top: 1px solid var(--border);
       padding: max(0.75rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+      padding-left: max(1rem, env(safe-area-inset-left));
       overflow-x: hidden;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;

@@ -13,6 +13,10 @@ const PAGE_SIZE_KEY = "dsa-items-per-page-v1";
 const PAGE_SIZE_MIN = 5;
 const PAGE_SIZE_MAX = 500;
 const THEME_KEY = "dsa-tracker-theme";
+const NOTES_SHEET_WIDTH_KEY = "dsa-notes-sheet-width-px";
+const NOTES_SHEET_WIDTH_MIN = 300;
+const NOTES_SHEET_WIDTH_DEFAULT = 400;
+const NOTES_SHEET_WIDTH_MAX = 960;
 const TIMER_PREFS_KEY = "dsa-session-timer-prefs-v1";
 const TIMER_FLOAT_POS_KEY = "dsa-timer-float-pos-v1";
 const TIMER_MAX_DURATION_SEC = 24 * 3600;
@@ -76,6 +80,7 @@ const elements = {
     hardRing: getEl("hardRing"),
     breakdown: getEl("sidebarBreakdown"),
     notesSheet: getEl("notesSheet"),
+    notesSheetResize: getEl("notesSheetResize"),
     sheetTitle: getEl("sheetTitle"),
     sheetNotesEditorHost: getEl("sheetNotesEditorHost"),
     notesFlagSelect: getEl("notesFlagSelect"),
@@ -218,6 +223,7 @@ async function init() {
     applyTheme(localStorage.getItem(THEME_KEY) || "light");
     try {
         bindControls();
+        applyNotesSheetWidth(loadStoredNotesSheetWidth(), false);
         initPaginationControls();
         initSessionTimer();
         const raw = await loadData();
@@ -431,13 +437,128 @@ function bindControls() {
         if (window.innerWidth > 850) closeMobileTimerDock();
         else clampTimerFloatToViewport();
         syncPageSizeFromViewportIfAuto();
+        clampNotesSheetWidthToViewport();
         const totalPages = getTotalPages(filteredProblems.length);
         currentPage = Math.min(currentPage, totalPages);
         renderProblems();
         renderPagination(totalPages);
     });
 
+    initNotesSheetResize();
     bindSessionTimer();
+}
+
+function clampNotesSheetWidth(w) {
+    const max = Math.min(NOTES_SHEET_WIDTH_MAX, Math.floor(window.innerWidth * 0.92));
+    return Math.max(NOTES_SHEET_WIDTH_MIN, Math.min(max, Math.round(w)));
+}
+
+function loadStoredNotesSheetWidth() {
+    try {
+        const raw = localStorage.getItem(NOTES_SHEET_WIDTH_KEY);
+        if (raw == null) return NOTES_SHEET_WIDTH_DEFAULT;
+        const n = parseInt(raw, 10);
+        if (!Number.isFinite(n)) return NOTES_SHEET_WIDTH_DEFAULT;
+        return clampNotesSheetWidth(n);
+    } catch (_) {
+        return NOTES_SHEET_WIDTH_DEFAULT;
+    }
+}
+
+function applyNotesSheetWidth(px, persist) {
+    if (!elements.notesSheet) return;
+    const w = clampNotesSheetWidth(px);
+    elements.notesSheet.style.setProperty("--notes-sheet-w", `${w}px`);
+    if (persist) {
+        try {
+            localStorage.setItem(NOTES_SHEET_WIDTH_KEY, String(w));
+        } catch (_) {
+            /* ignore */
+        }
+    }
+}
+
+function clampNotesSheetWidthToViewport() {
+    if (!elements.notesSheet) return;
+    const raw = elements.notesSheet.style.getPropertyValue("--notes-sheet-w").trim();
+    if (!raw) return;
+    const n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) return;
+    const next = clampNotesSheetWidth(n);
+    if (next !== n) {
+        applyNotesSheetWidth(next, true);
+    }
+}
+
+function initNotesSheetResize() {
+    const handle = elements.notesSheetResize;
+    if (!handle || !elements.notesSheet) return;
+
+    let dragging = false;
+    let startX = 0;
+    let startW = NOTES_SHEET_WIDTH_DEFAULT;
+
+    const endDrag = (e) => {
+        if (!dragging) return;
+        dragging = false;
+        elements.notesSheet.classList.remove("notes-sheet--dragging");
+        document.body.classList.remove("notes-sheet-resizing");
+        try {
+            handle.releasePointerCapture(e.pointerId);
+        } catch (_) {
+            /* ignore */
+        }
+        const raw = elements.notesSheet.style.getPropertyValue("--notes-sheet-w").trim();
+        const w = parseInt(raw, 10);
+        if (Number.isFinite(w)) {
+            applyNotesSheetWidth(w, true);
+        }
+    };
+
+    handle.addEventListener("pointerdown", (e) => {
+        if (window.innerWidth <= 850) return;
+        if (!elements.notesSheet.classList.contains("open")) return;
+        if (e.button !== 0) return;
+        e.preventDefault();
+        dragging = true;
+        startX = e.clientX;
+        startW = elements.notesSheet.getBoundingClientRect().width;
+        elements.notesSheet.classList.add("notes-sheet--dragging");
+        document.body.classList.add("notes-sheet-resizing");
+        handle.setPointerCapture(e.pointerId);
+    });
+
+    handle.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        const delta = startX - e.clientX;
+        applyNotesSheetWidth(startW + delta, false);
+    });
+
+    handle.addEventListener("pointerup", endDrag);
+    handle.addEventListener("pointercancel", endDrag);
+
+    handle.addEventListener("dblclick", () => {
+        if (window.innerWidth <= 850) return;
+        applyNotesSheetWidth(NOTES_SHEET_WIDTH_DEFAULT, true);
+    });
+
+    handle.addEventListener("keydown", (e) => {
+        if (window.innerWidth <= 850) return;
+        if (!elements.notesSheet.classList.contains("open")) return;
+        const step = e.shiftKey ? 40 : 16;
+        const raw = elements.notesSheet.style.getPropertyValue("--notes-sheet-w").trim();
+        const cur = parseInt(raw, 10) || NOTES_SHEET_WIDTH_DEFAULT;
+        if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            applyNotesSheetWidth(cur + step, true);
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            applyNotesSheetWidth(cur - step, true);
+        } else if (e.key === "Home") {
+            e.preventDefault();
+            applyNotesSheetWidth(NOTES_SHEET_WIDTH_DEFAULT, true);
+        }
+    });
 }
 
 function loadSavedDurationSeconds() {
