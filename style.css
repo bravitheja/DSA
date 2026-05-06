@@ -294,6 +294,26 @@ body.dark .user-chip__avatar {
 }
 .timer-primary-icon:disabled { opacity: 0.45; cursor: not-allowed; }
 .timer-primary-icon:not(:disabled):hover { filter: brightness(1.06); }
+.timer-pip-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-soft);
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.timer-pip-icon:hover { color: var(--text); border-color: var(--muted); }
+.timer-pip-icon[aria-pressed="true"] {
+  color: var(--brand);
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--border));
+  background: color-mix(in srgb, var(--brand) 14%, var(--panel-soft));
+}
 .timer-reset-icon {
   width: 2.25rem;
   height: 2.25rem;
@@ -310,6 +330,45 @@ body.dark .user-chip__avatar {
 }
 .timer-reset-icon:hover { color: var(--text); border-color: var(--muted); }
 .timer-panel.sidebar-card { padding: 0.75rem 0.85rem; }
+
+.timer-dock.timer-dock--pip {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: min(320px, calc(100vw - 16px));
+  z-index: 50000;
+  padding: 0;
+}
+.timer-dock.timer-dock--pip .timer-panel {
+  margin-top: 0;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 4px 6px rgba(15, 23, 42, 0.06),
+    0 16px 40px rgba(15, 23, 42, 0.14),
+    0 0 0 1px rgba(15, 23, 42, 0.04);
+  isolation: isolate;
+  overflow: hidden;
+}
+body.dark .timer-dock.timer-dock--pip .timer-panel {
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.35),
+    0 16px 48px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+@media (min-width: 851px) {
+  .timer-dock.timer-dock--pip .timer-drag-handle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: var(--panel-soft);
+    border-bottom: 1px solid var(--border);
+  }
+  .timer-dock.timer-dock--pip .timer-compact-top {
+    padding: 0.5rem 0.65rem 0.65rem;
+  }
+}
 
 @media (min-width: 851px) {
   .timer-drag-handle { display: none !important; }
@@ -864,6 +923,9 @@ body.notes-sheet-open { overflow: hidden; }
 
 /* --- MOBILE STACKED ACCORDION --- */
 @media (max-width: 850px) {
+    .timer-pip-icon {
+        display: none !important;
+    }
     /* Timer hidden until ⏱ — opens as top floating panel (draggable) */
     .timer-dock:not(.timer-dock--open) {
         display: none !important;

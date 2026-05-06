@@ -19,6 +19,8 @@ const NOTES_SHEET_WIDTH_DEFAULT = 400;
 const NOTES_SHEET_WIDTH_MAX = 960;
 const TIMER_PREFS_KEY = "dsa-session-timer-prefs-v1";
 const TIMER_FLOAT_POS_KEY = "dsa-timer-float-pos-v1";
+const TIMER_PIP_ENABLED_KEY = "dsa-timer-pip-enabled-v1";
+const TIMER_PIP_POS_KEY = "dsa-timer-pip-pos-v1";
 const TIMER_MAX_DURATION_SEC = 24 * 3600;
 
 /** Must match SyncWebApp.gs ALLOWED_NOTE_FLAGS_ and sync payload. */
@@ -98,6 +100,7 @@ const elements = {
     timerTimeInput: getEl("timerTimeInput"),
     timerProgressFill: getEl("timerProgressFill"),
     timerPrimaryBtn: getEl("timerPrimaryBtn"),
+    timerPipToggle: getEl("timerPipToggle"),
     timerResetBtn: getEl("timerResetBtn"),
     timerDock: getEl("timerDock"),
     timerMobileToggle: getEl("timerMobileToggle"),
@@ -207,6 +210,10 @@ let timerRemainingSeconds = 20 * 60;
 let timerState = "idle";
 let timerIntervalId = null;
 let timerTitleFlashId = null;
+let timerPipEnabled = false;
+let timerPipDocumentWindow = null;
+let timerPipDocumentControls = null;
+let timerPipClosingByCode = false;
 const appPageTitle = document.title;
 
 /** @type {Map<string, number>} problem id -> index in data.json order */
@@ -223,6 +230,8 @@ async function init() {
     applyTheme(localStorage.getItem(THEME_KEY) || "light");
     try {
         bindControls();
+        timerPipEnabled = loadDesktopTimerPipEnabled();
+        setDesktopTimerPip(timerPipEnabled, false);
         applyNotesSheetWidth(loadStoredNotesSheetWidth(), false);
         initPaginationControls();
         initSessionTimer();
@@ -436,6 +445,10 @@ function bindControls() {
     window.addEventListener("resize", () => {
         if (window.innerWidth > 850) closeMobileTimerDock();
         else clampTimerFloatToViewport();
+        setDesktopTimerPip(timerPipEnabled, false);
+        if (window.innerWidth > 850 && timerPipEnabled) {
+            clampDesktopTimerPipToViewport();
+        }
         syncPageSizeFromViewportIfAuto();
         clampNotesSheetWidthToViewport();
         const totalPages = getTotalPages(filteredProblems.length);
@@ -640,31 +653,52 @@ function applyDurationFromInput(persist) {
     return true;
 }
 
-function updateSessionTimerUI() {
-    elements.timerTimeInput.readOnly = timerState !== "idle";
-    elements.timerTimeInput.setAttribute("aria-live", timerState === "idle" ? "off" : "polite");
-    elements.timerTimeInput.value = formatTimeForInput(
+function applyDurationFromRawInput(rawValue, persist) {
+    const parsed = parseTimeToSeconds(rawValue);
+    if (parsed === null) return false;
+    timerTotalSeconds = clampDurationSec(parsed);
+    timerRemainingSeconds = timerTotalSeconds;
+    elements.timerTimeInput.value = formatTimeForInput(timerTotalSeconds);
+    if (persist) persistTimerPrefs();
+    return true;
+}
+
+function updateTimerControlsUI(ctrl) {
+    if (!ctrl?.timeInput || !ctrl?.progressFill || !ctrl?.primaryBtn) return;
+    ctrl.timeInput.readOnly = timerState !== "idle";
+    ctrl.timeInput.setAttribute("aria-live", timerState === "idle" ? "off" : "polite");
+    ctrl.timeInput.value = formatTimeForInput(
         timerState === "idle" ? timerTotalSeconds : timerRemainingSeconds
     );
-    elements.timerTimeInput.classList.toggle("timer-expired", timerRemainingSeconds <= 0 && timerState === "idle");
-
+    ctrl.timeInput.classList.toggle(
+        "timer-expired",
+        timerRemainingSeconds <= 0 && timerState === "idle"
+    );
     const pct = timerTotalSeconds > 0 ? (timerRemainingSeconds / timerTotalSeconds) * 100 : 0;
-    elements.timerProgressFill.style.width = `${pct}%`;
+    ctrl.progressFill.style.width = `${pct}%`;
 
     if (timerState === "idle") {
-        elements.timerPrimaryBtn.textContent = "▶";
-        elements.timerPrimaryBtn.setAttribute("aria-label", "Start timer");
-        elements.timerPrimaryBtn.disabled = timerRemainingSeconds <= 0;
+        ctrl.primaryBtn.textContent = "▶";
+        ctrl.primaryBtn.setAttribute("aria-label", "Start timer");
+        ctrl.primaryBtn.disabled = timerRemainingSeconds <= 0;
     } else if (timerState === "running") {
-        elements.timerPrimaryBtn.textContent = "⏸";
-        elements.timerPrimaryBtn.setAttribute("aria-label", "Pause timer");
-        elements.timerPrimaryBtn.disabled = false;
+        ctrl.primaryBtn.textContent = "⏸";
+        ctrl.primaryBtn.setAttribute("aria-label", "Pause timer");
+        ctrl.primaryBtn.disabled = false;
     } else {
-        elements.timerPrimaryBtn.textContent = "▶";
-        elements.timerPrimaryBtn.setAttribute("aria-label", "Resume timer");
-        elements.timerPrimaryBtn.disabled = timerRemainingSeconds <= 0;
+        ctrl.primaryBtn.textContent = "▶";
+        ctrl.primaryBtn.setAttribute("aria-label", "Resume timer");
+        ctrl.primaryBtn.disabled = timerRemainingSeconds <= 0;
     }
+}
 
+function updateSessionTimerUI() {
+    updateTimerControlsUI({
+        timeInput: elements.timerTimeInput,
+        progressFill: elements.timerProgressFill,
+        primaryBtn: elements.timerPrimaryBtn,
+    });
+    updateTimerControlsUI(timerPipDocumentControls);
     document.body.classList.toggle("session-timer-running", timerState === "running");
 }
 
@@ -763,6 +797,270 @@ function closeMobileTimerDock() {
     setMobileTimerDockOpen(false);
 }
 
+function loadDesktopTimerPipEnabled() {
+    try {
+        return localStorage.getItem(TIMER_PIP_ENABLED_KEY) === "1";
+    } catch (_) {
+        return false;
+    }
+}
+
+function supportsDocumentTimerPip() {
+    return (
+        typeof window !== "undefined" &&
+        "documentPictureInPicture" in window &&
+        typeof window.documentPictureInPicture?.requestWindow === "function"
+    );
+}
+
+function updateTimerPipToggleUI() {
+    if (!elements.timerPipToggle) return;
+    const active = timerPipEnabled && window.innerWidth > 850;
+    elements.timerPipToggle.textContent = active ? "🗗" : "⧉";
+    elements.timerPipToggle.setAttribute("aria-pressed", active ? "true" : "false");
+    elements.timerPipToggle.setAttribute(
+        "aria-label",
+        active ? "Disable timer picture in picture" : "Enable timer picture in picture"
+    );
+    elements.timerPipToggle.title = active
+        ? "Disable Picture in Picture"
+        : "Enable Picture in Picture";
+}
+
+function closeDocumentTimerPipWindow() {
+    const win = timerPipDocumentWindow;
+    timerPipDocumentWindow = null;
+    timerPipDocumentControls = null;
+    if (!win || win.closed) return;
+    timerPipClosingByCode = true;
+    try {
+        win.close();
+    } catch (_) {
+        /* ignore */
+    } finally {
+        setTimeout(() => {
+            timerPipClosingByCode = false;
+        }, 0);
+    }
+}
+
+async function openDocumentTimerPipWindow() {
+    if (!supportsDocumentTimerPip()) return false;
+    if (timerPipDocumentWindow && !timerPipDocumentWindow.closed) {
+        timerPipDocumentWindow.focus();
+        return true;
+    }
+    const pipWin = await window.documentPictureInPicture.requestWindow({
+        width: 340,
+        height: 190,
+    });
+    timerPipDocumentWindow = pipWin;
+
+    const pipDoc = pipWin.document;
+    pipDoc.documentElement.lang = "en";
+    pipDoc.head.innerHTML = "";
+    pipDoc.body.innerHTML = "";
+    pipDoc.title = "Timer PiP";
+
+    document.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
+        pipDoc.head.appendChild(node.cloneNode(true));
+    });
+    const runtimeStyle = pipDoc.createElement("style");
+    runtimeStyle.textContent = `
+      html, body { margin: 0; padding: 0; background: var(--bg); }
+      body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+      .timer-pip-root { padding: 8px; min-height: 100vh; box-sizing: border-box; }
+      .timer-panel.sidebar-card { margin: 0 !important; }
+      #timerDragHandle { display: none !important; }
+    `;
+    pipDoc.head.appendChild(runtimeStyle);
+
+    const root = pipDoc.createElement("div");
+    root.className = "timer-pip-root";
+    const panel = elements.timerPanel.cloneNode(true);
+    panel.id = "timerPanelPip";
+    root.appendChild(panel);
+    pipDoc.body.appendChild(root);
+
+    const pipControls = {
+        timeInput: pipDoc.getElementById("timerTimeInput"),
+        progressFill: pipDoc.getElementById("timerProgressFill"),
+        primaryBtn: pipDoc.getElementById("timerPrimaryBtn"),
+        resetBtn: pipDoc.getElementById("timerResetBtn"),
+        pipToggleBtn: pipDoc.getElementById("timerPipToggle"),
+    };
+    timerPipDocumentControls = pipControls;
+
+    if (pipControls.primaryBtn) {
+        pipControls.primaryBtn.addEventListener("click", () => {
+            if (timerState === "idle") startSessionTimer();
+            else if (timerState === "running") pauseSessionTimer();
+            else resumeSessionTimer();
+        });
+    }
+    if (pipControls.resetBtn) {
+        pipControls.resetBtn.addEventListener("click", () => {
+            resetSessionTimer();
+        });
+    }
+    if (pipControls.timeInput) {
+        pipControls.timeInput.addEventListener("change", () => {
+            if (timerState !== "idle") return;
+            if (applyDurationFromRawInput(pipControls.timeInput.value, true)) {
+                updateSessionTimerUI();
+            } else {
+                pipControls.timeInput.value = formatTimeForInput(timerTotalSeconds);
+            }
+        });
+        pipControls.timeInput.addEventListener("blur", () => {
+            if (timerState !== "idle") return;
+            const parsed = parseTimeToSeconds(pipControls.timeInput.value);
+            if (parsed === null) {
+                pipControls.timeInput.value = formatTimeForInput(timerTotalSeconds);
+                return;
+            }
+            timerTotalSeconds = clampDurationSec(parsed);
+            timerRemainingSeconds = timerTotalSeconds;
+            persistTimerPrefs();
+            updateSessionTimerUI();
+        });
+    }
+    if (pipControls.pipToggleBtn) {
+        pipControls.pipToggleBtn.textContent = "✕";
+        pipControls.pipToggleBtn.setAttribute("aria-label", "Close timer picture in picture");
+        pipControls.pipToggleBtn.title = "Close Picture in Picture";
+        pipControls.pipToggleBtn.addEventListener("click", () => {
+            setDesktopTimerPip(false, true);
+        });
+    }
+
+    pipWin.addEventListener("pagehide", () => {
+        timerPipDocumentWindow = null;
+        timerPipDocumentControls = null;
+        if (!timerPipClosingByCode && window.innerWidth > 850) {
+            timerPipEnabled = false;
+            try {
+                localStorage.setItem(TIMER_PIP_ENABLED_KEY, "0");
+            } catch (_) {
+                /* ignore */
+            }
+            updateTimerPipToggleUI();
+        }
+    });
+
+    updateSessionTimerUI();
+    return true;
+}
+
+function clearDesktopTimerPipPositionStyles() {
+    const dock = elements.timerDock;
+    if (!dock) return;
+    dock.style.removeProperty("left");
+    dock.style.removeProperty("top");
+    dock.style.removeProperty("right");
+    dock.style.removeProperty("bottom");
+    dock.style.removeProperty("transform");
+}
+
+function applyDesktopTimerPipPosition() {
+    const dock = elements.timerDock;
+    if (!dock || window.innerWidth <= 850 || !timerPipEnabled) return;
+    try {
+        const raw = localStorage.getItem(TIMER_PIP_POS_KEY);
+        if (raw) {
+            const { left, top } = JSON.parse(raw);
+            if (typeof left === "number" && typeof top === "number") {
+                dock.style.left = `${left}px`;
+                dock.style.top = `${top}px`;
+                dock.style.right = "auto";
+                dock.style.bottom = "auto";
+                dock.style.transform = "none";
+                return;
+            }
+        }
+    } catch {
+        /* ignore */
+    }
+    dock.style.right = "16px";
+    dock.style.bottom = "16px";
+    dock.style.left = "auto";
+    dock.style.top = "auto";
+    dock.style.transform = "none";
+}
+
+function saveDesktopTimerPipPosition() {
+    const dock = elements.timerDock;
+    if (!dock || window.innerWidth <= 850 || !timerPipEnabled) return;
+    const rect = dock.getBoundingClientRect();
+    try {
+        localStorage.setItem(
+            TIMER_PIP_POS_KEY,
+            JSON.stringify({ left: rect.left, top: rect.top })
+        );
+    } catch (_) {
+        /* ignore */
+    }
+}
+
+function clampDesktopTimerPipToViewport() {
+    const dock = elements.timerDock;
+    if (!dock || window.innerWidth <= 850 || !timerPipEnabled) return;
+    const rect = dock.getBoundingClientRect();
+    const w = rect.width;
+    const h = rect.height;
+    let left = rect.left;
+    let top = rect.top;
+    left = Math.max(0, Math.min(left, window.innerWidth - w));
+    top = Math.max(0, Math.min(top, window.innerHeight - h));
+    dock.style.left = `${left}px`;
+    dock.style.top = `${top}px`;
+    dock.style.right = "auto";
+    dock.style.bottom = "auto";
+    dock.style.transform = "none";
+}
+
+async function setDesktopTimerPip(enabled, persist = true) {
+    timerPipEnabled = !!enabled;
+    if (persist) {
+        try {
+            localStorage.setItem(TIMER_PIP_ENABLED_KEY, timerPipEnabled ? "1" : "0");
+        } catch (_) {
+            /* ignore */
+        }
+    }
+    if (!elements.timerDock) return;
+    const active = timerPipEnabled && window.innerWidth > 850;
+    if (!active) {
+        closeDocumentTimerPipWindow();
+        elements.timerDock.classList.remove("timer-dock--pip");
+        clearDesktopTimerPipPositionStyles();
+        updateTimerPipToggleUI();
+        return;
+    }
+    if (supportsDocumentTimerPip()) {
+        if (!persist && (!timerPipDocumentWindow || timerPipDocumentWindow.closed)) {
+            updateTimerPipToggleUI();
+            return;
+        }
+        elements.timerDock.classList.remove("timer-dock--pip");
+        clearDesktopTimerPipPositionStyles();
+        try {
+            await openDocumentTimerPipWindow();
+        } catch (err) {
+            console.error("Document PiP failed, falling back to in-page PiP:", err);
+            elements.timerDock.classList.add("timer-dock--pip");
+            applyDesktopTimerPipPosition();
+            clampDesktopTimerPipToViewport();
+        }
+        updateTimerPipToggleUI();
+        return;
+    }
+    elements.timerDock.classList.add("timer-dock--pip");
+    applyDesktopTimerPipPosition();
+    clampDesktopTimerPipToViewport();
+    updateTimerPipToggleUI();
+}
+
 function applyTimerFloatPosition() {
     const dock = elements.timerDock;
     if (!dock || window.innerWidth > 850) return;
@@ -822,7 +1120,9 @@ function bindTimerFloatDrag() {
     if (!handle || !dock) return;
 
     handle.addEventListener("pointerdown", (e) => {
-        if (window.innerWidth > 850 || !dock.classList.contains("timer-dock--open")) return;
+        const mobileFloat = window.innerWidth <= 850 && dock.classList.contains("timer-dock--open");
+        const desktopPip = window.innerWidth > 850 && dock.classList.contains("timer-dock--pip");
+        if (!mobileFloat && !desktopPip) return;
         e.preventDefault();
         handle.setPointerCapture(e.pointerId);
         const startX = e.clientX;
@@ -856,7 +1156,8 @@ function bindTimerFloatDrag() {
             } catch {
                 /* ignore */
             }
-            saveTimerFloatPosition();
+            if (mobileFloat) saveTimerFloatPosition();
+            if (desktopPip) saveDesktopTimerPipPosition();
         };
 
         window.addEventListener("pointermove", move);
@@ -893,6 +1194,13 @@ function bindSessionTimer() {
     elements.timerResetBtn.addEventListener("click", () => {
         resetSessionTimer();
     });
+
+    if (elements.timerPipToggle) {
+        elements.timerPipToggle.addEventListener("click", async () => {
+            if (window.innerWidth <= 850) return;
+            await setDesktopTimerPip(!timerPipEnabled, true);
+        });
+    }
 
     if (elements.timerMobileToggle) {
         elements.timerMobileToggle.addEventListener("click", () => {
