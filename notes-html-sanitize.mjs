@@ -6,6 +6,14 @@ import DOMPurify from "https://esm.sh/dompurify@3.1.7?target=es2022";
 
 const ALLOW_STYLE_PROPS = new Set(["color", "font-size", "background-color"]);
 
+DOMPurify.addHook("uponSanitizeElement", (node) => {
+    if (node.nodeType !== 1 || node.nodeName !== "INPUT") return;
+    const t = (/** @type {Element} */ (node).getAttribute("type") || "").toLowerCase();
+    if (t !== "checkbox") {
+        node.parentNode?.removeChild(node);
+    }
+});
+
 DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
     if (data.attrName !== "style") return;
     const raw = data.attrValue || "";
@@ -62,8 +70,22 @@ const SANITIZE_CONFIG = {
         "div",
         "hr",
         "mark",
+        "label",
+        "input",
     ],
-    ALLOWED_ATTR: ["href", "title", "target", "rel", "class", "style", "data-color"],
+    ALLOWED_ATTR: [
+        "href",
+        "title",
+        "target",
+        "rel",
+        "class",
+        "style",
+        "data-color",
+        "data-type",
+        "data-checked",
+        "type",
+        "checked",
+    ],
     ALLOW_DATA_ATTR: false,
 };
 

@@ -15,6 +15,9 @@ import Underline from "https://esm.sh/@tiptap/extension-underline@2.27.2?deps=@t
 import Link from "https://esm.sh/@tiptap/extension-link@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
 import Highlight from "https://esm.sh/@tiptap/extension-highlight@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
 import Placeholder from "https://esm.sh/@tiptap/extension-placeholder@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
+import BubbleMenu from "https://esm.sh/@tiptap/extension-bubble-menu@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
+import TaskList from "https://esm.sh/@tiptap/extension-task-list@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
+import TaskItem from "https://esm.sh/@tiptap/extension-task-item@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
 
 const FontSize = Extension.create({
     name: "fontSize",
@@ -42,6 +45,18 @@ const FontSize = Extension.create({
 
 const FONT_SIZES = ["12px", "14px", "16px", "18px", "22px"];
 
+/** Fixed text colors (Notion-like restraint vs free-form picker). */
+const DOC_TEXT_COLORS = ["#111827", "#b91c1c", "#c2410c", "#15803d", "#1d4ed8", "#7c3aed"];
+
+/** Fixed highlight fills (stored as inline style; palette stays consistent). */
+const DOC_HIGHLIGHTS = [
+    { color: "#fef08a", label: "Yellow" },
+    { color: "#bfdbfe", label: "Blue" },
+    { color: "#fecaca", label: "Red" },
+    { color: "#d9f99d", label: "Green" },
+    { color: "#e9d5ff", label: "Purple" },
+];
+
 function el(tag, cls, text) {
     const n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -49,56 +64,106 @@ function el(tag, cls, text) {
     return n;
 }
 
+function mkToolbarBtn(editor, label, title, run) {
+    const b = el("button", "notes-rich-toolbar__pill", label);
+    b.type = "button";
+    b.title = title;
+    b.addEventListener("click", () => {
+        run();
+        editor.commands.focus();
+    });
+    return b;
+}
+
+function mkBubbleBtn(editor, label, title, run, extraClass, activeKind) {
+    const b = el("button", `notes-rich-bubble__btn${extraClass ? ` ${extraClass}` : ""}`, label);
+    b.type = "button";
+    b.title = title;
+    if (activeKind) b.dataset.bubbleActive = activeKind;
+    b.addEventListener("click", () => {
+        run();
+        editor.commands.focus();
+    });
+    return b;
+}
+
+function bubbleVsep() {
+    const n = el("span", "notes-rich-bubble__vsep");
+    n.setAttribute("aria-hidden", "true");
+    return n;
+}
+
+function bubbleBtnActive(editor, kind) {
+    switch (kind) {
+        case "bold":
+            return editor.isActive("bold");
+        case "italic":
+            return editor.isActive("italic");
+        case "underline":
+            return editor.isActive("underline");
+        case "strike":
+            return editor.isActive("strike");
+        case "code":
+            return editor.isActive("code");
+        case "codeBlock":
+            return editor.isActive("codeBlock");
+        case "blockquote":
+            return editor.isActive("blockquote");
+        case "bulletList":
+            return editor.isActive("bulletList");
+        case "orderedList":
+            return editor.isActive("orderedList");
+        case "taskList":
+            return editor.isActive("taskList");
+        case "h1":
+            return editor.isActive("heading", { level: 1 });
+        case "h2":
+            return editor.isActive("heading", { level: 2 });
+        case "paragraph":
+            return editor.isActive("paragraph");
+        case "link":
+            return editor.isActive("link");
+        default:
+            return false;
+    }
+}
+
+/** Toggle `.notes-rich-bubble__btn--active` from `data-bubble-active` marks. */
+function wireBubbleToolbarState(editor, panel) {
+    const refresh = () => {
+        for (const btn of panel.querySelectorAll("[data-bubble-active]")) {
+            if (!(btn instanceof HTMLElement)) continue;
+            const k = btn.dataset.bubbleActive;
+            if (!k) continue;
+            btn.classList.toggle("notes-rich-bubble__btn--active", bubbleBtnActive(editor, k));
+        }
+    };
+    refresh();
+    editor.on("selectionUpdate", refresh);
+    editor.on("transaction", refresh);
+    return () => {
+        editor.off("selectionUpdate", refresh);
+        editor.off("transaction", refresh);
+    };
+}
+
+/** Full strip for problem-notes sheet (legacy layout). */
 function buildToolbar(editor) {
     const bar = el("div", "notes-rich-toolbar");
 
-    const mkBtn = (label, title, run) => {
-        const b = el("button", "notes-rich-toolbar__pill", label);
-        b.type = "button";
-        b.title = title;
-        b.addEventListener("click", () => {
-            run();
-            editor.commands.focus();
-        });
-        return b;
-    };
-
-    bar.appendChild(
-        mkBtn("B", "Bold", () => editor.chain().focus().toggleBold().run())
-    );
-    bar.appendChild(
-        mkBtn("I", "Italic", () => editor.chain().focus().toggleItalic().run())
-    );
-    bar.appendChild(
-        mkBtn("U", "Underline", () => editor.chain().focus().toggleUnderline().run())
-    );
-    bar.appendChild(
-        mkBtn("S", "Strike", () => editor.chain().focus().toggleStrike().run())
-    );
-    bar.appendChild(
-        mkBtn("•", "Bullet list", () => editor.chain().focus().toggleBulletList().run())
-    );
-    bar.appendChild(
-        mkBtn("1.", "Ordered list", () => editor.chain().focus().toggleOrderedList().run())
-    );
-    bar.appendChild(
-        mkBtn("</>", "Code", () => editor.chain().focus().toggleCode().run())
-    );
-    bar.appendChild(
-        mkBtn("{ }", "Code block", () => editor.chain().focus().toggleCodeBlock().run())
-    );
-    bar.appendChild(
-        mkBtn("❝", "Quote", () => editor.chain().focus().toggleBlockquote().run())
-    );
-    bar.appendChild(
-        mkBtn("H1", "Heading 1", () => editor.chain().focus().toggleHeading({ level: 1 }).run())
-    );
-    bar.appendChild(
-        mkBtn("H2", "Heading 2", () => editor.chain().focus().toggleHeading({ level: 2 }).run())
-    );
-    bar.appendChild(
-        mkBtn("¶", "Paragraph", () => editor.chain().focus().setParagraph().run())
-    );
+    bar.appendChild(mkToolbarBtn(editor, "B", "Bold", () => editor.chain().focus().toggleBold().run()));
+    bar.appendChild(mkToolbarBtn(editor, "I", "Italic", () => editor.chain().focus().toggleItalic().run()));
+    bar.appendChild(mkToolbarBtn(editor, "U", "Underline", () => editor.chain().focus().toggleUnderline().run()));
+    bar.appendChild(mkToolbarBtn(editor, "S", "Strike", () => editor.chain().focus().toggleStrike().run()));
+    bar.appendChild(mkToolbarBtn(editor, "•", "Bullet list", () => editor.chain().focus().toggleBulletList().run()));
+    bar.appendChild(mkToolbarBtn(editor, "1.", "Ordered list", () => editor.chain().focus().toggleOrderedList().run()));
+    bar.appendChild(mkToolbarBtn(editor, "☐", "Task list", () => editor.chain().focus().toggleTaskList().run()));
+    bar.appendChild(mkToolbarBtn(editor, "</>", "Code", () => editor.chain().focus().toggleCode().run()));
+    bar.appendChild(mkToolbarBtn(editor, "{ }", "Code block", () => editor.chain().focus().toggleCodeBlock().run()));
+    bar.appendChild(mkToolbarBtn(editor, "❝", "Quote", () => editor.chain().focus().toggleBlockquote().run()));
+    bar.appendChild(mkToolbarBtn(editor, "H1", "Heading 1", () => editor.chain().focus().toggleHeading({ level: 1 }).run()));
+    bar.appendChild(mkToolbarBtn(editor, "H2", "Heading 2", () => editor.chain().focus().toggleHeading({ level: 2 }).run()));
+    bar.appendChild(mkToolbarBtn(editor, "¶", "Paragraph", () => editor.chain().focus().setParagraph().run()));
 
     const colorWrap = el("label", "notes-rich-toolbar__color");
     const colorLab = el("span", null, "A");
@@ -140,11 +205,7 @@ function buildToolbar(editor) {
     sizeSel.addEventListener("change", () => {
         const v = sizeSel.value || "16px";
         const cur = editor.getAttributes("textStyle") || {};
-        editor
-            .chain()
-            .focus()
-            .setMark("textStyle", { ...cur, fontSize: v })
-            .run();
+        editor.chain().focus().setMark("textStyle", { ...cur, fontSize: v }).run();
     });
 
     bar.appendChild(colorWrap);
@@ -152,23 +213,227 @@ function buildToolbar(editor) {
     bar.appendChild(sizeSel);
 
     bar.appendChild(
-        mkBtn("🔗", "Add link", () => {
+        mkToolbarBtn(editor, "🔗", "Add link", () => {
             const prev = window.prompt("Link URL", "https://");
             if (prev == null || prev === "") return;
             editor.chain().focus().extendMarkRange("link").setLink({ href: prev }).run();
         })
     );
-    bar.appendChild(
-        mkBtn("⌫ link", "Remove link", () => editor.chain().focus().unsetLink().run())
-    );
+    bar.appendChild(mkToolbarBtn(editor, "⌫ link", "Remove link", () => editor.chain().focus().unsetLink().run()));
 
     return bar;
 }
 
 /**
+ * General-notes floating bar: compact Notion-style rows. Opaque shell is on
+ * `.notes-rich-bubble`; drag applies `translate` there so the card never slides off its fill.
+ */
+function buildBubbleToolbar(editor) {
+    const panel = el("div", "notes-rich-bubble__panel notes-rich-bubble__panel--notion");
+
+    const grip = el("div", "notes-rich-bubble__grip");
+    const drag = el("div", "notes-rich-bubble__drag");
+    drag.title = "Drag to move";
+    drag.appendChild(el("span", "notes-rich-bubble__drag-grip", "⋮⋮"));
+    drag.appendChild(el("span", "notes-rich-bubble__drag-hint", "Move"));
+    grip.appendChild(drag);
+    panel.appendChild(grip);
+
+    const body = el("div", "notes-rich-bubble__notion-body");
+
+    const rowMain = el("div", "notes-rich-bubble__row notes-rich-bubble__row--notion-main");
+    rowMain.appendChild(mkBubbleBtn(editor, "B", "Bold", () => editor.chain().focus().toggleBold().run(), undefined, "bold"));
+    rowMain.appendChild(mkBubbleBtn(editor, "I", "Italic", () => editor.chain().focus().toggleItalic().run(), undefined, "italic"));
+    rowMain.appendChild(mkBubbleBtn(editor, "U", "Underline", () => editor.chain().focus().toggleUnderline().run(), undefined, "underline"));
+    rowMain.appendChild(mkBubbleBtn(editor, "S", "Strike", () => editor.chain().focus().toggleStrike().run(), undefined, "strike"));
+    rowMain.appendChild(bubbleVsep());
+    rowMain.appendChild(mkBubbleBtn(editor, "•", "Bullet list", () => editor.chain().focus().toggleBulletList().run(), undefined, "bulletList"));
+    rowMain.appendChild(mkBubbleBtn(editor, "1.", "Ordered list", () => editor.chain().focus().toggleOrderedList().run(), undefined, "orderedList"));
+    rowMain.appendChild(mkBubbleBtn(editor, "☐", "Task list", () => editor.chain().focus().toggleTaskList().run(), undefined, "taskList"));
+    rowMain.appendChild(mkBubbleBtn(editor, "</>", "Inline code", () => editor.chain().focus().toggleCode().run(), undefined, "code"));
+    rowMain.appendChild(mkBubbleBtn(editor, "{ }", "Code block", () => editor.chain().focus().toggleCodeBlock().run(), undefined, "codeBlock"));
+    rowMain.appendChild(mkBubbleBtn(editor, "❝", "Quote", () => editor.chain().focus().toggleBlockquote().run(), undefined, "blockquote"));
+    rowMain.appendChild(bubbleVsep());
+    rowMain.appendChild(mkBubbleBtn(editor, "H1", "Heading 1", () => editor.chain().focus().toggleHeading({ level: 1 }).run(), undefined, "h1"));
+    rowMain.appendChild(mkBubbleBtn(editor, "H2", "Heading 2", () => editor.chain().focus().toggleHeading({ level: 2 }).run(), undefined, "h2"));
+    rowMain.appendChild(mkBubbleBtn(editor, "¶", "Paragraph", () => editor.chain().focus().setParagraph().run(), undefined, "paragraph"));
+    rowMain.appendChild(bubbleVsep());
+    const sizeSel = document.createElement("select");
+    sizeSel.className = "notes-rich-bubble__select notes-rich-bubble__select--notion";
+    sizeSel.title = "Font size";
+    for (const fs of FONT_SIZES) {
+        const o = document.createElement("option");
+        o.value = fs;
+        o.textContent = fs;
+        sizeSel.appendChild(o);
+    }
+    sizeSel.value = "16px";
+    sizeSel.addEventListener("change", () => {
+        const v = sizeSel.value || "16px";
+        const cur = editor.getAttributes("textStyle") || {};
+        editor.chain().focus().setMark("textStyle", { ...cur, fontSize: v }).run();
+    });
+    rowMain.appendChild(sizeSel);
+    body.appendChild(rowMain);
+
+    body.appendChild(el("div", "notes-rich-bubble__sep"));
+
+    const rowText = el("div", "notes-rich-bubble__row notes-rich-bubble__row--swatches notes-rich-bubble__row--swatches-tight");
+    for (const c of DOC_TEXT_COLORS) {
+        const sw = el("button", "notes-rich-bubble__swatch notes-rich-bubble__swatch--text");
+        sw.type = "button";
+        sw.title = `Text ${c}`;
+        sw.style.setProperty("--swatch", c);
+        sw.addEventListener("click", () => {
+            editor.chain().focus().setColor(c).run();
+        });
+        rowText.appendChild(sw);
+    }
+    body.appendChild(rowText);
+
+    const rowHi = el("div", "notes-rich-bubble__row notes-rich-bubble__row--swatches notes-rich-bubble__row--swatches-tight");
+    for (const { color, label } of DOC_HIGHLIGHTS) {
+        const sw = el("button", "notes-rich-bubble__swatch notes-rich-bubble__swatch--hi");
+        sw.type = "button";
+        sw.title = `Highlight: ${label}`;
+        sw.style.setProperty("--swatch", color);
+        sw.addEventListener("click", () => {
+            editor.chain().focus().toggleHighlight({ color }).run();
+        });
+        rowHi.appendChild(sw);
+    }
+    rowHi.appendChild(
+        mkBubbleBtn(editor, "Clear", "Remove highlight", () => editor.chain().focus().unsetHighlight().run(), "notes-rich-bubble__btn--compact")
+    );
+    body.appendChild(rowHi);
+
+    body.appendChild(el("div", "notes-rich-bubble__sep"));
+
+    const rowLink = el("div", "notes-rich-bubble__row notes-rich-bubble__row--notion-link");
+    rowLink.appendChild(
+        mkBubbleBtn(
+            editor,
+            "🔗",
+            "Add link",
+            () => {
+                const prev = window.prompt("Link URL", "https://");
+                if (prev == null || prev === "") return;
+                editor.chain().focus().extendMarkRange("link").setLink({ href: prev }).run();
+            },
+            undefined,
+            "link"
+        )
+    );
+    rowLink.appendChild(mkBubbleBtn(editor, "⌫", "Remove link", () => editor.chain().focus().unsetLink().run()));
+    body.appendChild(rowLink);
+
+    panel.appendChild(body);
+    return panel;
+}
+
+/** Drag-reposition the whole bubble root (offset from Tippy anchor). Cleans up on return. */
+function attachBubbleDrag(editor, bubbleRoot) {
+    const drag = bubbleRoot.querySelector(".notes-rich-bubble__drag");
+    if (!drag || !(drag instanceof HTMLElement)) {
+        return () => {};
+    }
+    const dragWin = bubbleRoot.ownerDocument.defaultView;
+    if (!dragWin) {
+        return () => {};
+    }
+
+    let dragX = 0;
+    let dragY = 0;
+    let dragging = false;
+    let startClient = { x: 0, y: 0 };
+    let startOffset = { x: 0, y: 0 };
+    let lastRangeKey = "";
+
+    const applyTransform = () => {
+        if (dragX === 0 && dragY === 0) {
+            bubbleRoot.style.transform = "";
+        } else {
+            bubbleRoot.style.transform = `translate(${dragX}px, ${dragY}px)`;
+        }
+    };
+
+    const onPointerDown = (e) => {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        e.stopPropagation();
+        dragging = true;
+        startClient = { x: e.clientX, y: e.clientY };
+        startOffset = { x: dragX, y: dragY };
+        drag.classList.add("notes-rich-bubble__drag--dragging");
+        try {
+            drag.setPointerCapture(e.pointerId);
+        } catch (_) {
+            /* ignore */
+        }
+    };
+
+    const onPointerMove = (e) => {
+        if (!dragging) return;
+        dragX = startOffset.x + (e.clientX - startClient.x);
+        dragY = startOffset.y + (e.clientY - startClient.y);
+        applyTransform();
+    };
+
+    const onPointerUp = (e) => {
+        if (!dragging) return;
+        dragging = false;
+        drag.classList.remove("notes-rich-bubble__drag--dragging");
+        try {
+            drag.releasePointerCapture(e.pointerId);
+        } catch (_) {
+            /* ignore */
+        }
+    };
+
+    const onSelectionUpdate = () => {
+        const { from, to } = editor.state.selection;
+        const key = `${from}-${to}`;
+        if (from === to) {
+            dragX = 0;
+            dragY = 0;
+            applyTransform();
+            lastRangeKey = key;
+            return;
+        }
+        if (key !== lastRangeKey) {
+            dragX = 0;
+            dragY = 0;
+            applyTransform();
+            lastRangeKey = key;
+        }
+    };
+
+    drag.addEventListener("pointerdown", onPointerDown);
+    dragWin.addEventListener("pointermove", onPointerMove);
+    dragWin.addEventListener("pointerup", onPointerUp);
+    dragWin.addEventListener("pointercancel", onPointerUp);
+    editor.on("selectionUpdate", onSelectionUpdate);
+
+    return () => {
+        drag.removeEventListener("pointerdown", onPointerDown);
+        dragWin.removeEventListener("pointermove", onPointerMove);
+        dragWin.removeEventListener("pointerup", onPointerUp);
+        dragWin.removeEventListener("pointercancel", onPointerUp);
+        editor.off("selectionUpdate", onSelectionUpdate);
+        bubbleRoot.style.transform = "";
+    };
+}
+
+/**
  * @param {HTMLElement | null} toolbarHost — toolbar pills (sibling of editor is typical)
  * @param {HTMLElement} editorHost — TipTap / ProseMirror mount target (replaced on destroy)
- * @param {{ initialHtml: string; isDark: boolean; placeholder?: string; onChange?: () => void }} opts
+ * @param {{
+ *   initialHtml: string;
+ *   isDark: boolean;
+ *   placeholder?: string;
+ *   onChange?: () => void;
+ *   documentSurface?: boolean;
+ * }} opts — when true (e.g. session sticky / compact surface), floating bubble only (no bottom strip)
  */
 export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
     if (toolbarHost) toolbarHost.replaceChildren();
@@ -176,11 +441,24 @@ export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
     editorHost.classList.add("notes-rich-prose-host");
     if (opts.isDark) editorHost.classList.add("notes-rich-editor--dark");
 
+    const docSurface = !!opts.documentSurface;
+    const surfaceDoc = editorHost.ownerDocument;
+    /** @type {HTMLElement | null} */
+    let bubbleRoot = null;
+    /** @type {null | (() => void)} */
+    let bubbleDragDispose = null;
+    if (docSurface) {
+        bubbleRoot = el("div", "notes-rich-bubble");
+        editorHost.parentNode?.insertBefore(bubbleRoot, editorHost);
+    }
+
     const extensions = [
         StarterKit.configure({
             heading: { levels: [1, 2, 3] },
             codeBlock: { HTMLAttributes: { class: "notes-rich-codeblock" } },
         }),
+        TaskList,
+        TaskItem,
         TextStyle,
         FontSize,
         Color,
@@ -188,11 +466,35 @@ export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
         Underline,
         Link.configure({ openOnClick: false, autolink: true, defaultProtocol: "https" }),
         Placeholder.configure({
-            placeholder:
-                opts.placeholder ??
-                "Write notes… Use the toolbar for colors, lists, and code blocks.",
+            placeholder: opts.placeholder ?? "Write notes… Use the toolbar for colors, lists, and code blocks.",
         }),
     ];
+
+    if (docSurface && bubbleRoot) {
+        extensions.push(
+            BubbleMenu.configure({
+                element: bubbleRoot,
+                shouldShow: ({ editor: ed, state }) => {
+                    const { from, to } = state.selection;
+                    return from !== to && ed.isEditable;
+                },
+                tippyOptions: {
+                    theme: "dsa-gn-bubble",
+                    arrow: false,
+                    placement: "top-start",
+                    flip: true,
+                    /** Tighter gap so the chip feels anchored to the selection */
+                    offset: [0, 6],
+                    moveTransition: "transform 0.1s ease-out",
+                    sticky: true,
+                    /** Popper targets the same document as the editor (main app vs Document PiP). */
+                    appendTo: () => surfaceDoc.body,
+                    zIndex: 110050,
+                    maxWidth: "none",
+                },
+            })
+        );
+    }
 
     const editor = new Editor({
         element: editorHost,
@@ -209,6 +511,33 @@ export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
         onUpdate: () => opts.onChange?.(),
     });
 
+    if (docSurface && bubbleRoot) {
+        const bubblePanel = buildBubbleToolbar(editor);
+        bubbleRoot.appendChild(bubblePanel);
+        const dragClean = attachBubbleDrag(editor, bubbleRoot);
+        const stateClean = wireBubbleToolbarState(editor, bubblePanel);
+        const sizeSel = bubblePanel.querySelector("select.notes-rich-bubble__select");
+        const syncBubbleFontSize = () => {
+            if (!(sizeSel instanceof HTMLSelectElement)) return;
+            const a = editor.getAttributes("textStyle");
+            const fs = (a && a.fontSize) || "16px";
+            sizeSel.value = FONT_SIZES.includes(fs) ? fs : "16px";
+        };
+        if (sizeSel instanceof HTMLSelectElement) {
+            syncBubbleFontSize();
+            editor.on("selectionUpdate", syncBubbleFontSize);
+            editor.on("transaction", syncBubbleFontSize);
+        }
+        bubbleDragDispose = () => {
+            dragClean();
+            stateClean();
+            if (sizeSel instanceof HTMLSelectElement) {
+                editor.off("selectionUpdate", syncBubbleFontSize);
+                editor.off("transaction", syncBubbleFontSize);
+            }
+        };
+    }
+
     /** Move caret to document end and ensure the contenteditable receives real focus. */
     const focusAtDocEnd = () => {
         const view = editor.view;
@@ -218,11 +547,15 @@ export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
         view.focus({ preventScroll: true });
     };
 
-    const toolbar = buildToolbar(editor);
-    if (toolbarHost) {
-        toolbarHost.appendChild(toolbar);
-    } else {
-        editorHost.parentNode?.insertBefore(toolbar, editorHost);
+    const toolbar = docSurface ? null : buildToolbar(editor);
+    if (toolbar) {
+        if (toolbarHost) {
+            toolbarHost.appendChild(toolbar);
+        } else {
+            editorHost.parentNode?.insertBefore(toolbar, editorHost);
+        }
+    } else if (toolbarHost) {
+        toolbarHost.replaceChildren();
     }
 
     return {
@@ -233,22 +566,27 @@ export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
         },
         focus: () => focusAtDocEnd(),
         /** Called from title field: Enter = caret at end; Shift+Enter = caret + hard break (line inside body). */
-        focusFromTitle: (opts) => {
+        focusFromTitle: (selOpts) => {
             focusAtDocEnd();
-            if (opts && opts.shiftKey) {
+            if (selOpts && selOpts.shiftKey) {
                 editor.chain().focus().setHardBreak().run();
             }
         },
         setDark: (dark) => {
             editorHost.classList.toggle("notes-rich-editor--dark", !!dark);
             if (toolbarHost) toolbarHost.classList.toggle("notes-rich-toolbar-host--dark", !!dark);
+            bubbleRoot?.classList.toggle("notes-rich-bubble--dark", !!dark);
         },
         destroy: () => {
+            bubbleDragDispose?.();
+            bubbleDragDispose = null;
             editor.destroy();
+            bubbleRoot?.remove();
+            bubbleRoot = null;
             editorHost.replaceChildren();
             editorHost.classList.remove("notes-rich-prose-host", "notes-rich-editor--dark");
             if (toolbarHost) toolbarHost.replaceChildren();
-            else toolbar.remove();
+            else toolbar?.remove();
         },
     };
 }

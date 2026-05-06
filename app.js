@@ -23,7 +23,20 @@ const TIMER_PREFS_KEY = "dsa-session-timer-prefs-v1";
 const TIMER_FLOAT_POS_KEY = "dsa-timer-float-pos-v1";
 const TIMER_PIP_ENABLED_KEY = "dsa-timer-pip-enabled-v1";
 const TIMER_PIP_POS_KEY = "dsa-timer-pip-pos-v1";
+const TIMER_STICKY_KEY = "dsa-timer-sticky-v1";
 const TIMER_MAX_DURATION_SEC = 24 * 3600;
+
+/** Post-it backgrounds for the timer sticky card (local only, not synced). */
+const TIMER_STICKY_BACKGROUNDS = [
+    { id: "lemon", label: "Lemon", color: "#fff8d6" },
+    { id: "peach", label: "Peach", color: "#ffe8d6" },
+    { id: "mint", label: "Mint", color: "#d8f5e4" },
+    { id: "lavender", label: "Lavender", color: "#ebe4ff" },
+    { id: "sky", label: "Sky", color: "#d4efff" },
+    { id: "rose", label: "Rose", color: "#ffe4ef" },
+];
+
+const TIMER_STICKY_STICKERS = ["📌", "🎯", "⭐", "🔥", "💡", "🧠", "✅", "📝", "☕", "🚀"];
 
 /** Must match SyncWebApp.gs ALLOWED_NOTE_FLAGS_ and sync payload. */
 const NOTE_FLAG_SLUGS = new Set([
@@ -108,6 +121,21 @@ const elements = {
     timerDock: getEl("timerDock"),
     timerMobileToggle: getEl("timerMobileToggle"),
     timerDragHandle: getEl("timerDragHandle"),
+    timerStickySection: getEl("timerStickySection"),
+    timerStickyDock: getEl("timerStickyDock"),
+    timerStickyPipBanner: getEl("timerStickyPipBanner"),
+    timerStickyCardPipToggle: getEl("timerStickyCardPipToggle"),
+    timerStickyCardAddBtn: getEl("timerStickyCardAddBtn"),
+    timerStickyCardDeleteBtn: getEl("timerStickyCardDeleteBtn"),
+    timerStickyCardPrevBtn: getEl("timerStickyCardPrevBtn"),
+    timerStickyCardNextBtn: getEl("timerStickyCardNextBtn"),
+    timerStickyCarousel: getEl("timerStickyCarousel"),
+    timerStickyCarouselDots: getEl("timerStickyCarouselDots"),
+    timerStickyActiveLabel: getEl("timerStickyActiveLabel"),
+    timerStickyColorRow: getEl("timerStickyColorRow"),
+    timerStickyEditorHost: getEl("timerStickyEditorHost"),
+    timerStickyEditorMount: getEl("timerStickyEditorMount"),
+    timerStickyToolbarHost: getEl("timerStickyToolbarHost"),
     generalNotesOpenBtn: getEl("generalNotesOpenBtn"),
     generalNotesModal: getEl("generalNotesModal"),
     generalNotesBackdrop: getEl("generalNotesBackdrop"),
@@ -121,6 +149,8 @@ const elements = {
     generalNotesTitleInput: getEl("generalNotesTitleInput"),
     generalNotesToolbarHost: getEl("generalNotesToolbarHost"),
     generalNotesEditorHost: getEl("generalNotesEditorHost"),
+    /** TipTap mounts here; outer `#generalNotesEditorHost` stays full width so scrollbar hugs modal edge. */
+    generalNotesEditorMount: getEl("generalNotesEditorMount"),
 };
 
 let allProblems = [];
@@ -280,6 +310,8 @@ let timerPipEnabled = false;
 let timerPipDocumentWindow = null;
 let timerPipDocumentControls = null;
 let timerPipClosingByCode = false;
+/** @type {null | 'timer' | 'sticky'} */
+let pipDocumentMode = null;
 const appPageTitle = document.title;
 
 /** @type {Map<string, number>} problem id -> index in data.json order */
@@ -527,6 +559,7 @@ function bindControls() {
     initNotesSheetResize();
     bindSessionTimer();
     initGeneralNotesModal();
+    initTimerSticky();
 }
 
 function clampNotesSheetWidth(w) {
@@ -883,23 +916,104 @@ function supportsDocumentTimerPip() {
 
 function updateTimerPipToggleUI() {
     if (!elements.timerPipToggle) return;
-    const active = timerPipEnabled && window.innerWidth > 850;
-    elements.timerPipToggle.textContent = active ? "🗗" : "⧉";
-    elements.timerPipToggle.setAttribute("aria-pressed", active ? "true" : "false");
+    const desktop = window.innerWidth > 850;
+    const docPipTimer =
+        desktop &&
+        timerPipDocumentWindow &&
+        !timerPipDocumentWindow.closed &&
+        pipDocumentMode === "timer";
+    const fallbackPip = desktop && elements.timerDock?.classList.contains("timer-dock--pip");
+    const pressed = docPipTimer || fallbackPip;
+    elements.timerPipToggle.textContent = pressed ? "🗗" : "⧉";
+    elements.timerPipToggle.setAttribute("aria-pressed", pressed ? "true" : "false");
     elements.timerPipToggle.setAttribute(
         "aria-label",
-        active ? "Disable timer picture in picture" : "Enable timer picture in picture"
+        pressed ? "Close timer picture in picture" : "Open timer picture in picture"
     );
-    elements.timerPipToggle.title = active
-        ? "Disable Picture in Picture"
-        : "Enable Picture in Picture";
+    elements.timerPipToggle.title = pressed ? "Close Picture in Picture" : "Timer in Picture in Picture";
+}
+
+function updateStickyPipToggleUI() {
+    const btn = elements.timerStickyCardPipToggle;
+    if (!btn) return;
+    const desktop = window.innerWidth > 850;
+    const pressed =
+        desktop &&
+        timerPipDocumentWindow &&
+        !timerPipDocumentWindow.closed &&
+        pipDocumentMode === "sticky";
+    btn.setAttribute("aria-pressed", pressed ? "true" : "false");
+    btn.setAttribute(
+        "aria-label",
+        pressed ? "Close stickies picture in picture" : "Open stickies picture in picture"
+    );
+    btn.title = pressed ? "Close stickies Picture in Picture" : "Stickies in Picture in Picture";
+}
+
+function refreshDocumentPipToggleUIs() {
+    updateTimerPipToggleUI();
+    updateStickyPipToggleUI();
+}
+
+/**
+ * Shrink (or grow) the Document PiP outer window to match laid-out content.
+ * @param {Window} pipWin
+ * @param {Document} pipDoc
+ * @param {{ w: number; h: number }} lastApplied — skip if change is negligible (ResizeObserver loops).
+ */
+function fitDocumentPipToContent(pipWin, pipDoc, lastApplied) {
+    if (!pipWin || pipWin.closed || !pipDoc) return;
+    const root = pipDoc.querySelector(".timer-pip-root");
+    if (!root) return;
+    const padX = 20;
+    const padY = 32;
+    const rect = root.getBoundingClientRect();
+    const contentW = Math.ceil(Math.max(rect.width, root.scrollWidth) + padX);
+    const contentH = Math.ceil(
+        Math.max(
+            pipDoc.body.scrollHeight,
+            pipDoc.documentElement.scrollHeight,
+            rect.height,
+            root.scrollHeight
+        ) + padY
+    );
+    const minW = 292;
+    const minH = 120;
+    const maxW = Math.min(560, window.screen?.availWidth ? window.screen.availWidth - 24 : 560);
+    const maxH = Math.min(900, window.screen?.availHeight ? window.screen.availHeight - 48 : 900);
+    const finalW = Math.min(maxW, Math.max(minW, contentW));
+    const finalH = Math.min(maxH, Math.max(minH, contentH));
+    if (Math.abs(finalW - lastApplied.w) < 3 && Math.abs(finalH - lastApplied.h) < 3) return;
+    lastApplied.w = finalW;
+    lastApplied.h = finalH;
+    try {
+        pipWin.resizeTo(finalW, finalH);
+    } catch (_) {
+        /* Some builds require transient activation for resizeTo */
+    }
+}
+
+function disconnectDocumentPipFit(pipWin) {
+    if (!pipWin) return;
+    const obs = pipWin.__dsaPipFitObserver;
+    const st = pipWin.__dsaPipFitState;
+    if (obs && typeof obs.disconnect === "function") obs.disconnect();
+    if (st?.timerId) clearTimeout(st.timerId);
+    pipWin.__dsaPipFitObserver = null;
+    pipWin.__dsaPipFitState = null;
 }
 
 function closeDocumentTimerPipWindow() {
     const win = timerPipDocumentWindow;
+    const mode = pipDocumentMode;
+    disconnectDocumentPipFit(win);
     timerPipDocumentWindow = null;
     timerPipDocumentControls = null;
+    pipDocumentMode = null;
     if (!win || win.closed) return;
+    if (mode === "sticky") {
+        void disposeTimerStickyPipAndRemountMain(win);
+    }
     timerPipClosingByCode = true;
     try {
         win.close();
@@ -912,44 +1026,34 @@ function closeDocumentTimerPipWindow() {
     }
 }
 
-async function openDocumentTimerPipWindow() {
-    if (!supportsDocumentTimerPip()) return false;
-    if (timerPipDocumentWindow && !timerPipDocumentWindow.closed) {
-        timerPipDocumentWindow.focus();
-        return true;
-    }
-    const pipWin = await window.documentPictureInPicture.requestWindow({
-        width: 340,
-        height: 190,
+function attachDocumentPipResizeFit(pipWin, pipDoc, root) {
+    const state = { timerId: null, last: { w: 0, h: 0 } };
+    pipWin.__dsaPipFitState = state;
+    const scheduleFitDocumentPip = () => {
+        if (state.timerId) clearTimeout(state.timerId);
+        state.timerId = setTimeout(() => {
+            state.timerId = null;
+            fitDocumentPipToContent(pipWin, pipDoc, state.last);
+        }, 48);
+    };
+    const pipFitObserver = new ResizeObserver(() => scheduleFitDocumentPip());
+    pipFitObserver.observe(root);
+    pipWin.__dsaPipFitObserver = pipFitObserver;
+}
+
+function scheduleDocumentPipInitialFits(pipWin, pipDoc) {
+    const st = pipWin.__dsaPipFitState;
+    const pipFitLast = st?.last || { w: 0, h: 0 };
+    fitDocumentPipToContent(pipWin, pipDoc, pipFitLast);
+    requestAnimationFrame(() => {
+        fitDocumentPipToContent(pipWin, pipDoc, pipFitLast);
+        requestAnimationFrame(() => fitDocumentPipToContent(pipWin, pipDoc, pipFitLast));
     });
-    timerPipDocumentWindow = pipWin;
+    setTimeout(() => fitDocumentPipToContent(pipWin, pipDoc, pipFitLast), 120);
+    setTimeout(() => fitDocumentPipToContent(pipWin, pipDoc, pipFitLast), 400);
+}
 
-    const pipDoc = pipWin.document;
-    pipDoc.documentElement.lang = "en";
-    pipDoc.head.innerHTML = "";
-    pipDoc.body.innerHTML = "";
-    pipDoc.title = "Timer PiP";
-
-    document.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
-        pipDoc.head.appendChild(node.cloneNode(true));
-    });
-    const runtimeStyle = pipDoc.createElement("style");
-    runtimeStyle.textContent = `
-      html, body { margin: 0; padding: 0; background: var(--bg); }
-      body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-      .timer-pip-root { padding: 8px; min-height: 100vh; box-sizing: border-box; }
-      .timer-panel.sidebar-card { margin: 0 !important; }
-      #timerDragHandle { display: none !important; }
-    `;
-    pipDoc.head.appendChild(runtimeStyle);
-
-    const root = pipDoc.createElement("div");
-    root.className = "timer-pip-root";
-    const panel = elements.timerPanel.cloneNode(true);
-    panel.id = "timerPanelPip";
-    root.appendChild(panel);
-    pipDoc.body.appendChild(root);
-
+function wireTimerPipControls(pipWin, pipDoc) {
     const pipControls = {
         timeInput: pipDoc.getElementById("timerTimeInput"),
         progressFill: pipDoc.getElementById("timerProgressFill"),
@@ -1001,23 +1105,379 @@ async function openDocumentTimerPipWindow() {
             setDesktopTimerPip(false, true);
         });
     }
+}
 
+function installDocumentPipPagehide(pipWin, pipDoc) {
+    if (pipWin.__dsaPagehideBound) return;
+    pipWin.__dsaPagehideBound = true;
     pipWin.addEventListener("pagehide", () => {
+        disconnectDocumentPipFit(pipWin);
+        const mode = pipDocumentMode;
         timerPipDocumentWindow = null;
         timerPipDocumentControls = null;
+        pipDocumentMode = null;
+        if (mode === "sticky") {
+            void disposeTimerStickyPipAndRemountMain(pipWin);
+        }
         if (!timerPipClosingByCode && window.innerWidth > 850) {
-            timerPipEnabled = false;
-            try {
-                localStorage.setItem(TIMER_PIP_ENABLED_KEY, "0");
-            } catch (_) {
-                /* ignore */
+            if (mode === "timer") {
+                timerPipEnabled = false;
+                try {
+                    localStorage.setItem(TIMER_PIP_ENABLED_KEY, "0");
+                } catch (_) {
+                    /* ignore */
+                }
             }
-            updateTimerPipToggleUI();
+            refreshDocumentPipToggleUIs();
         }
     });
+}
+
+/**
+ * @param {'timer' | 'sticky'} mode
+ */
+// async function openDocumentPipWindow(mode) {
+//     if (!supportsDocumentTimerPip()) return false;
+//     if (timerPipDocumentWindow && !timerPipDocumentWindow.closed) {
+//         if (pipDocumentMode === mode) {
+//             timerPipDocumentWindow.focus();
+//             return true;
+//         }
+//         return swapDocumentPipMode(mode);
+//     }
+
+//     persistTimerStickyStateFromUi();
+
+//     if (mode === "sticky") {
+//         destroyTimerStickyEditor();
+//         if (elements.timerStickyPipBanner) elements.timerStickyPipBanner.classList.remove("hidden");
+//     }
+
+//     // let pipWin;
+//     // try {
+//     //     pipWin = await window.documentPictureInPicture.requestWindow({
+//     //         width: mode === "timer" ? 320 : 340,
+//     //         height: mode === "timer" ? 130 : 300,
+//     //     });
+//     // } catch (err) {
+//     //     console.error("Document Picture-in-Picture failed:", err);
+//     //     if (mode === "sticky") {
+//     //         if (elements.timerStickyPipBanner) elements.timerStickyPipBanner.classList.add("hidden");
+//     //         await remountTimerStickyMainAfterPip();
+//     //     }
+//     //     return false;
+//     // }
+//     let pipWin;
+//     try {
+//         pipWin = await window.documentPictureInPicture.requestWindow({
+//             width: mode === "timer" ? 320 : 340,
+//             height: mode === "timer" ? 85 : 300,
+//         });
+
+//         const doc = pipWin.document;
+
+//         // 🔥 CRITICAL FIX
+//         doc.documentElement.style.background = "transparent";
+//         doc.body.style.background = "transparent";
+//         doc.body.style.margin = "0";
+//         doc.body.style.padding = "0";
+
+//     } catch (err) {
+//         console.error("Document Picture-in-Picture failed:", err);
+//         if (mode === "sticky") {
+//             if (elements.timerStickyPipBanner) elements.timerStickyPipBanner.classList.add("hidden");
+//             await remountTimerStickyMainAfterPip();
+//         }
+//         return false;
+//     }
+
+//     timerPipDocumentWindow = pipWin;
+//     pipDocumentMode = mode;
+
+//     const pipDoc = pipWin.document;
+//     pipDoc.documentElement.lang = "en";
+//     pipDoc.head.innerHTML = "";
+//     pipDoc.body.innerHTML = "";
+//     pipDoc.title = mode === "timer" ? "Timer" : "Session stickies";
+
+//     document.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
+//         pipDoc.head.appendChild(node.cloneNode(true));
+//     });
+//     const runtimeStyle = pipDoc.createElement("style");
+//     runtimeStyle.textContent = `
+//       html, body {
+//         margin: 0;
+//         padding: 0;
+//         background: transparent !important;
+//         min-height: 0 !important;
+//         height: auto !important;
+//         overflow-x: hidden;
+//       }
+//       body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+//       .timer-pip-root {
+//         padding: 0;
+//         box-sizing: border-box;
+//         width: max-content;
+//         max-width: min(520px, 100vw);
+//         min-height: 0;
+//       }
+//       .timer-panel.sidebar-card { margin: 0 !important; display: flex; flex-direction: column; }
+//       .timer-sticky-dock.sidebar-card {
+//         margin: 0 !important;
+//         margin-top: 0 !important;
+//         padding: 0 !important;
+//         border: none !important;
+//         box-shadow: none !important;
+//         background: transparent !important;
+//       }
+//       .timer-pip-root .timer-sticky-card {
+//         box-shadow: none;
+//       }
+//       #timerDragHandle { display: none !important; }
+//       .timer-pip-root .timer-sticky-editor-host .notes-rich-prose-host { min-height: 3rem; }
+//       .timer-pip-root .timer-sticky-editor-host .notes-rich-prosemirror {
+//         min-height: 2.75rem;
+//         max-height: min(58vh, 26rem);
+//       }
+//     `;
+//     pipDoc.head.appendChild(runtimeStyle);
+
+//     const root = pipDoc.createElement("div");
+//     root.className = "timer-pip-root";
+//     pipDoc.body.appendChild(root);
+//     pipDoc.body.classList.toggle("dark", document.body.classList.contains("dark"));
+
+//     if (mode === "timer") {
+//         const panelClone = elements.timerPanel.cloneNode(true);
+//         panelClone.id = "timerPanelPip";
+//         root.appendChild(panelClone);
+//         wireTimerPipControls(pipWin, pipDoc);
+//     } else {
+//         const dockClone = elements.timerStickyDock.cloneNode(true);
+//         dockClone.id = "timerStickyDockPip";
+//         root.appendChild(dockClone);
+//         pipDoc.getElementById("timerStickyPipBanner")?.classList.add("hidden");
+//         pipDoc.getElementById("timerStickyEditorMount")?.replaceChildren();
+//         pipDoc.getElementById("timerStickyToolbarHost")?.replaceChildren();
+//         await setupStickyPipSurface(pipWin, pipDoc);
+//         timerPipDocumentControls = null;
+//     }
+
+//     attachDocumentPipResizeFit(pipWin, pipDoc, root);
+//     installDocumentPipPagehide(pipWin, pipDoc);
+
+//     updateSessionTimerUI();
+//     scheduleDocumentPipInitialFits(pipWin, pipDoc);
+//     refreshDocumentPipToggleUIs();
+//     return true;
+// }
+async function openDocumentPipWindow(mode) {
+    if (!supportsDocumentTimerPip()) return false;
+
+    if (timerPipDocumentWindow && !timerPipDocumentWindow.closed) {
+        if (pipDocumentMode === mode) {
+            timerPipDocumentWindow.focus();
+            return true;
+        }
+        return swapDocumentPipMode(mode);
+    }
+
+    persistTimerStickyStateFromUi();
+
+    if (mode === "sticky") {
+        destroyTimerStickyEditor();
+        if (elements.timerStickyPipBanner) {
+            elements.timerStickyPipBanner.classList.remove("hidden");
+        }
+    }
+
+    let pipWin;
+    try {
+        pipWin = await window.documentPictureInPicture.requestWindow({
+            width: mode === "timer" ? 320 : 340,
+            height: mode === "timer" ? 85 : 300,
+        });
+    } catch (err) {
+        console.error("Document Picture-in-Picture failed:", err);
+        if (mode === "sticky") {
+            if (elements.timerStickyPipBanner) {
+                elements.timerStickyPipBanner.classList.add("hidden");
+            }
+            await remountTimerStickyMainAfterPip();
+        }
+        return false;
+    }
+
+    timerPipDocumentWindow = pipWin;
+    pipDocumentMode = mode;
+
+    const pipDoc = pipWin.document;
+
+    // 🧹 Reset document
+    pipDoc.documentElement.lang = "en";
+    pipDoc.head.innerHTML = "";
+    pipDoc.body.innerHTML = "";
+    pipDoc.title = mode === "timer" ? "Timer" : "Session stickies";
+
+    // 🔥 CRITICAL: apply AFTER reset
+    pipDoc.documentElement.style.background = "transparent";
+    pipDoc.body.style.background = "transparent";
+    pipDoc.body.style.margin = "0";
+    pipDoc.body.style.padding = "0";
+    pipDoc.body.style.height = "100%";
+
+    // 🎨 Copy styles
+    document.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
+        pipDoc.head.appendChild(node.cloneNode(true));
+    });
+
+    // 🎯 Runtime styles
+    const runtimeStyle = pipDoc.createElement("style");
+    runtimeStyle.textContent = `
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: transparent !important;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        }
+
+        .timer-pip-root {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        /* Optional: nicer floating feel */
+        .timer-pip-card {
+            background: transparent;
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+        }
+
+        .timer-panel.sidebar-card,
+        .timer-sticky-dock.sidebar-card {
+            margin: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        #timerDragHandle { display: none !important; }
+    `;
+    pipDoc.head.appendChild(runtimeStyle);
+
+    // 🧱 Root container
+    const root = pipDoc.createElement("div");
+    root.className = "timer-pip-root";
+    pipDoc.body.appendChild(root);
+
+    // 🌗 Dark mode sync
+    pipDoc.body.classList.toggle("dark", document.body.classList.contains("dark"));
+
+    if (mode === "timer") {
+        const panelClone = elements.timerPanel.cloneNode(true);
+        panelClone.id = "timerPanelPip";
+        panelClone.classList.add("timer-pip-card");
+
+        root.appendChild(panelClone);
+        wireTimerPipControls(pipWin, pipDoc);
+
+    } else {
+        const dockClone = elements.timerStickyDock.cloneNode(true);
+        dockClone.id = "timerStickyDockPip";
+        dockClone.classList.add("timer-pip-card");
+
+        root.appendChild(dockClone);
+
+        pipDoc.getElementById("timerStickyPipBanner")?.classList.add("hidden");
+        pipDoc.getElementById("timerStickyEditorMount")?.replaceChildren();
+        pipDoc.getElementById("timerStickyToolbarHost")?.replaceChildren();
+
+        await setupStickyPipSurface(pipWin, pipDoc);
+        timerPipDocumentControls = null;
+    }
+
+    attachDocumentPipResizeFit(pipWin, pipDoc, root);
+    installDocumentPipPagehide(pipWin, pipDoc);
 
     updateSessionTimerUI();
+    scheduleDocumentPipInitialFits(pipWin, pipDoc);
+    refreshDocumentPipToggleUIs();
+
     return true;
+}
+
+/**
+ * @param {'timer' | 'sticky'} mode
+ */
+async function swapDocumentPipMode(mode) {
+    const pipWin = timerPipDocumentWindow;
+    if (!pipWin || pipWin.closed) return openDocumentPipWindow(mode);
+    const pipDoc = pipWin.document;
+    const prev = pipDocumentMode;
+
+    persistTimerStickyStateFromUi();
+    disconnectDocumentPipFit(pipWin);
+
+    if (prev === "sticky") {
+        try {
+            if (pipWin.document && timerStickyPipEditorHandle) {
+                persistTimerStickyFromEditor(timerStickyPipEditorHandle, pipWin.document);
+                destroyTimerStickyPipEditor(pipWin.document);
+            }
+        } catch (_) {
+            /* ignore */
+        }
+        await remountTimerStickyMainAfterPip();
+        if (elements.timerStickyPipBanner) elements.timerStickyPipBanner.classList.add("hidden");
+    }
+
+    if (mode === "sticky") {
+        destroyTimerStickyEditor();
+        if (elements.timerStickyPipBanner) elements.timerStickyPipBanner.classList.remove("hidden");
+    }
+
+    pipDocumentMode = mode;
+    timerPipDocumentControls = null;
+
+    const root = pipDoc.querySelector(".timer-pip-root");
+    if (root) root.replaceChildren();
+
+    if (mode === "timer") {
+        const panelClone = elements.timerPanel.cloneNode(true);
+        panelClone.id = "timerPanelPip";
+        root?.appendChild(panelClone);
+        wireTimerPipControls(pipWin, pipDoc);
+    } else {
+        const dockClone = elements.timerStickyDock.cloneNode(true);
+        dockClone.id = "timerStickyDockPip";
+        root?.appendChild(dockClone);
+        pipDoc.getElementById("timerStickyPipBanner")?.classList.add("hidden");
+        pipDoc.getElementById("timerStickyEditorMount")?.replaceChildren();
+        pipDoc.getElementById("timerStickyToolbarHost")?.replaceChildren();
+        await setupStickyPipSurface(pipWin, pipDoc);
+    }
+
+    pipDoc.title = mode === "timer" ? "Timer" : "Session stickies";
+    if (root) attachDocumentPipResizeFit(pipWin, pipDoc, root);
+
+    updateSessionTimerUI();
+    scheduleDocumentPipInitialFits(pipWin, pipDoc);
+    refreshDocumentPipToggleUIs();
+    return true;
+}
+
+async function openDocumentTimerPipWindow() {
+    return openDocumentPipWindow("timer");
 }
 
 function clearDesktopTimerPipPositionStyles() {
@@ -1099,34 +1559,42 @@ async function setDesktopTimerPip(enabled, persist = true) {
     if (!elements.timerDock) return;
     const active = timerPipEnabled && window.innerWidth > 850;
     if (!active) {
-        closeDocumentTimerPipWindow();
+        const preserveStickyOnlyPip =
+            !persist &&
+            timerPipDocumentWindow &&
+            !timerPipDocumentWindow.closed &&
+            pipDocumentMode === "sticky" &&
+            window.innerWidth > 850;
+        if (!preserveStickyOnlyPip) {
+            closeDocumentTimerPipWindow();
+        }
         elements.timerDock.classList.remove("timer-dock--pip");
         clearDesktopTimerPipPositionStyles();
-        updateTimerPipToggleUI();
+        refreshDocumentPipToggleUIs();
         return;
     }
     if (supportsDocumentTimerPip()) {
         if (!persist && (!timerPipDocumentWindow || timerPipDocumentWindow.closed)) {
-            updateTimerPipToggleUI();
+            refreshDocumentPipToggleUIs();
             return;
         }
         elements.timerDock.classList.remove("timer-dock--pip");
         clearDesktopTimerPipPositionStyles();
         try {
-            await openDocumentTimerPipWindow();
+            await openDocumentPipWindow("timer");
         } catch (err) {
             console.error("Document PiP failed, falling back to in-page PiP:", err);
             elements.timerDock.classList.add("timer-dock--pip");
             applyDesktopTimerPipPosition();
             clampDesktopTimerPipToViewport();
         }
-        updateTimerPipToggleUI();
+        refreshDocumentPipToggleUIs();
         return;
     }
     elements.timerDock.classList.add("timer-dock--pip");
     applyDesktopTimerPipPosition();
     clampDesktopTimerPipToViewport();
-    updateTimerPipToggleUI();
+    refreshDocumentPipToggleUIs();
 }
 
 function applyTimerFloatPosition() {
@@ -1278,6 +1746,620 @@ function bindSessionTimer() {
     }
 
     bindTimerFloatDrag();
+}
+
+/** @type {null | { getHtml: () => string; setDark: (d: boolean) => void; destroy: () => void }} */
+let timerStickyEditorHandle = null;
+/** @type {null | { getHtml: () => string; setDark: (d: boolean) => void; destroy: () => void }} */
+let timerStickyPipEditorHandle = null;
+let timerStickySaveTimer = null;
+let timerStickyChromeListenersBound = false;
+let timerStickyInited = false;
+let timerStickyDockActionsBound = false;
+let timerStickyCarouselScrollBound = false;
+/** Shared active note index between main UI and Document PiP (sticky mode). */
+let timerStickyActiveIndex = 0;
+let timerStickyCarouselScrollTimer = null;
+let timerStickyCarouselSuppress = false;
+
+function newStickyNoteId() {
+    return typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `sn-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
+function getDefaultTimerStickyBgId() {
+    return TIMER_STICKY_BACKGROUNDS[0].id;
+}
+
+function timerStickyBgMeta(id) {
+    return TIMER_STICKY_BACKGROUNDS.find((b) => b.id === id) || TIMER_STICKY_BACKGROUNDS[0];
+}
+
+/** @param {unknown} n */
+function normalizeTimerStickyNote(n) {
+    const o = n && typeof n === "object" ? /** @type {Record<string, unknown>} */ (n) : {};
+    const htmlRaw = typeof o.html === "string" ? o.html : "<p></p>";
+    const html = sanitizeNotesHtml(htmlRaw) || "<p></p>";
+    const bgId =
+        typeof o.bgId === "string" && TIMER_STICKY_BACKGROUNDS.some((b) => b.id === o.bgId)
+            ? o.bgId
+            : getDefaultTimerStickyBgId();
+    const sticker =
+        typeof o.sticker === "string" && TIMER_STICKY_STICKERS.includes(o.sticker)
+            ? o.sticker
+            : TIMER_STICKY_STICKERS[0];
+    return {
+        id: typeof o.id === "string" ? o.id : newStickyNoteId(),
+        html,
+        bgId,
+        sticker,
+    };
+}
+
+/** @param {unknown} raw */
+function migrateRawToTimerStickyStore(raw) {
+    if (!raw || typeof raw !== "object") {
+        return {
+            v: 2,
+            activeIndex: 0,
+            notes: [
+                {
+                    id: newStickyNoteId(),
+                    html: "<p></p>",
+                    bgId: getDefaultTimerStickyBgId(),
+                    sticker: TIMER_STICKY_STICKERS[0],
+                },
+            ],
+        };
+    }
+    const o = /** @type {Record<string, unknown>} */ (raw);
+    if (Array.isArray(o.notes) && o.notes.length) {
+        const notes = o.notes.map((n) => normalizeTimerStickyNote(n));
+        const ai = Math.max(0, Math.min(notes.length - 1, Math.floor(Number(o.activeIndex)) || 0));
+        return { v: 2, activeIndex: ai, notes };
+    }
+    const legacyHtml = typeof o.html === "string" ? o.html : "<p></p>";
+    const legacyBg =
+        typeof o.bgId === "string" && TIMER_STICKY_BACKGROUNDS.some((b) => b.id === o.bgId)
+            ? o.bgId
+            : getDefaultTimerStickyBgId();
+    const legacySticker =
+        typeof o.sticker === "string" && TIMER_STICKY_STICKERS.includes(o.sticker)
+            ? o.sticker
+            : TIMER_STICKY_STICKERS[0];
+    return {
+        v: 2,
+        activeIndex: 0,
+        notes: [
+            {
+                id: newStickyNoteId(),
+                html: sanitizeNotesHtml(legacyHtml) || "<p></p>",
+                bgId: legacyBg,
+                sticker: legacySticker,
+            },
+        ],
+    };
+}
+
+function readTimerStickyStore() {
+    try {
+        const raw = JSON.parse(localStorage.getItem(TIMER_STICKY_KEY) || "null");
+        return migrateRawToTimerStickyStore(raw);
+    } catch (_) {
+        return migrateRawToTimerStickyStore(null);
+    }
+}
+
+function writeTimerStickyStore(store) {
+    try {
+        localStorage.setItem(
+            TIMER_STICKY_KEY,
+            JSON.stringify({
+                v: 2,
+                activeIndex: store.activeIndex,
+                notes: store.notes,
+            })
+        );
+    } catch (_) {
+        /* ignore */
+    }
+}
+
+function stickyNoteTextPreview(html, maxLen = 72) {
+    const t = String(html || "")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    if (!t) return "Empty note";
+    return t.length > maxLen ? `${t.slice(0, maxLen)}…` : t;
+}
+
+/** @param {Document} [doc] */
+function applyTimerStickyCardChrome(bgId, sticker, doc = document) {
+    const card = doc.getElementById("timerStickySection");
+    if (!card) return;
+    const bg = timerStickyBgMeta(bgId);
+    card.style.setProperty("--timer-sticky-paper", bg.color);
+    card.dataset.stickyBg = bg.id;
+}
+
+function syncTimerStickyColorSwatchesForDoc(bgId, doc) {
+    const row = doc.getElementById("timerStickyColorRow");
+    if (!row) return;
+    row.querySelectorAll(".timer-sticky-color-swatch").forEach((btn) => {
+        const el = /** @type {HTMLElement} */ (btn);
+        el.classList.toggle("timer-sticky-color-swatch--active", el.dataset.bgId === bgId);
+    });
+}
+
+function persistCurrentTimerStickyEditor() {
+    const win = timerPipDocumentWindow;
+    if (win && !win.closed && pipDocumentMode === "sticky" && timerStickyPipEditorHandle) {
+        persistTimerStickyFromEditor(timerStickyPipEditorHandle, win.document);
+    } else if (timerStickyEditorHandle) {
+        persistTimerStickyFromEditor(timerStickyEditorHandle, document);
+    }
+}
+
+/**
+ * @param {null | { getHtml?: () => string }} editorHandle
+ * @param {Document} doc
+ */
+function persistTimerStickyFromEditor(editorHandle, doc) {
+    const card = doc.getElementById("timerStickySection");
+    if (!card) return;
+    let html = "<p></p>";
+    if (editorHandle && typeof editorHandle.getHtml === "function") {
+        html = sanitizeNotesHtml(editorHandle.getHtml());
+    }
+    const bgId = card.dataset.stickyBg || getDefaultTimerStickyBgId();
+    const store = readTimerStickyStore();
+    const idx = Math.max(0, Math.min(store.notes.length - 1, timerStickyActiveIndex));
+    const prev = store.notes[idx] || { id: newStickyNoteId(), html: "<p></p>", bgId };
+    store.notes[idx] = { ...prev, html, bgId };
+    store.activeIndex = idx;
+    writeTimerStickyStore(store);
+}
+
+function persistTimerStickyStateFromUi() {
+    persistCurrentTimerStickyEditor();
+}
+
+function scheduleTimerStickyPersist() {
+    if (timerStickySaveTimer) clearTimeout(timerStickySaveTimer);
+    timerStickySaveTimer = setTimeout(() => {
+        timerStickySaveTimer = null;
+        const win = timerPipDocumentWindow;
+        if (win && !win.closed && pipDocumentMode === "sticky" && timerStickyPipEditorHandle) {
+            persistTimerStickyFromEditor(timerStickyPipEditorHandle, win.document);
+        } else {
+            persistTimerStickyFromEditor(timerStickyEditorHandle, document);
+        }
+    }, 250);
+}
+
+function destroyTimerStickyEditor() {
+    if (timerStickyEditorHandle) {
+        timerStickyEditorHandle.destroy();
+        timerStickyEditorHandle = null;
+    }
+    if (elements.timerStickyToolbarHost) elements.timerStickyToolbarHost.replaceChildren();
+    const mount = elements.timerStickyEditorMount || elements.timerStickyEditorHost;
+    if (mount) mount.replaceChildren();
+}
+
+/** @param {Document | null} pipDoc */
+function destroyTimerStickyPipEditor(pipDoc) {
+    if (timerStickyPipEditorHandle) {
+        timerStickyPipEditorHandle.destroy();
+        timerStickyPipEditorHandle = null;
+    }
+    if (pipDoc) {
+        pipDoc.getElementById("timerStickyToolbarHost")?.replaceChildren();
+        pipDoc.getElementById("timerStickyEditorMount")?.replaceChildren();
+    }
+}
+
+/** @param {Document} pipDoc */
+async function mountTimerStickyPipEditor(initialHtml, pipDoc) {
+    destroyTimerStickyPipEditor(pipDoc);
+    const mount = pipDoc.getElementById("timerStickyEditorMount");
+    const tb = pipDoc.getElementById("timerStickyToolbarHost");
+    if (!mount) return;
+    try {
+        const mod = await loadRichNotesEditorModule();
+        timerStickyPipEditorHandle = mod.mountRichNotesEditor(tb, mount, {
+            initialHtml: initialHtml || "<p></p>",
+            isDark: pipDoc.body.classList.contains("dark"),
+            placeholder:
+                "Session todos — select text for bold and colors. Tap ☐ in the bubble for checklist rows; or end a line with [ ] then space.",
+            onChange: () => scheduleTimerStickyPersist(),
+            documentSurface: true,
+        });
+    } catch (e) {
+        console.error("Timer sticky PiP editor failed:", e);
+    }
+}
+
+/** @param {Window} pipWin */
+async function disposeTimerStickyPipAndRemountMain(pipWin) {
+    try {
+        if (pipWin && !pipWin.closed && pipWin.document && timerStickyPipEditorHandle) {
+            persistTimerStickyFromEditor(timerStickyPipEditorHandle, pipWin.document);
+            destroyTimerStickyPipEditor(pipWin.document);
+        }
+        if (elements.timerStickyPipBanner) elements.timerStickyPipBanner.classList.add("hidden");
+        await remountTimerStickyMainAfterPip();
+    } catch (e) {
+        console.error("Timer PiP sticky teardown:", e);
+    }
+}
+
+async function refreshTimerStickyEditors() {
+    const store = readTimerStickyStore();
+    const idx = Math.max(0, Math.min(store.notes.length - 1, timerStickyActiveIndex));
+    const note = store.notes[idx];
+    const html = sanitizeNotesHtml(note?.html || "<p></p>");
+    const pipOpen = timerPipDocumentWindow && !timerPipDocumentWindow.closed;
+    const stickyPip = pipOpen && pipDocumentMode === "sticky";
+    if (stickyPip) {
+        destroyTimerStickyEditor();
+        await mountTimerStickyPipEditor(html, timerPipDocumentWindow.document);
+    } else {
+        destroyTimerStickyPipEditor(null);
+        await mountTimerStickyEditor(html);
+    }
+}
+
+async function selectTimerStickyIndex(nextIdx, opts = {}) {
+    const { skipPersist = false, force = false } = opts;
+    const store = readTimerStickyStore();
+    const clamped = Math.max(0, Math.min(store.notes.length - 1, nextIdx));
+    if (!force && clamped === timerStickyActiveIndex) return;
+    if (!skipPersist) persistCurrentTimerStickyEditor();
+    timerStickyActiveIndex = clamped;
+    store.activeIndex = clamped;
+    writeTimerStickyStore(store);
+    const note = store.notes[clamped];
+    applyTimerStickyCardChrome(note.bgId, note.sticker, document);
+    syncTimerStickyColorSwatchesForDoc(note.bgId, document);
+    const pipDoc = timerPipDocumentWindow?.document;
+    if (pipDoc && pipDocumentMode === "sticky") {
+        applyTimerStickyCardChrome(note.bgId, note.sticker, pipDoc);
+        syncTimerStickyColorSwatchesForDoc(note.bgId, pipDoc);
+    }
+    await refreshTimerStickyEditors();
+    timerStickyCarouselSuppress = true;
+    renderTimerStickyCarouselInDoc(document);
+    scrollTimerStickyCarouselToIndex(document, clamped);
+    if (pipDoc && pipDocumentMode === "sticky") {
+        renderTimerStickyCarouselInDoc(pipDoc);
+        scrollTimerStickyCarouselToIndex(pipDoc, clamped);
+    }
+    setTimeout(() => {
+        timerStickyCarouselSuppress = false;
+    }, 160);
+    syncTimerStickyNavControls();
+}
+
+function syncTimerStickyNavControls() {
+    const store = readTimerStickyStore();
+    const n = store.notes.length;
+    const i = timerStickyActiveIndex;
+
+    if (elements.timerStickyCardDeleteBtn) {
+        elements.timerStickyCardDeleteBtn.disabled = n <= 1;
+    }
+    if (elements.timerStickyCardPrevBtn) {
+        elements.timerStickyCardPrevBtn.disabled = i <= 0;
+    }
+    if (elements.timerStickyCardNextBtn) {
+        elements.timerStickyCardNextBtn.disabled = i >= n - 1;
+    }
+    const pipDoc = timerPipDocumentWindow?.document;
+    if (pipDoc && pipDocumentMode === "sticky") {
+        /** Document PiP uses another realm; `instanceof HTMLButtonElement` from this window is false. */
+        const del = pipDoc.getElementById("timerStickyCardDeleteBtn");
+        if (del) del.disabled = n <= 1;
+        const prev = pipDoc.getElementById("timerStickyCardPrevBtn");
+        if (prev) prev.disabled = i <= 0;
+        const next = pipDoc.getElementById("timerStickyCardNextBtn");
+        if (next) next.disabled = i >= n - 1;
+    }
+}
+
+/** @param {Document} doc */
+function renderTimerStickyCarouselInDoc(doc) {
+    const carousel = doc.getElementById("timerStickyCarousel");
+    if (!carousel) return;
+    const store = readTimerStickyStore();
+    const w = Math.max(120, carousel.clientWidth || 260);
+    carousel.replaceChildren();
+    store.notes.forEach((note, i) => {
+        const slide = doc.createElement("div");
+        slide.className = "timer-sticky-carousel-slide";
+        if (i === timerStickyActiveIndex) slide.classList.add("timer-sticky-carousel-slide--active");
+        slide.dataset.index = String(i);
+        slide.style.flex = `0 0 ${w}px`;
+        slide.style.minWidth = `${w}px`;
+        slide.textContent = `${i + 1}/${store.notes.length}`;
+        carousel.appendChild(slide);
+    });
+    const dotsHost = doc.getElementById("timerStickyCarouselDots");
+    if (dotsHost) {
+        dotsHost.replaceChildren();
+        store.notes.forEach((_, i) => {
+            const dot = doc.createElement("button");
+            dot.type = "button";
+            dot.className = "timer-sticky-carousel-dot";
+            if (i === timerStickyActiveIndex) dot.classList.add("timer-sticky-carousel-dot--active");
+            dot.setAttribute("aria-label", `Go to note ${i + 1}`);
+            dot.addEventListener("click", () => {
+                void selectTimerStickyIndex(i);
+            });
+            dotsHost.appendChild(dot);
+        });
+    }
+}
+
+/** @param {Document} doc */
+function scrollTimerStickyCarouselToIndex(doc, idx) {
+    const carousel = doc.getElementById("timerStickyCarousel");
+    if (!carousel) return;
+    const w = Math.max(1, carousel.clientWidth);
+    carousel.scrollTo({ left: idx * w, behavior: "auto" });
+}
+
+/** @param {Document} doc */
+function bindTimerStickyCarouselScroll(doc) {
+    const carousel = doc.getElementById("timerStickyCarousel");
+    if (!carousel || carousel.dataset.dsaScrollBound === "1") return;
+    carousel.dataset.dsaScrollBound = "1";
+    carousel.addEventListener(
+        "scroll",
+        () => {
+            if (timerStickyCarouselSuppress) return;
+            if (timerStickyCarouselScrollTimer) clearTimeout(timerStickyCarouselScrollTimer);
+            timerStickyCarouselScrollTimer = setTimeout(() => {
+                timerStickyCarouselScrollTimer = null;
+                const w = Math.max(1, carousel.clientWidth);
+                const idx = Math.round(carousel.scrollLeft / w);
+                const store = readTimerStickyStore();
+                if (idx >= 0 && idx < store.notes.length && idx !== timerStickyActiveIndex) {
+                    void selectTimerStickyIndex(idx, { skipPersist: false });
+                }
+            }, 80);
+        },
+        { passive: true }
+    );
+}
+
+async function addTimerStickyNote() {
+    persistCurrentTimerStickyEditor();
+    const store = readTimerStickyStore();
+    store.notes.push({
+        id: newStickyNoteId(),
+        html: "<p></p>",
+        bgId: getDefaultTimerStickyBgId(),
+        sticker: TIMER_STICKY_STICKERS[0],
+    });
+    timerStickyActiveIndex = store.notes.length - 1;
+    store.activeIndex = timerStickyActiveIndex;
+    writeTimerStickyStore(store);
+    await selectTimerStickyIndex(timerStickyActiveIndex, { skipPersist: true, force: true });
+}
+
+async function deleteActiveTimerStickyNote() {
+    const store = readTimerStickyStore();
+    if (store.notes.length <= 1) return;
+    persistCurrentTimerStickyEditor();
+    store.notes.splice(timerStickyActiveIndex, 1);
+    timerStickyActiveIndex = Math.min(timerStickyActiveIndex, store.notes.length - 1);
+    store.activeIndex = timerStickyActiveIndex;
+    writeTimerStickyStore(store);
+    await selectTimerStickyIndex(timerStickyActiveIndex, { skipPersist: true, force: true });
+}
+
+/** @param {Window} pipWin @param {Document} pipDoc */
+async function setupStickyPipSurface(pipWin, pipDoc) {
+    renderTimerStickyColorRow(pipDoc);
+    const store = readTimerStickyStore();
+    timerStickyActiveIndex = Math.max(0, Math.min(store.notes.length - 1, store.activeIndex | 0));
+    const note = store.notes[timerStickyActiveIndex];
+
+    applyTimerStickyCardChrome(note.bgId, note.sticker, pipDoc);
+    syncTimerStickyColorSwatchesForDoc(note.bgId, pipDoc);
+
+    pipDoc.getElementById("timerStickyCardPipToggle")?.addEventListener("click", () => {
+        closeDocumentTimerPipWindow();
+    });
+    pipDoc.getElementById("timerStickyCardPrevBtn")?.addEventListener(
+        "click",
+        () => {
+            void selectTimerStickyIndex(timerStickyActiveIndex - 1);
+        },
+        true
+    );
+    pipDoc.getElementById("timerStickyCardNextBtn")?.addEventListener(
+        "click",
+        () => {
+            void selectTimerStickyIndex(timerStickyActiveIndex + 1);
+        },
+        true
+    );
+    pipDoc.getElementById("timerStickyCardAddBtn")?.addEventListener("click", () => {
+        void addTimerStickyNote();
+    });
+    pipDoc.getElementById("timerStickyCardDeleteBtn")?.addEventListener("click", () => {
+        void deleteActiveTimerStickyNote();
+    });
+
+    renderTimerStickyCarouselInDoc(pipDoc);
+    requestAnimationFrame(() => {
+        renderTimerStickyCarouselInDoc(pipDoc);
+        scrollTimerStickyCarouselToIndex(pipDoc, timerStickyActiveIndex);
+    });
+    bindTimerStickyCarouselScroll(pipDoc);
+    const pipCarousel = pipDoc.getElementById("timerStickyCarousel");
+    if (pipCarousel && pipWin && pipCarousel.dataset.dsaPipScrollFit !== "1") {
+        pipCarousel.dataset.dsaPipScrollFit = "1";
+        pipCarousel.addEventListener(
+            "scroll",
+            () => {
+                const st = pipWin.__dsaPipFitState;
+                if (!st) return;
+                if (st.timerId) clearTimeout(st.timerId);
+                st.timerId = setTimeout(() => {
+                    st.timerId = null;
+                    fitDocumentPipToContent(pipWin, pipDoc, st.last);
+                }, 120);
+            },
+            { passive: true }
+        );
+    }
+    await mountTimerStickyPipEditor(sanitizeNotesHtml(note.html || "<p></p>"), pipDoc);
+    syncTimerStickyNavControls();
+}
+
+/** @param {Document} doc @param {Window | null} pipWin */
+async function remountTimerStickyMainAfterPip() {
+    if (!elements.timerStickyEditorMount) return;
+    const store = readTimerStickyStore();
+    timerStickyActiveIndex = Math.max(0, Math.min(store.notes.length - 1, store.activeIndex | 0));
+    const note = store.notes[timerStickyActiveIndex];
+    applyTimerStickyCardChrome(note.bgId, note.sticker, document);
+    syncTimerStickyColorSwatchesForDoc(note.bgId, document);
+    renderTimerStickyCarouselInDoc(document);
+    scrollTimerStickyCarouselToIndex(document, timerStickyActiveIndex);
+    await mountTimerStickyEditor(sanitizeNotesHtml(note.html || "<p></p>"));
+    syncTimerStickyNavControls();
+}
+
+async function mountTimerStickyEditor(initialHtml) {
+    destroyTimerStickyEditor();
+    const mount =
+        elements.timerStickyEditorMount && elements.timerStickyEditorHost?.contains(elements.timerStickyEditorMount)
+            ? elements.timerStickyEditorMount
+            : elements.timerStickyEditorHost;
+    if (!mount) return;
+    try {
+        const mod = await loadRichNotesEditorModule();
+        timerStickyEditorHandle = mod.mountRichNotesEditor(
+            elements.timerStickyToolbarHost,
+            mount,
+            {
+                initialHtml: initialHtml || "<p></p>",
+                isDark: document.body.classList.contains("dark"),
+                placeholder:
+                    "Session todos — select text for bold and colors. Tap ☐ in the bubble for checklist rows; or end a line with [ ] then space.",
+                onChange: () => scheduleTimerStickyPersist(),
+                documentSurface: true,
+            }
+        );
+    } catch (e) {
+        console.error("Timer sticky editor failed:", e);
+    }
+}
+
+/** @param {Document} [doc] */
+function renderTimerStickyColorRow(doc = document) {
+    const row = doc.getElementById("timerStickyColorRow");
+    if (!row) return;
+    row.replaceChildren();
+    TIMER_STICKY_BACKGROUNDS.forEach((bg) => {
+        const b = doc.createElement("button");
+        b.type = "button";
+        b.className = "timer-sticky-color-swatch";
+        b.title = bg.label;
+        b.dataset.bgId = bg.id;
+        b.style.setProperty("--swatch", bg.color);
+        b.addEventListener("click", () => {
+            const st = readTimerStickyStore();
+            const ix = Math.max(0, Math.min(st.notes.length - 1, timerStickyActiveIndex));
+            const sticker = st.notes[ix]?.sticker || TIMER_STICKY_STICKERS[0];
+            applyTimerStickyCardChrome(bg.id, sticker, doc);
+            scheduleTimerStickyPersist();
+            row.querySelectorAll(".timer-sticky-color-swatch").forEach((x) => {
+                x.classList.toggle("timer-sticky-color-swatch--active", x === b);
+            });
+        });
+        row.appendChild(b);
+    });
+}
+
+async function toggleDesktopStickyPip() {
+    if (window.innerWidth <= 850) return;
+    if (timerPipDocumentWindow && !timerPipDocumentWindow.closed && pipDocumentMode === "sticky") {
+        closeDocumentTimerPipWindow();
+        return;
+    }
+    await openDocumentPipWindow("sticky");
+}
+
+function initTimerSticky() {
+    if (timerStickyInited) return;
+    if (!elements.timerStickySection || !elements.timerStickyEditorHost) return;
+
+    renderTimerStickyColorRow(document);
+
+    const store = readTimerStickyStore();
+    timerStickyActiveIndex = Math.max(0, Math.min(store.notes.length - 1, store.activeIndex | 0));
+    const note = store.notes[timerStickyActiveIndex];
+
+    applyTimerStickyCardChrome(note.bgId, note.sticker, document);
+    syncTimerStickyColorSwatchesForDoc(note.bgId, document);
+
+    if (!timerStickyDockActionsBound) {
+        timerStickyDockActionsBound = true;
+        elements.timerStickyCardPipToggle?.addEventListener("click", () => {
+            void toggleDesktopStickyPip();
+        });
+        elements.timerStickyCardPrevBtn?.addEventListener(
+            "click",
+            () => {
+                void selectTimerStickyIndex(timerStickyActiveIndex - 1);
+            },
+            true
+        );
+        elements.timerStickyCardNextBtn?.addEventListener(
+            "click",
+            () => {
+                void selectTimerStickyIndex(timerStickyActiveIndex + 1);
+            },
+            true
+        );
+        elements.timerStickyCardAddBtn?.addEventListener("click", () => {
+            void addTimerStickyNote();
+        });
+        elements.timerStickyCardDeleteBtn?.addEventListener("click", () => {
+            void deleteActiveTimerStickyNote();
+        });
+    }
+
+    if (!timerStickyCarouselScrollBound) {
+        timerStickyCarouselScrollBound = true;
+        bindTimerStickyCarouselScroll(document);
+        window.addEventListener("resize", () => {
+            renderTimerStickyCarouselInDoc(document);
+            scrollTimerStickyCarouselToIndex(document, timerStickyActiveIndex);
+            const pipDoc = timerPipDocumentWindow?.document;
+            if (pipDoc && pipDocumentMode === "sticky") {
+                renderTimerStickyCarouselInDoc(pipDoc);
+                scrollTimerStickyCarouselToIndex(pipDoc, timerStickyActiveIndex);
+            }
+        });
+    }
+
+    void mountTimerStickyEditor(sanitizeNotesHtml(note.html || "<p></p>"));
+    renderTimerStickyCarouselInDoc(document);
+    requestAnimationFrame(() => {
+        renderTimerStickyCarouselInDoc(document);
+        scrollTimerStickyCarouselToIndex(document, timerStickyActiveIndex);
+    });
+    syncTimerStickyNavControls();
+
+    timerStickyInited = true;
 }
 
 function normalizeProblemData(items) {
@@ -1621,7 +2703,7 @@ function persistActiveGeneralNote() {
     if (generalNotesEditorHandle && typeof generalNotesEditorHandle.getHtml === "function") {
         body = sanitizeNotesHtml(generalNotesEditorHandle.getHtml());
     }
-    const noteFlag = "";
+    const noteFlag = sanitizeNoteFlag(prev.noteFlag);
     const updatedAt = new Date().toISOString();
     doc.notes[activeGeneralNoteId] = {
         ...prev,
@@ -1697,6 +2779,9 @@ function closeGeneralNotesOverflow() {
         elements.generalNotesOverflowMenu.classList.add("hidden");
         elements.generalNotesOverflowMenu.hidden = true;
     }
+    if (elements.generalNotesOverflowBtn) {
+        elements.generalNotesOverflowBtn.setAttribute("aria-expanded", "false");
+    }
 }
 
 function toggleGeneralNotesPicker() {
@@ -1738,6 +2823,7 @@ function toggleGeneralNotesOverflow() {
         renderGeneralNotesOverflow();
         elements.generalNotesOverflowMenu.classList.remove("hidden");
         elements.generalNotesOverflowMenu.hidden = false;
+        elements.generalNotesOverflowBtn?.setAttribute("aria-expanded", "true");
     } else {
         closeGeneralNotesOverflow();
     }
@@ -1817,23 +2903,29 @@ function destroyGeneralNotesEditor() {
         generalNotesEditorHandle = null;
     }
     if (elements.generalNotesToolbarHost) elements.generalNotesToolbarHost.replaceChildren();
-    if (elements.generalNotesEditorHost) elements.generalNotesEditorHost.replaceChildren();
+    const mountEl = elements.generalNotesEditorMount || elements.generalNotesEditorHost;
+    if (mountEl) mountEl.replaceChildren();
 }
 
 async function mountGeneralNotesEditor(html) {
     destroyGeneralNotesEditor();
     const mountGen = generalNotesMountGeneration;
+    const editorMount =
+        elements.generalNotesEditorMount && elements.generalNotesEditorHost?.contains(elements.generalNotesEditorMount)
+            ? elements.generalNotesEditorMount
+            : elements.generalNotesEditorHost;
     try {
         const mod = await loadRichNotesEditorModule();
         if (mountGen !== generalNotesMountGeneration || !generalNotesModalOpen) return;
         generalNotesEditorHandle = mod.mountRichNotesEditor(
             elements.generalNotesToolbarHost,
-            elements.generalNotesEditorHost,
+            editorMount,
             {
                 initialHtml: html || "<p></p>",
                 isDark: document.body.classList.contains("dark"),
-                placeholder: "Start writing…",
+                placeholder: "Write freely — select text for bold, colors, and highlights.",
                 onChange: () => scheduleGeneralNotePersist(),
+                documentSurface: true,
             }
         );
     } catch (e) {
@@ -2201,5 +3293,14 @@ function applyTheme(t) {
     }
     if (generalNotesEditorHandle && typeof generalNotesEditorHandle.setDark === "function") {
         generalNotesEditorHandle.setDark(t === "dark");
+    }
+    if (timerStickyEditorHandle && typeof timerStickyEditorHandle.setDark === "function") {
+        timerStickyEditorHandle.setDark(t === "dark");
+    }
+    if (timerPipDocumentWindow && !timerPipDocumentWindow.closed) {
+        timerPipDocumentWindow.document.body.classList.toggle("dark", t === "dark");
+    }
+    if (timerStickyPipEditorHandle && typeof timerStickyPipEditorHandle.setDark === "function") {
+        timerStickyPipEditorHandle.setDark(t === "dark");
     }
 }

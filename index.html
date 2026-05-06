@@ -129,11 +129,56 @@
               </div>
               <div class="timer-inline-actions">
                 <button type="button" id="timerPrimaryBtn" class="timer-primary-icon" aria-label="Start timer">▶</button>
-                <button type="button" id="timerPipToggle" class="timer-pip-icon" title="Toggle Picture in Picture" aria-label="Enable timer picture in picture" aria-pressed="false">⧉</button>
+                <button type="button" id="timerPipToggle" class="timer-pip-icon" title="Timer in Picture in Picture" aria-label="Timer picture in picture" aria-pressed="false">⧉</button>
                 <button type="button" id="timerResetBtn" class="timer-reset-icon" title="Reset" aria-label="Reset timer">↻</button>
               </div>
             </div>
           </section>
+
+          <div id="timerStickyDock" class="sidebar-card timer-sticky-dock">
+            <p id="timerStickyPipBanner" class="timer-sticky-pip-banner hidden" role="status">
+              Session stickies are open in Picture-in-Picture — edit there.
+            </p>
+
+            <section id="timerStickySection" class="timer-sticky-card" aria-label="Active sticky note">
+              <div
+                id="timerStickyCarousel"
+                class="timer-sticky-carousel"
+                tabindex="0"
+                aria-roledescription="carousel"
+                aria-label="Swipe between notes"
+              ></div>
+              <div id="timerStickyCarouselDots" class="timer-sticky-carousel-dots" aria-hidden="true"></div>
+
+              <div class="timer-sticky-header">
+                <span id="timerStickyActiveLabel" class="timer-sticky-active-label">Note 1</span>
+                <div class="timer-sticky-meta">
+                  <button type="button" id="timerStickyCardPipToggle" class="timer-sticky-card-pip-btn" title="Stickies in Picture in Picture" aria-label="Stickies picture in picture" aria-pressed="false">⧉</button>
+                  <button type="button" id="timerStickyCardAddBtn" class="timer-sticky-card-icon-btn" title="New note">+</button>
+                  <button type="button" id="timerStickyCardDeleteBtn" class="timer-sticky-card-icon-btn" title="Delete this note" aria-label="Delete note">⌫</button>
+                </div>
+              </div>
+              <div
+                id="timerStickyColorRow"
+                class="timer-sticky-colors"
+                role="group"
+                aria-label="Sticky background"
+              ></div>
+              <div
+                id="timerStickyEditorHost"
+                class="timer-sticky-editor-host notes-rich-body-host timer-rich-anchor"
+              >
+                <div id="timerStickyEditorMount" class="timer-sticky-prose-mount"></div>
+              </div>
+              <div
+                id="timerStickyToolbarHost"
+                class="notes-rich-toolbar-host notes-rich-toolbar-host--body timer-sticky-toolbar-host"
+                hidden
+              ></div>
+              <button type="button" id="timerStickyCardPrevBtn" class="timer-sticky-card-nav-btn timer-sticky-card-nav-btn--prev" aria-label="Previous note">‹</button>
+              <button type="button" id="timerStickyCardNextBtn" class="timer-sticky-card-nav-btn timer-sticky-card-nav-btn--next" aria-label="Next note">›</button>
+            </section>
+          </div>
         </div>
 
         <div class="sidebar-general-notes-wrap">
@@ -362,6 +407,7 @@
               ⤢
             </button>
             <span class="general-notes-context">General notes</span>
+            <span class="general-notes-chrome-divider" aria-hidden="true"></span>
             <div class="general-notes-picker-wrap">
               <button
                 type="button"
@@ -377,13 +423,21 @@
             </div>
           </div>
           <div class="general-notes-chrome-right">
-            <button type="button" id="generalNotesOverflowBtn" class="general-notes-icon-btn" aria-label="More options" title="More">
+            <button
+              type="button"
+              id="generalNotesOverflowBtn"
+              class="general-notes-icon-btn"
+              aria-label="More options"
+              title="More"
+              aria-expanded="false"
+              aria-haspopup="menu"
+            >
               ⋯
             </button>
             <div id="generalNotesOverflowMenu" class="general-notes-overflow-menu hidden" role="menu" hidden></div>
           </div>
         </header>
-        <div class="general-notes-scroll">
+        <div class="general-notes-title-strip">
           <h2 id="generalNotesModalTitle" class="general-notes-sr-only">General notes</h2>
           <input
             type="text"
@@ -394,11 +448,17 @@
             autocomplete="off"
             aria-label="Note title"
           />
-          <div id="generalNotesEditorHost" class="notes-rich-body-host"></div>
-          <div
-            id="generalNotesToolbarHost"
-            class="notes-rich-toolbar-host notes-rich-toolbar-host--body general-notes-format-bar"
-          ></div>
+        </div>
+        <div class="general-notes-scroll">
+          <div class="general-notes-editor-column">
+            <div id="generalNotesEditorHost" class="notes-rich-body-host">
+              <div id="generalNotesEditorMount" class="general-notes-prose-mount"></div>
+            </div>
+            <div
+              id="generalNotesToolbarHost"
+              class="notes-rich-toolbar-host notes-rich-toolbar-host--body general-notes-format-bar"
+            ></div>
+          </div>
         </div>
       </div>
     </div>
