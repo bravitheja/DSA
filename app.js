@@ -1,3 +1,5 @@
+import { sanitizeNotesHtml } from "./notes-html-sanitize.mjs";
+
 const LEGACY_TRACKER_KEY = "dsa-tracker-state-v4";
 
 function getTrackerLocalStorageKey() {
@@ -85,6 +87,7 @@ const elements = {
     notesSheetResize: getEl("notesSheetResize"),
     sheetTitle: getEl("sheetTitle"),
     sheetNotesEditorHost: getEl("sheetNotesEditorHost"),
+    sheetNotesToolbarHost: getEl("sheetNotesToolbarHost"),
     notesFlagSelect: getEl("notesFlagSelect"),
     notesPreview: getEl("notesPreview"),
     autoSaveStatus: getEl("autoSaveStatus"),
@@ -104,7 +107,20 @@ const elements = {
     timerResetBtn: getEl("timerResetBtn"),
     timerDock: getEl("timerDock"),
     timerMobileToggle: getEl("timerMobileToggle"),
-    timerDragHandle: getEl("timerDragHandle")
+    timerDragHandle: getEl("timerDragHandle"),
+    generalNotesOpenBtn: getEl("generalNotesOpenBtn"),
+    generalNotesModal: getEl("generalNotesModal"),
+    generalNotesBackdrop: getEl("generalNotesBackdrop"),
+    generalNotesCard: getEl("generalNotesCard"),
+    generalNotesExpandBtn: getEl("generalNotesExpandBtn"),
+    generalNotesPickerBtn: getEl("generalNotesPickerBtn"),
+    generalNotesPickerLabel: getEl("generalNotesPickerLabel"),
+    generalNotesPickerMenu: getEl("generalNotesPickerMenu"),
+    generalNotesOverflowBtn: getEl("generalNotesOverflowBtn"),
+    generalNotesOverflowMenu: getEl("generalNotesOverflowMenu"),
+    generalNotesTitleInput: getEl("generalNotesTitleInput"),
+    generalNotesToolbarHost: getEl("generalNotesToolbarHost"),
+    generalNotesEditorHost: getEl("generalNotesEditorHost"),
 };
 
 let allProblems = [];
@@ -127,19 +143,57 @@ let itemsPerPageOverride = loadStoredPageSize();
 let saveTimeout;
 let previewMode = false;
 
-let notesEditorModPromise = null;
-/** @type {null | { getText: () => string; setText: (t: string) => void; focus: () => void; setDark: (d: boolean) => void; destroy: () => void }} */
+let richNotesEditorPromise = null;
+/**
+ * @type {null | {
+ *   getHtml: () => string;
+ *   setHtml?: (h: string) => void;
+ *   getText?: () => string;
+ *   setText?: (t: string) => void;
+ *   focus: () => void;
+ *   setDark: (d: boolean) => void;
+ *   destroy: () => void;
+ * }}
+ */
 let notesEditorHandle = null;
-/** When the sheet is open but CodeMirror has not mounted yet (or failed), read/write this string so saves never wipe notes. */
+/** `"markdown"` when plain textarea fallback is active; otherwise `"html"`. */
+let activeNotesFormat = "markdown";
+/** When the sheet is open but the editor has not mounted yet (or failed), read/write this string so saves never wipe notes. */
 let notesOpenFallbackText = /** @type {string | null} */ (null);
 /** Bumped on each `openNotesSheet` so stale async mounts are ignored. */
 let notesSheetMountGeneration = 0;
 
-function loadNotesEditorModule() {
-    if (!notesEditorModPromise) {
-        notesEditorModPromise = import("./notes-editor.mjs");
+function loadRichNotesEditorModule() {
+    if (!richNotesEditorPromise) {
+        richNotesEditorPromise = import("./notes-tiptap-editor.mjs");
     }
-    return notesEditorModPromise;
+    return richNotesEditorPromise;
+}
+
+function looksLikeStoredHtml(s) {
+    const t = String(s || "").trim();
+    if (!t) return false;
+    return /^\s*</.test(t) && /<(p|div|ul|ol|h[1-6]|blockquote|pre|span)\b/i.test(t);
+}
+
+function normalizeStoredNotesFormat(stored) {
+    const raw = stored.notes != null ? String(stored.notes) : "";
+    if (stored.notesFormat === "html" || stored.notesFormat === "markdown") {
+        return stored.notesFormat;
+    }
+    return looksLikeStoredHtml(raw) ? "html" : "markdown";
+}
+
+function problemNotesInitialHtml(p) {
+    const raw = p.notes || "";
+    const fmt = p.notesFormat === "html" || p.notesFormat === "markdown" ? p.notesFormat : "markdown";
+    if (fmt === "html" || looksLikeStoredHtml(raw)) {
+        return sanitizeNotesHtml(raw) || "<p></p>";
+    }
+    if (window.marked?.parse) {
+        return sanitizeNotesHtml(window.marked.parse(raw)) || "<p></p>";
+    }
+    return "<p></p>";
 }
 
 function destroyNotesEditor() {
@@ -147,13 +201,23 @@ function destroyNotesEditor() {
         notesEditorHandle.destroy();
         notesEditorHandle = null;
     }
+    if (elements.sheetNotesToolbarHost) {
+        elements.sheetNotesToolbarHost.replaceChildren();
+    }
     if (elements.sheetNotesEditorHost) {
         elements.sheetNotesEditorHost.replaceChildren();
     }
 }
 
 function getActiveNotesText() {
-    if (notesEditorHandle) return notesEditorHandle.getText();
+    if (notesEditorHandle) {
+        if (typeof notesEditorHandle.getHtml === "function") {
+            return notesEditorHandle.getHtml();
+        }
+        if (typeof notesEditorHandle.getText === "function") {
+            return notesEditorHandle.getText();
+        }
+    }
     if (notesOpenFallbackText !== null) return notesOpenFallbackText;
     return "";
 }
@@ -193,6 +257,8 @@ function mountPlainNotesEditor(host, opts) {
     host.appendChild(wrap);
     return {
         getText: () => ta.value,
+        getHtml: () =>
+            window.marked?.parse ? sanitizeNotesHtml(window.marked.parse(ta.value)) : `<p></p>`,
         setText: (t) => {
             ta.value = t;
         },
@@ -437,6 +503,7 @@ function bindControls() {
     });
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && elements.notesSheet.classList.contains("open")) closeNotesSheet();
+        if (e.key === "Escape" && generalNotesModalOpen) closeGeneralNotesModal();
         if (e.key === "Escape" && elements.timerDock?.classList.contains("timer-dock--open")) {
             closeMobileTimerDock();
         }
@@ -459,6 +526,7 @@ function bindControls() {
 
     initNotesSheetResize();
     bindSessionTimer();
+    initGeneralNotesModal();
 }
 
 function clampNotesSheetWidth(w) {
@@ -1216,6 +1284,7 @@ function normalizeProblemData(items) {
     return items.map((item, idx) => {
         const id = item.problem || `p-${idx}`;
         const stored = trackerState[id] || {};
+        const notesFormat = normalizeStoredNotesFormat(stored);
         return {
             id,
             problem: item.problem || "Untitled",
@@ -1228,6 +1297,7 @@ function normalizeProblemData(items) {
             frequency: parseInt(item.frequency) || 0,
             status: stored.status || "Not Started",
             notes: stored.notes || "",
+            notesFormat,
             noteFlag: sanitizeNoteFlag(stored.noteFlag),
         };
     });
@@ -1476,6 +1546,439 @@ function updateSidebarStats(items) {
     });
 }
 
+/** @type {null | { getHtml: () => string; setHtml?: (h: string) => void; focus: () => void; setDark: (d: boolean) => void; destroy: () => void }} */
+let generalNotesEditorHandle = null;
+let activeGeneralNoteId = /** @type {string | null} */ (null);
+let generalNotesModalOpen = false;
+let generalNotesPickerOpen = false;
+let generalNotesOverflowOpen = false;
+let generalNotesMountGeneration = 0;
+let generalNotesSaveTimer = null;
+
+function getGeneralNotesStorageKey() {
+    return typeof window.dsaGetGeneralNotesStorageKey === "function"
+        ? window.dsaGetGeneralNotesStorageKey()
+        : "dsa-general-notes-v1:signed-out";
+}
+
+function readGeneralNotesDoc() {
+    let doc = { notes: {} };
+    try {
+        doc = JSON.parse(localStorage.getItem(getGeneralNotesStorageKey()) || "{}") || {};
+    } catch (_) {
+        doc = { notes: {} };
+    }
+    if (!doc.notes || typeof doc.notes !== "object") doc.notes = {};
+    return doc;
+}
+
+function writeGeneralNotesDoc(doc) {
+    try {
+        localStorage.setItem(getGeneralNotesStorageKey(), JSON.stringify(doc));
+    } catch (_) {
+        /* ignore */
+    }
+}
+
+function newGeneralNoteId() {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+        return crypto.randomUUID();
+    }
+    return `gn-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
+function ensureGeneralNotesBootstrap() {
+    const doc = readGeneralNotesDoc();
+    const ids = Object.keys(doc.notes);
+    if (ids.length) return doc;
+    const id = newGeneralNoteId();
+    const now = new Date().toISOString();
+    doc.notes[id] = {
+        title: "",
+        body: "<p></p>",
+        noteFlag: "",
+        updatedAt: now,
+        notesFormat: "html",
+    };
+    writeGeneralNotesDoc(doc);
+    return doc;
+}
+
+function scheduleGeneralNotePersist() {
+    if (generalNotesSaveTimer) clearTimeout(generalNotesSaveTimer);
+    generalNotesSaveTimer = setTimeout(() => {
+        generalNotesSaveTimer = null;
+        persistActiveGeneralNote();
+    }, 200);
+}
+
+function persistActiveGeneralNote() {
+    if (!activeGeneralNoteId || !elements.generalNotesTitleInput) return;
+    const doc = readGeneralNotesDoc();
+    const prev = doc.notes[activeGeneralNoteId] || {};
+    const title = elements.generalNotesTitleInput.value.trim();
+    let body = "<p></p>";
+    if (generalNotesEditorHandle && typeof generalNotesEditorHandle.getHtml === "function") {
+        body = sanitizeNotesHtml(generalNotesEditorHandle.getHtml());
+    }
+    const noteFlag = "";
+    const updatedAt = new Date().toISOString();
+    doc.notes[activeGeneralNoteId] = {
+        ...prev,
+        title,
+        body,
+        noteFlag,
+        updatedAt,
+        notesFormat: "html",
+    };
+    writeGeneralNotesDoc(doc);
+    if (typeof window.dsaScheduleGeneralNotePush === "function") {
+        window.dsaScheduleGeneralNotePush(activeGeneralNoteId);
+    }
+    renderGeneralNotesPickerLabel();
+}
+
+function renderGeneralNotesPickerLabel() {
+    if (!elements.generalNotesPickerLabel || !activeGeneralNoteId) return;
+    const doc = readGeneralNotesDoc();
+    const n = doc.notes[activeGeneralNoteId];
+    const t = (n && n.title) || "";
+    elements.generalNotesPickerLabel.textContent = t.trim() ? t.trim() : "Untitled";
+}
+
+function renderGeneralNotesPickerMenu() {
+    if (!elements.generalNotesPickerMenu) return;
+    const doc = readGeneralNotesDoc();
+    elements.generalNotesPickerMenu.replaceChildren();
+    const ids = Object.keys(doc.notes).sort((a, b) => {
+        const ta = doc.notes[a]?.updatedAt || "";
+        const tb = doc.notes[b]?.updatedAt || "";
+        return tb.localeCompare(ta);
+    });
+    const mkItem = (label, id, isNew) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = isNew
+            ? "general-notes-picker-item general-notes-picker-item--new"
+            : "general-notes-picker-item";
+        b.textContent = label;
+        b.addEventListener("click", () => {
+            if (isNew) {
+                createGeneralNoteAndSelect();
+            } else {
+                void selectGeneralNote(id);
+            }
+            closeGeneralNotesPicker();
+        });
+        elements.generalNotesPickerMenu.appendChild(b);
+    };
+    mkItem("+ New note", "", true);
+    for (const id of ids) {
+        const n = doc.notes[id];
+        const lab = (n && n.title && String(n.title).trim()) || "Untitled";
+        mkItem(lab, id, false);
+    }
+}
+
+function closeGeneralNotesPicker() {
+    generalNotesPickerOpen = false;
+    if (elements.generalNotesPickerMenu) {
+        elements.generalNotesPickerMenu.classList.add("hidden");
+        elements.generalNotesPickerMenu.hidden = true;
+    }
+    if (elements.generalNotesPickerBtn) {
+        elements.generalNotesPickerBtn.setAttribute("aria-expanded", "false");
+    }
+}
+
+function closeGeneralNotesOverflow() {
+    generalNotesOverflowOpen = false;
+    if (elements.generalNotesOverflowMenu) {
+        elements.generalNotesOverflowMenu.classList.add("hidden");
+        elements.generalNotesOverflowMenu.hidden = true;
+    }
+}
+
+function toggleGeneralNotesPicker() {
+    generalNotesPickerOpen = !generalNotesPickerOpen;
+    if (!elements.generalNotesPickerMenu) return;
+    if (generalNotesPickerOpen) {
+        renderGeneralNotesPickerMenu();
+        elements.generalNotesPickerMenu.classList.remove("hidden");
+        elements.generalNotesPickerMenu.hidden = false;
+        elements.generalNotesPickerBtn.setAttribute("aria-expanded", "true");
+    } else {
+        closeGeneralNotesPicker();
+    }
+}
+
+function renderGeneralNotesOverflow() {
+    if (!elements.generalNotesOverflowMenu) return;
+    elements.generalNotesOverflowMenu.replaceChildren();
+    const mk = (text, fn) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "general-notes-overflow-item";
+        b.textContent = text;
+        b.addEventListener("click", () => {
+            closeGeneralNotesOverflow();
+            fn();
+        });
+        elements.generalNotesOverflowMenu.appendChild(b);
+    };
+    mk("New note", () => createGeneralNoteAndSelect());
+    mk("Duplicate", () => duplicateActiveGeneralNote());
+    mk("Delete", () => deleteActiveGeneralNote());
+}
+
+function toggleGeneralNotesOverflow() {
+    generalNotesOverflowOpen = !generalNotesOverflowOpen;
+    if (!elements.generalNotesOverflowMenu) return;
+    if (generalNotesOverflowOpen) {
+        renderGeneralNotesOverflow();
+        elements.generalNotesOverflowMenu.classList.remove("hidden");
+        elements.generalNotesOverflowMenu.hidden = false;
+    } else {
+        closeGeneralNotesOverflow();
+    }
+}
+
+function duplicateActiveGeneralNote() {
+    if (!activeGeneralNoteId) return;
+    const doc = readGeneralNotesDoc();
+    const cur = doc.notes[activeGeneralNoteId];
+    if (!cur) return;
+    const id = newGeneralNoteId();
+    const now = new Date().toISOString();
+    doc.notes[id] = {
+        title: (cur.title && String(cur.title).trim() ? `${cur.title} (copy)` : "Untitled (copy)").slice(
+            0,
+            240
+        ),
+        body: cur.body || "<p></p>",
+        noteFlag: sanitizeNoteFlag(cur.noteFlag),
+        updatedAt: now,
+        notesFormat: "html",
+    };
+    writeGeneralNotesDoc(doc);
+    void selectGeneralNote(id);
+    if (typeof window.dsaScheduleGeneralNotePush === "function") {
+        window.dsaScheduleGeneralNotePush(id);
+    }
+}
+
+function deleteActiveGeneralNote() {
+    if (!activeGeneralNoteId) return;
+    if (!window.confirm("Delete this note? This cannot be undone.")) return;
+    const doc = readGeneralNotesDoc();
+    delete doc.notes[activeGeneralNoteId];
+    writeGeneralNotesDoc(doc);
+    const ids = Object.keys(doc.notes);
+    if (ids.length) {
+        void selectGeneralNote(
+            ids.sort((a, b) => (doc.notes[b].updatedAt || "").localeCompare(doc.notes[a].updatedAt || ""))[0]
+        );
+    } else {
+        const id = newGeneralNoteId();
+        const now = new Date().toISOString();
+        doc.notes[id] = {
+            title: "",
+            body: "<p></p>",
+            noteFlag: "",
+            updatedAt: now,
+            notesFormat: "html",
+        };
+        writeGeneralNotesDoc(doc);
+        void selectGeneralNote(id);
+    }
+}
+
+function createGeneralNoteAndSelect() {
+    const doc = readGeneralNotesDoc();
+    const id = newGeneralNoteId();
+    const now = new Date().toISOString();
+    doc.notes[id] = {
+        title: "",
+        body: "<p></p>",
+        noteFlag: "",
+        updatedAt: now,
+        notesFormat: "html",
+    };
+    writeGeneralNotesDoc(doc);
+    void selectGeneralNote(id);
+    if (typeof window.dsaScheduleGeneralNotePush === "function") {
+        window.dsaScheduleGeneralNotePush(id);
+    }
+}
+
+function destroyGeneralNotesEditor() {
+    if (generalNotesEditorHandle) {
+        generalNotesEditorHandle.destroy();
+        generalNotesEditorHandle = null;
+    }
+    if (elements.generalNotesToolbarHost) elements.generalNotesToolbarHost.replaceChildren();
+    if (elements.generalNotesEditorHost) elements.generalNotesEditorHost.replaceChildren();
+}
+
+async function mountGeneralNotesEditor(html) {
+    destroyGeneralNotesEditor();
+    const mountGen = generalNotesMountGeneration;
+    try {
+        const mod = await loadRichNotesEditorModule();
+        if (mountGen !== generalNotesMountGeneration || !generalNotesModalOpen) return;
+        generalNotesEditorHandle = mod.mountRichNotesEditor(
+            elements.generalNotesToolbarHost,
+            elements.generalNotesEditorHost,
+            {
+                initialHtml: html || "<p></p>",
+                isDark: document.body.classList.contains("dark"),
+                placeholder: "Start writing…",
+                onChange: () => scheduleGeneralNotePersist(),
+            }
+        );
+    } catch (e) {
+        console.error("General notes editor failed:", e);
+    }
+}
+
+async function selectGeneralNote(id) {
+    activeGeneralNoteId = id;
+    const doc = readGeneralNotesDoc();
+    const n = doc.notes[id];
+    if (!n) return;
+    if (elements.generalNotesTitleInput) {
+        elements.generalNotesTitleInput.value = n.title != null ? String(n.title) : "";
+    }
+    renderGeneralNotesPickerLabel();
+    generalNotesMountGeneration += 1;
+    const gen = generalNotesMountGeneration;
+    const body = n.body != null ? String(n.body) : "<p></p>";
+    await mountGeneralNotesEditor(sanitizeNotesHtml(body));
+    if (gen !== generalNotesMountGeneration || !generalNotesModalOpen) return;
+    if (generalNotesEditorHandle && typeof generalNotesEditorHandle.focus === "function") {
+        const h = generalNotesEditorHandle;
+        const bumpFocus = () => h.focus();
+        bumpFocus();
+        queueMicrotask(bumpFocus);
+        requestAnimationFrame(bumpFocus);
+        setTimeout(bumpFocus, 0);
+        setTimeout(bumpFocus, 32);
+    }
+}
+
+function openGeneralNotesModal() {
+    closeGeneralNotesPicker();
+    closeGeneralNotesOverflow();
+    generalNotesModalOpen = true;
+    const doc = ensureGeneralNotesBootstrap();
+    const ids = Object.keys(doc.notes).sort((a, b) =>
+        (doc.notes[b].updatedAt || "").localeCompare(doc.notes[a].updatedAt || "")
+    );
+    if (!elements.generalNotesModal) return;
+    elements.generalNotesModal.hidden = false;
+    document.body.classList.add("general-notes-modal-open");
+    const pick = activeGeneralNoteId && doc.notes[activeGeneralNoteId] ? activeGeneralNoteId : ids[0];
+    void selectGeneralNote(pick || ids[0]);
+}
+
+function closeGeneralNotesModal() {
+    persistActiveGeneralNote();
+    generalNotesModalOpen = false;
+    generalNotesMountGeneration += 1;
+    destroyGeneralNotesEditor();
+    closeGeneralNotesPicker();
+    closeGeneralNotesOverflow();
+    if (elements.generalNotesModal) elements.generalNotesModal.hidden = true;
+    document.body.classList.remove("general-notes-modal-open");
+}
+
+function initGeneralNotesModal() {
+    if (elements.generalNotesOpenBtn) {
+        elements.generalNotesOpenBtn.addEventListener("click", () => openGeneralNotesModal());
+    }
+    if (elements.generalNotesBackdrop) {
+        elements.generalNotesBackdrop.addEventListener("click", () => {
+            if (!generalNotesPickerOpen && !generalNotesOverflowOpen) closeGeneralNotesModal();
+        });
+    }
+    if (elements.generalNotesExpandBtn && elements.generalNotesCard) {
+        elements.generalNotesExpandBtn.addEventListener("click", () => {
+            const maxed = elements.generalNotesCard.classList.toggle("general-notes-card--max");
+            elements.generalNotesExpandBtn.setAttribute("aria-pressed", maxed ? "true" : "false");
+        });
+    }
+    if (elements.generalNotesPickerBtn) {
+        elements.generalNotesPickerBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleGeneralNotesPicker();
+        });
+    }
+    if (elements.generalNotesOverflowBtn) {
+        elements.generalNotesOverflowBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleGeneralNotesOverflow();
+        });
+    }
+    if (elements.generalNotesTitleInput) {
+        elements.generalNotesTitleInput.addEventListener("input", () => {
+            renderGeneralNotesPickerLabel();
+            scheduleGeneralNotePersist();
+        });
+        const isTitleEnter = (e) =>
+            !e.isComposing &&
+            (e.key === "Enter" ||
+                e.key === "NumpadEnter" ||
+                e.code === "Enter" ||
+                e.code === "NumpadEnter" ||
+                e.keyCode === 13);
+
+        const moveTitleToBody = (e) => {
+            if (e.isComposing) return;
+            if (e.key === "Tab" && e.shiftKey) return;
+            if (e.key === "Tab") {
+                e.preventDefault();
+                e.stopPropagation();
+                elements.generalNotesTitleInput.blur();
+                generalNotesEditorHandle?.focus?.();
+                requestAnimationFrame(() => generalNotesEditorHandle?.focus?.());
+                return;
+            }
+            if (!isTitleEnter(e)) return;
+            e.preventDefault();
+            e.stopPropagation();
+            elements.generalNotesTitleInput.blur();
+            const shift = !!e.shiftKey;
+            const run = () => {
+                if (generalNotesEditorHandle?.focusFromTitle) {
+                    generalNotesEditorHandle.focusFromTitle({ shiftKey: shift });
+                } else {
+                    generalNotesEditorHandle?.focus?.();
+                }
+            };
+            run();
+            if (!generalNotesEditorHandle) {
+                requestAnimationFrame(() => {
+                    run();
+                    if (!generalNotesEditorHandle) {
+                        setTimeout(run, 50);
+                    }
+                });
+            }
+        };
+        elements.generalNotesTitleInput.addEventListener("keydown", moveTitleToBody, true);
+    }
+    document.addEventListener("click", (e) => {
+        if (!generalNotesModalOpen) return;
+        const t = /** @type {Node} */ (e.target);
+        if (elements.generalNotesPickerBtn?.contains(t)) return;
+        if (elements.generalNotesPickerMenu?.contains(t)) return;
+        if (elements.generalNotesOverflowBtn?.contains(t)) return;
+        if (elements.generalNotesOverflowMenu?.contains(t)) return;
+        closeGeneralNotesPicker();
+        closeGeneralNotesOverflow();
+    });
+}
+
 window.pickRandom = () => {
     const todo = allProblems.filter(p => p.status !== "Mastered");
     if (todo.length) window.open(todo[Math.floor(Math.random() * todo.length)].link, '_blank');
@@ -1485,6 +1988,7 @@ async function openNotesSheet(id) {
     const p = allProblems.find(i => i.id === id);
     if (!p) return;
     activeNotesId = id;
+    activeNotesFormat = p.notesFormat === "html" ? "html" : "markdown";
     elements.sheetTitle.textContent = p.problem;
     if (elements.notesFlagSelect) {
         elements.notesFlagSelect.value = sanitizeNoteFlag(p.noteFlag) || "";
@@ -1499,23 +2003,28 @@ async function openNotesSheet(id) {
     destroyNotesEditor();
     setPreviewMode(true);
     try {
-        const mod = await loadNotesEditorModule();
+        const mod = await loadRichNotesEditorModule();
         if (mountGen !== notesSheetMountGeneration || activeNotesId !== id) {
             return;
         }
-        notesEditorHandle = mod.mountNotesEditor(elements.sheetNotesEditorHost, {
-            initial: p.notes || "",
-            isDark: document.body.classList.contains("dark"),
-            placeholder:
-                "Capture intuition, pitfalls, or code snippets (Markdown supported). Use fenced ```python (etc.) blocks for syntax colors.",
-            onChange: onNotesInput,
-        });
+        const initialHtml = problemNotesInitialHtml(p);
+        notesEditorHandle = mod.mountRichNotesEditor(
+            elements.sheetNotesToolbarHost,
+            elements.sheetNotesEditorHost,
+            {
+                initialHtml,
+                isDark: document.body.classList.contains("dark"),
+                placeholder: "Capture intuition, pitfalls, or code snippets…",
+                onChange: onNotesInput,
+            }
+        );
+        activeNotesFormat = "html";
         notesOpenFallbackText = null;
         if (!previewMode) {
             notesEditorHandle.focus();
         }
     } catch (err) {
-        console.error("Notes editor load failed:", err);
+        console.error("Rich notes editor load failed:", err);
         if (mountGen !== notesSheetMountGeneration || activeNotesId !== id) {
             return;
         }
@@ -1524,14 +2033,14 @@ async function openNotesSheet(id) {
             window.location.protocol === "file:"
                 ? "This page was opened as a file (file://). Browsers often block or break ES module loading. Run a local server in the project folder, for example: python3 -m http.server 8080 — then open http://localhost:8080/ instead of double-clicking index.html. "
                 : "";
-        const hint = `${fileHint}The syntax-highlighting editor loads CodeMirror from the network (esm.sh). If you are already on http(s), check your connection, VPN, corporate firewall, or ad/privacy blockers. (${msg}) You can still edit notes below without colors.`;
+        const hint = `${fileHint}The rich editor loads TipTap from the network (esm.sh). If you are already on http(s), check your connection, VPN, corporate firewall, or ad/privacy blockers. (${msg}) You can still edit notes as plain Markdown below.`;
         notesEditorHandle = mountPlainNotesEditor(elements.sheetNotesEditorHost, {
             initial: p.notes || "",
-            placeholder:
-                "Capture intuition, pitfalls, or code snippets (Markdown supported). Use fenced ```python blocks for colors after the rich editor loads.",
+            placeholder: "Markdown notes (plain editor fallback).",
             onChange: onNotesInput,
             hint,
         });
+        activeNotesFormat = "markdown";
         notesOpenFallbackText = null;
         if (!previewMode) {
             notesEditorHandle.focus();
@@ -1572,15 +2081,24 @@ function onNotesFlagChange() {
 
 function saveNotesNow() {
     if (!activeNotesId) return;
-    const notes = getActiveNotesText();
+    const raw = getActiveNotesText();
     const noteFlag = elements.notesFlagSelect
         ? sanitizeNoteFlag(elements.notesFlagSelect.value)
         : "";
-    patchProblemState(activeNotesId, { notes, noteFlag });
+    let notes = raw;
+    let notesFormat = activeNotesFormat;
+    if (activeNotesFormat === "html" && typeof notesEditorHandle?.getHtml === "function") {
+        notes = sanitizeNotesHtml(raw);
+        notesFormat = "html";
+    } else {
+        notesFormat = "markdown";
+    }
+    patchProblemState(activeNotesId, { notes, noteFlag, notesFormat });
     const idx = allProblems.findIndex(i => i.id === activeNotesId);
     if (idx !== -1) {
         allProblems[idx].notes = notes;
         allProblems[idx].noteFlag = noteFlag;
+        allProblems[idx].notesFormat = notesFormat;
     }
     setAutoSaveStatus("Saved");
 }
@@ -1602,13 +2120,14 @@ function setPreviewMode(nextPreviewMode) {
 }
 
 function renderNotesPreview() {
-    const markdown = getActiveNotesText().trim();
-    if (!markdown) {
+    const body = getActiveNotesText().trim();
+    if (!body) {
         elements.notesPreview.innerHTML = `<p class="preview-placeholder">Nothing to preview yet.</p>`;
         return;
     }
-    if (window.marked?.parse) {
-        elements.notesPreview.innerHTML = window.marked.parse(markdown);
+    if (activeNotesFormat === "html") {
+        const safe = sanitizeNotesHtml(body);
+        elements.notesPreview.innerHTML = safe || `<p class="preview-placeholder">Nothing to preview yet.</p>`;
         if (window.hljs?.highlightElement) {
             elements.notesPreview.querySelectorAll("pre code").forEach((block) => {
                 try {
@@ -1620,7 +2139,20 @@ function renderNotesPreview() {
         }
         return;
     }
-    elements.notesPreview.textContent = markdown;
+    if (window.marked?.parse) {
+        elements.notesPreview.innerHTML = window.marked.parse(body);
+        if (window.hljs?.highlightElement) {
+            elements.notesPreview.querySelectorAll("pre code").forEach((block) => {
+                try {
+                    window.hljs.highlightElement(block);
+                } catch (_) {
+                    /* ignore unknown grammar */
+                }
+            });
+        }
+        return;
+    }
+    elements.notesPreview.textContent = body;
 }
 function patchProblemState(id, partial) {
     const next = {
@@ -1664,7 +2196,10 @@ function applyTheme(t) {
     document.body.classList.toggle("dark", t === "dark");
     elements.themeToggle.textContent = t === "dark" ? "☀️" : "🌙";
     syncHljsThemeForNotes();
-    if (notesEditorHandle) {
+    if (notesEditorHandle && typeof notesEditorHandle.setDark === "function") {
         notesEditorHandle.setDark(t === "dark");
+    }
+    if (generalNotesEditorHandle && typeof generalNotesEditorHandle.setDark === "function") {
+        generalNotesEditorHandle.setDark(t === "dark");
     }
 }

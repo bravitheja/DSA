@@ -762,7 +762,10 @@ body.notes-sheet-resizing {
   pointer-events: auto;
   touch-action: pan-y;
 }
-body.notes-sheet-open { overflow: hidden; }
+body.notes-sheet-open,
+body.general-notes-modal-open {
+  overflow: hidden;
+}
 .notes-container {
   flex: 1;
   min-height: 0;
@@ -1233,3 +1236,383 @@ body.notes-sheet-open { overflow: hidden; }
       transform: translate3d(0, 0, 0) !important;
     }
 }
+
+/* --- Rich notes (TipTap) + general notes modal --- */
+.sidebar-general-notes-wrap {
+  padding: 0 0.75rem 0.75rem;
+}
+
+.sidebar-general-notes-btn {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel-soft);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.sidebar-general-notes-btn:hover {
+  background: var(--panel);
+  border-color: var(--muted);
+}
+
+.notes-rich-toolbar-host {
+  flex-shrink: 0;
+  padding: 0.35rem 0.75rem 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel-soft);
+}
+
+.notes-rich-toolbar-host--body {
+  border-bottom: none;
+  padding-top: 0.5rem;
+  background: transparent;
+}
+
+/* General notes: body grows, format bar stays visible at bottom of the scroll column */
+.notes-rich-body-host {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.general-notes-scroll .general-notes-format-bar {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-top: 1px solid var(--border);
+  background: var(--panel-soft);
+  border-bottom: none;
+  position: relative;
+  z-index: 1;
+}
+
+.notes-rich-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.notes-rich-toolbar__pill {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+.notes-rich-toolbar__pill:hover {
+  color: var(--text);
+  border-color: var(--muted);
+}
+
+.notes-rich-toolbar__select {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.2rem 0.45rem;
+  font-size: 0.72rem;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.notes-rich-toolbar__color {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.notes-rich-toolbar__color-input {
+  width: 1.75rem;
+  height: 1.35rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.notes-rich-prose-host {
+  min-height: 12rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.notes-rich-prosemirror {
+  outline: none;
+  flex: 1;
+  min-height: min(12rem, 30vh);
+  padding: 0.5rem 0.75rem 1rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.notes-rich-prosemirror p {
+  margin: 0.35rem 0;
+}
+
+.notes-rich-prosemirror p.is-editor-empty:first-child::before {
+  color: var(--muted);
+}
+
+.notes-rich-prosemirror pre.notes-rich-codeblock {
+  margin: 0.5rem 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  overflow-x: auto;
+  font-size: 0.8rem;
+}
+
+.notes-rich-prosemirror pre.notes-rich-codeblock code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
+  background: none;
+  padding: 0;
+}
+
+.notes-rich-editor--dark .notes-rich-prosemirror {
+  color: var(--text);
+}
+
+.general-notes-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.general-notes-modal {
+  position: fixed;
+  inset: 0;
+  /* Above `.notes-sheet` (100000) so this dialog is never underneath the problem-notes panel. */
+  z-index: 110000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right))
+    max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+}
+
+.general-notes-modal[hidden] {
+  display: none !important;
+}
+
+.general-notes-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  cursor: pointer;
+}
+
+body.dark .general-notes-backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.general-notes-card {
+  position: relative;
+  z-index: 1;
+  width: min(80vw, 960px);
+  height: min(80vh, 900px);
+  max-height: calc(100dvh - 1.5rem);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 14px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.general-notes-card.general-notes-card--max {
+  width: min(96vw, 1400px);
+  height: min(94vh, 1200px);
+}
+
+.general-notes-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.85rem;
+  flex-shrink: 0;
+}
+
+.general-notes-chrome-left,
+.general-notes-chrome-right {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.general-notes-context {
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.general-notes-icon-btn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 8px;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.general-notes-icon-btn:hover {
+  color: var(--text);
+  background: var(--panel-soft);
+}
+
+.general-notes-picker-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.general-notes-picker-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 12rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.general-notes-picker-btn:hover {
+  border-color: var(--border);
+  background: var(--panel-soft);
+}
+
+.general-notes-chevron {
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+.general-notes-picker-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 12rem;
+  max-height: 14rem;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  z-index: 2;
+}
+
+.general-notes-picker-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.45rem 0.65rem;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.general-notes-picker-item:hover {
+  background: var(--panel-soft);
+}
+
+.general-notes-picker-item--new {
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.general-notes-overflow-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 10rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  z-index: 3;
+}
+
+.general-notes-overflow-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.45rem 0.65rem;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.general-notes-overflow-item:hover {
+  background: var(--panel-soft);
+}
+
+.general-notes-chrome-right {
+  position: relative;
+}
+
+.general-notes-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.25rem 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.general-notes-title-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--text);
+  padding: 0.35rem 0;
+  margin-bottom: 0.25rem;
+  outline: none;
+}
+
+.general-notes-title-input::placeholder {
+  color: var(--muted);
+  opacity: 0.85;
+}
+

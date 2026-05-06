@@ -19,8 +19,10 @@
  *
  * ── Apps Script (backend) ────────────────────────────────────────────────────
  * 1. New Google Sheet → tab "Progress" with header row:
- *      googleSub | problemKey | status | notes | updatedAt | noteFlag
- *    Existing 5-column sheets: add column F with header noteFlag (or deploy latest SyncWebApp.gs — it extends the sheet on first sync).
+ *      googleSub | problemKey | status | notes | updatedAt | noteFlag | notesFormat
+ *    Older sheets: deploy latest SyncWebApp.gs — it extends headers/columns on sync.
+ *    Tab "GeneralNotes" is auto-created with:
+ *      googleSub | noteId | title | body | noteFlag | updatedAt
  * 2. Extensions → Apps Script → paste scripts/google-apps-script/SyncWebApp.gs
  * 3. Project Settings → Script properties (not in GitHub Secrets for the static site):
  *      GOOGLE_CLIENT_ID = same as googleClientId below

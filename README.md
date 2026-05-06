@@ -4,7 +4,7 @@ A static GitHub Pages-ready web app to track DSA preparation with richer intervi
 
 ## Features
 
-- Pure **HTML/CSS/JavaScript** (no framework, no build step)
+- Pure **HTML/CSS/JavaScript** (no framework, no bundler). Rich notes use **TipTap** + **DOMPurify** loaded as **ES modules** from `esm.sh` (network required for that editor).
 - Problem table with:
   - Problem (clickable LeetCode link)
   - Pattern
@@ -22,8 +22,10 @@ A static GitHub Pages-ready web app to track DSA preparation with richer intervi
 - Column visibility toggles (show/hide selected columns)
 - Local persistence using `localStorage` for:
   - status
-  - notes
+  - per-problem notes (sanitized **HTML** when using the rich editor; legacy Markdown still supported in the plain fallback)
   - optional per-problem **note flag** (color for confidence / triage)
+  - optional `notesFormat` per problem (`markdown` | `html`) for sync with Google Sheets column **G**
+  - **General notes** (multiple documents) under `dsa-general-notes-v1:user:<googleSub>` (or `:signed-out` when not signed in)
   - theme
   - column visibility
 
@@ -32,6 +34,8 @@ A static GitHub Pages-ready web app to track DSA preparation with richer intervi
 - `index.html` – layout + controls + table template
 - `style.css` – theme, responsiveness, badges, tooltip, table styles
 - `app.js` – data loading, rendering, filters, sort, persistence
+- `notes-html-sanitize.mjs` – DOMPurify allowlist for notes HTML
+- `notes-tiptap-editor.mjs` – TipTap rich editor (toolbar + ProseMirror)
 - `data.json` – editable problem dataset
 - `README.md` – docs
 
@@ -83,5 +87,9 @@ If you ever change the site URL (custom domain, different repo path), add that o
 ### Sheet:
 Your progress is in localStorage first; sync pushes/pulls against the sheet—useful to know if you clear browser data or use another device.
 
-The **Progress** tab uses columns: `googleSub`, `problemKey`, `status`, `notes`, `updatedAt`, `noteFlag` (optional color slug). If you created the sheet before `noteFlag` existed, add column **F** with header `noteFlag`, or deploy the latest [`SyncWebApp.gs`](scripts/google-apps-script/SyncWebApp.gs) and run a sync so the script can extend the sheet.
+The **Progress** tab uses columns: `googleSub`, `problemKey`, `status`, `notes`, `updatedAt`, `noteFlag`, `notesFormat` (`markdown` or `html`; empty = client treats as Markdown). Deploy the latest [`SyncWebApp.gs`](scripts/google-apps-script/SyncWebApp.gs) and run a sync so the script can add missing headers/columns.
+
+Add a **GeneralNotes** tab (created automatically on first sync) with headers: `googleSub`, `noteId`, `title`, `body`, `noteFlag`, `updatedAt`. The `body` cell stores sanitized HTML (same size limits as problem notes).
+
+**Redeploy** the Apps Script web app after editing `SyncWebApp.gs` so `pullGeneralNotes` / `pushGeneralNotes` are available; older deployments will log a skipped pull for general notes until upgraded.
 

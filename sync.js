@@ -12,6 +12,8 @@
     const LEGACY_TRACKER_KEY = "dsa-tracker-state-v4";
     /** Progress when not signed in with Google (cleared on Google sign-out). */
     const SIGNED_OUT_TRACKER_KEY = LEGACY_TRACKER_KEY + ":signed-out";
+    const GENERAL_NOTES_BASE_KEY = "dsa-general-notes-v1";
+    const SIGNED_OUT_GENERAL_NOTES_KEY = GENERAL_NOTES_BASE_KEY + ":signed-out";
     const TOKEN_KEY = "dsa-google-id-token";
     const DEBOUNCE_MS = 4000;
 
@@ -20,6 +22,10 @@
     let pushTimer = null;
     /** @type {Set<string>} */
     const dirty = new Set();
+
+    let generalPushTimer = null;
+    /** @type {Set<string>} */
+    const generalDirty = new Set();
 
     function getToken() {
         try {
@@ -83,6 +89,15 @@
         return LEGACY_TRACKER_KEY + ":user:" + sub;
     }
 
+    function getGeneralNotesStorageKey() {
+        const t = getUsableToken();
+        if (!t) return SIGNED_OUT_GENERAL_NOTES_KEY;
+        const p = parseJwtPayload(t);
+        const sub = p && p.sub != null ? String(p.sub) : "";
+        if (!sub) return SIGNED_OUT_GENERAL_NOTES_KEY;
+        return GENERAL_NOTES_BASE_KEY + ":user:" + sub;
+    }
+
     function migrateLegacyTrackerIfNeeded() {
         const t = getUsableToken();
         if (!t) return;
@@ -144,6 +159,7 @@
     }
 
     window.dsaGetTrackerStorageKey = getTrackerStorageKey;
+    window.dsaGetGeneralNotesStorageKey = getGeneralNotesStorageKey;
     window.dsaMigrateLegacyTrackerIfNeeded = migrateLegacyTrackerIfNeeded;
 
     /** Google `sub` must never be used as a problem key (corrupt merge / bad sheet row). */
@@ -171,11 +187,16 @@
             const prevTs = prev.updatedAt ? Date.parse(prev.updatedAt) : 0;
             const remoteTs = r.updatedAt ? Date.parse(r.updatedAt) : 0;
             if (remoteTs >= prevTs) {
+                const nfmt =
+                    r.notesFormat === "html" || r.notesFormat === "markdown"
+                        ? r.notesFormat
+                        : "";
                 state[key] = {
                     status: r.status || "Not Started",
                     notes: r.notes != null ? String(r.notes) : "",
                     updatedAt: r.updatedAt || new Date().toISOString(),
                     noteFlag: r.noteFlag != null ? String(r.noteFlag) : "",
+                    ...(nfmt ? { notesFormat: nfmt } : {}),
                 };
             }
         }
@@ -187,6 +208,48 @@
         } catch (_) {
             /* ignore */
         }
+    }
+
+    function readGeneralNotesDoc() {
+        let doc = { notes: {} };
+        try {
+            doc = JSON.parse(localStorage.getItem(getGeneralNotesStorageKey()) || "{}") || {};
+        } catch (_) {
+            doc = { notes: {} };
+        }
+        if (!doc.notes || typeof doc.notes !== "object") doc.notes = {};
+        return doc;
+    }
+
+    function writeGeneralNotesDoc(doc) {
+        try {
+            localStorage.setItem(getGeneralNotesStorageKey(), JSON.stringify(doc));
+        } catch (_) {
+            /* ignore */
+        }
+    }
+
+    function mergeGeneralNotesFromCloud(rows) {
+        if (!Array.isArray(rows) || !rows.length) return;
+        const doc = readGeneralNotesDoc();
+        const notes = { ...doc.notes };
+        for (const r of rows) {
+            const id = String(r.noteId || "").trim();
+            if (!id) continue;
+            const prev = notes[id] || {};
+            const prevTs = prev.updatedAt ? Date.parse(prev.updatedAt) : 0;
+            const remoteTs = r.updatedAt ? Date.parse(r.updatedAt) : 0;
+            if (remoteTs >= prevTs) {
+                notes[id] = {
+                    title: r.title != null ? String(r.title) : "",
+                    body: r.body != null ? String(r.body) : "",
+                    noteFlag: r.noteFlag != null ? String(r.noteFlag) : "",
+                    updatedAt: r.updatedAt || new Date().toISOString(),
+                    notesFormat: "html",
+                };
+            }
+        }
+        writeGeneralNotesDoc({ notes });
     }
 
     try {
@@ -242,12 +305,20 @@
         if (!token || !cfg.syncWebAppUrl) return;
         migrateLegacyTrackerIfNeeded();
         try {
-            const data = await api({ action: "pullProgress", idToken: token });
-            if (data.rows && data.rows.length) {
-                mergeCloudIntoLocalStorage(data.rows);
+            const progressData = await api({ action: "pullProgress", idToken: token });
+            if (progressData.rows && progressData.rows.length) {
+                mergeCloudIntoLocalStorage(progressData.rows);
             }
         } catch (e) {
-            console.warn("[DSA sync] Pull skipped or failed:", e);
+            console.warn("[DSA sync] pullProgress failed:", e);
+        }
+        try {
+            const generalData = await api({ action: "pullGeneralNotes", idToken: token });
+            if (generalData.rows && generalData.rows.length) {
+                mergeGeneralNotesFromCloud(generalData.rows);
+            }
+        } catch (e) {
+            console.warn("[DSA sync] pullGeneralNotes skipped (deploy latest SyncWebApp.gs):", e);
         }
     };
 
@@ -269,13 +340,17 @@
             if (selfSub && String(id) === selfSub) continue;
             const row = state[id];
             if (!row) continue;
-            rows.push({
+            const payload = {
                 problemKey: id,
                 status: row.status || "Not Started",
                 notes: row.notes != null ? String(row.notes) : "",
                 updatedAt: row.updatedAt || new Date().toISOString(),
                 noteFlag: row.noteFlag != null ? String(row.noteFlag) : "",
-            });
+            };
+            if (row.notesFormat === "html" || row.notesFormat === "markdown") {
+                payload.notesFormat = row.notesFormat;
+            }
+            rows.push(payload);
         }
         if (purgedSubKey) {
             try {
@@ -338,7 +413,75 @@
         }, DEBOUNCE_MS);
     };
 
-    window.addEventListener("pagehide", flushPushKeepalive);
+    function buildGeneralRowsFromDirty() {
+        const doc = readGeneralNotesDoc();
+        const rows = [];
+        for (const id of generalDirty) {
+            const row = doc.notes[id];
+            if (!row) continue;
+            rows.push({
+                noteId: id,
+                title: row.title != null ? String(row.title) : "",
+                body: row.body != null ? String(row.body) : "",
+                noteFlag: row.noteFlag != null ? String(row.noteFlag) : "",
+                updatedAt: row.updatedAt || new Date().toISOString(),
+            });
+        }
+        return rows;
+    }
+
+    async function flushGeneralPush() {
+        generalPushTimer = null;
+        const token = getUsableToken();
+        if (!token || !cfg.syncWebAppUrl || generalDirty.size === 0) return;
+        const rows = buildGeneralRowsFromDirty();
+        const keys = [...generalDirty];
+        generalDirty.clear();
+        if (!rows.length) return;
+        try {
+            await api({ action: "pushGeneralNotes", idToken: token, rows });
+            setSyncActivity("Saved");
+        } catch (e) {
+            console.warn("[DSA sync] General notes push failed:", e);
+            keys.forEach((k) => generalDirty.add(k));
+            setSyncStatus("Sync error · retrying", true);
+        }
+    }
+
+    function flushGeneralPushKeepalive() {
+        const token = getUsableToken();
+        if (!token || !cfg.syncWebAppUrl || generalDirty.size === 0) return;
+        const rows = buildGeneralRowsFromDirty();
+        if (!rows.length) return;
+        generalDirty.clear();
+        try {
+            fetch(cfg.syncWebAppUrl, {
+                method: "POST",
+                mode: "cors",
+                redirect: "follow",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ action: "pushGeneralNotes", idToken: token, rows }),
+                keepalive: true,
+            }).catch(() => {});
+        } catch (_) {
+            /* ignore */
+        }
+    }
+
+    window.dsaScheduleGeneralNotePush = function dsaScheduleGeneralNotePush(noteId) {
+        if (!getUsableToken() || !cfg.syncWebAppUrl) return;
+        if (noteId != null && String(noteId)) generalDirty.add(String(noteId));
+        setSyncActivity("Saving…");
+        clearTimeout(generalPushTimer);
+        generalPushTimer = setTimeout(() => {
+            flushGeneralPush();
+        }, DEBOUNCE_MS);
+    };
+
+    window.addEventListener("pagehide", () => {
+        flushPushKeepalive();
+        flushGeneralPushKeepalive();
+    });
 
     function setSyncStatus(text, isError) {
         const el = document.getElementById("syncStatusText");
@@ -484,6 +627,7 @@
         if (outBtn) {
             outBtn.onclick = () => {
                 dirty.clear();
+                generalDirty.clear();
                 try {
                     localStorage.removeItem(TOKEN_KEY);
                 } catch (_) {

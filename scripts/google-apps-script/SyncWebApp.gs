@@ -1,8 +1,10 @@
 /**
  * Google Apps Script — verify Google ID tokens + read/write Progress sheet.
  *
- * Sheet "Progress" columns: googleSub | problemKey | status | notes | updatedAt | noteFlag
- * Row 1 = headers (exact strings above). Legacy 5-column sheets: add column F with header noteFlag.
+ * Sheet "Progress" columns: googleSub | problemKey | status | notes | updatedAt | noteFlag | notesFormat
+ * Row 1 = headers (exact strings above). Legacy sheets: extend to F (noteFlag) then G (notesFormat).
+ *
+ * Sheet "GeneralNotes": googleSub | noteId | title | body | noteFlag | updatedAt
  *
  * Script properties (Project Settings → Script properties):
  *   GOOGLE_CLIENT_ID — OAuth Web client ID (same as frontend; used to validate token aud).
@@ -19,8 +21,11 @@
  */
 
 var PROGRESS_SHEET = "Progress";
-/** Columns A–F */
-var PROGRESS_NUM_COLS = 6;
+/** Columns A–G */
+var PROGRESS_NUM_COLS = 7;
+var GENERAL_NOTES_SHEET = "GeneralNotes";
+/** GeneralNotes columns A–F */
+var GENERAL_NOTES_NUM_COLS = 6;
 /** Google Sheets max characters per cell */
 var MAX_NOTE_CHARS = 50000;
 /** Allowed noteFlag slugs (must match client); empty string = none */
@@ -43,17 +48,65 @@ function sanitizeNoteFlag_(raw) {
   return ALLOWED_NOTE_FLAGS_[s] ? s : "";
 }
 
-/** Ensure row 1 has noteFlag in column F (extends sheet if needed). */
+/** Client body format for notes cell; empty = treat as markdown on client. */
+function sanitizeNotesFormat_(raw) {
+  var s = String(raw != null ? raw : "").trim().toLowerCase();
+  if (s === "html" || s === "markdown") return s;
+  return "";
+}
+
+/** Ensure row 1 headers through column G (noteFlag F, notesFormat G). */
 function ensureProgressSheetShape_(sh) {
-  var lastCol = sh.getLastColumn();
   var need = PROGRESS_NUM_COLS;
+  var lastCol = sh.getLastColumn();
   if (lastCol < need) {
-    sh.getRange(1, need).setValue("noteFlag");
-  } else {
-    var h = sh.getRange(1, need, 1, need).getValue();
-    if (String(h).trim() === "") {
-      sh.getRange(1, need).setValue("noteFlag");
-    }
+    sh.getRange(1, 1, 1, need).setValues([
+      [
+        "googleSub",
+        "problemKey",
+        "status",
+        "notes",
+        "updatedAt",
+        "noteFlag",
+        "notesFormat",
+      ],
+    ]);
+    return;
+  }
+  var headers = sh.getRange(1, 1, 1, need).getValues()[0];
+  if (String(headers[5] || "").trim() === "") {
+    sh.getRange(1, 6).setValue("noteFlag");
+  }
+  if (String(headers[6] || "").trim() === "") {
+    sh.getRange(1, 7).setValue("notesFormat");
+  }
+}
+
+function ensureGeneralNotesSheet_(ss) {
+  var sh = ss.getSheetByName(GENERAL_NOTES_SHEET);
+  if (!sh) {
+    sh = ss.insertSheet(GENERAL_NOTES_SHEET);
+    sh.appendRow([
+      "googleSub",
+      "noteId",
+      "title",
+      "body",
+      "noteFlag",
+      "updatedAt",
+    ]);
+  }
+  var lastCol = sh.getLastColumn();
+  if (lastCol < GENERAL_NOTES_NUM_COLS) {
+    sh.getRange(1, 1, 1, GENERAL_NOTES_NUM_COLS).setValues([
+      [
+        "googleSub",
+        "noteId",
+        "title",
+        "body",
+        "noteFlag",
+        "updatedAt",
+      ],
+    ]);
   }
 }
 
@@ -159,6 +212,18 @@ function doPost(e) {
       });
       return jsonOut(pushProgress_(String(sub), rowsIn));
     }
+    if (action === "pullGeneralNotes") {
+      syncLog_("doPost pullGeneralNotes", { sub: redactSub_(sub) });
+      return jsonOut(pullGeneralNotes_(String(sub)));
+    }
+    if (action === "pushGeneralNotes") {
+      var gRows = body.rows || [];
+      syncLog_("doPost pushGeneralNotes", {
+        sub: redactSub_(sub),
+        incomingRows: gRows.length,
+      });
+      return jsonOut(pushGeneralNotes_(String(sub), gRows));
+    }
     syncLog_("doPost rejected", { reason: "unknown_action", action: String(action || "") });
     return jsonOut({ ok: false, error: "Unknown action" });
   } catch (err) {
@@ -229,12 +294,17 @@ function pullProgress_(googleSub) {
     if (rowVals.length > 5) {
       nf = sanitizeNoteFlag_(rowVals[5]);
     }
+    var nfmt = "";
+    if (rowVals.length > 6) {
+      nfmt = sanitizeNotesFormat_(rowVals[6]);
+    }
     rows.push({
       problemKey: pkPull,
       status: String(values[r][2] || "Not Started"),
       notes: String(values[r][3] || ""),
       updatedAt: String(values[r][4] || ""),
       noteFlag: nf,
+      notesFormat: nfmt,
     });
   }
   syncLog_("pullProgress done", {
@@ -257,6 +327,7 @@ function pushProgress_(googleSub, incoming) {
       "notes",
       "updatedAt",
       "noteFlag",
+      "notesFormat",
     ]);
   } else {
     ensureProgressSheetShape_(sh);
@@ -299,6 +370,7 @@ function pushProgress_(googleSub, incoming) {
     }
     var updatedAt = String(row.updatedAt || new Date().toISOString());
     var noteFlag = sanitizeNoteFlag_(row.noteFlag);
+    var notesFormat = sanitizeNotesFormat_(row.notesFormat);
     var existingRow = rowIndexByKey[pk];
     var safeRow = [
       escapeSheetCell_(googleSub),
@@ -307,6 +379,7 @@ function pushProgress_(googleSub, incoming) {
       escapeSheetCell_(notes),
       escapeSheetCell_(updatedAt),
       escapeSheetCell_(noteFlag),
+      escapeSheetCell_(notesFormat),
     ];
     if (existingRow) {
       setRowPlainTextFormat_(sh, existingRow, PROGRESS_NUM_COLS);
@@ -327,6 +400,95 @@ function pushProgress_(googleSub, incoming) {
     inserted: inserted,
     skippedEmpty: skippedEmpty,
     skippedSubAsProblemKey: skippedSubAsPk,
+  });
+  return { ok: true };
+}
+
+function pullGeneralNotes_(googleSub) {
+  var ss = getSh_();
+  ensureGeneralNotesSheet_(ss);
+  var sh = ss.getSheetByName(GENERAL_NOTES_SHEET);
+  if (!sh) {
+    return { ok: true, rows: [] };
+  }
+  var values = sh.getDataRange().getValues();
+  var rows = [];
+  for (var r = 1; r < values.length; r++) {
+    if (String(values[r][0]) !== String(googleSub)) continue;
+    var noteId = String(values[r][1] || "").trim();
+    if (!noteId) continue;
+    rows.push({
+      noteId: noteId,
+      title: String(values[r][2] || ""),
+      body: String(values[r][3] || ""),
+      noteFlag: sanitizeNoteFlag_(values[r][4]),
+      updatedAt: String(values[r][5] || ""),
+    });
+  }
+  syncLog_("pullGeneralNotes done", {
+    sub: redactSub_(googleSub),
+    rowsReturned: rows.length,
+  });
+  return { ok: true, rows: rows };
+}
+
+function pushGeneralNotes_(googleSub, incoming) {
+  googleSub = String(googleSub);
+  var ss = getSh_();
+  ensureGeneralNotesSheet_(ss);
+  var sh = ss.getSheetByName(GENERAL_NOTES_SHEET);
+  var values = sh.getDataRange().getValues();
+  var rowIndexByNoteId = {};
+  for (var r = 1; r < values.length; r++) {
+    if (String(values[r][0]) === googleSub) {
+      rowIndexByNoteId[String(values[r][1] || "").trim()] = r + 1;
+    }
+  }
+  var updated = 0;
+  var inserted = 0;
+  for (var i = 0; i < incoming.length; i++) {
+    var row = incoming[i];
+    var nid = String(row.noteId || "").trim();
+    if (!nid) continue;
+    var title = String(row.title != null ? row.title : "");
+    var body = String(row.body != null ? row.body : "");
+    if (body.length > MAX_NOTE_CHARS) {
+      throw new Error(
+        "General note \"" +
+          nid +
+          "\" body exceeds " +
+          MAX_NOTE_CHARS +
+          " characters. Shorten and try again."
+      );
+    }
+    var updatedAt = String(row.updatedAt || new Date().toISOString());
+    var noteFlag = sanitizeNoteFlag_(row.noteFlag);
+    var existingRow = rowIndexByNoteId[nid];
+    var safeRow = [
+      escapeSheetCell_(googleSub),
+      escapeSheetCell_(nid),
+      escapeSheetCell_(title),
+      escapeSheetCell_(body),
+      escapeSheetCell_(noteFlag),
+      escapeSheetCell_(updatedAt),
+    ];
+    if (existingRow) {
+      setRowPlainTextFormat_(sh, existingRow, GENERAL_NOTES_NUM_COLS);
+      getOneRowRange_(sh, existingRow, GENERAL_NOTES_NUM_COLS).setValues([safeRow]);
+      updated++;
+    } else {
+      var newRowNum = sh.getLastRow() + 1;
+      setRowPlainTextFormat_(sh, newRowNum, GENERAL_NOTES_NUM_COLS);
+      getOneRowRange_(sh, newRowNum, GENERAL_NOTES_NUM_COLS).setValues([safeRow]);
+      rowIndexByNoteId[nid] = newRowNum;
+      inserted++;
+    }
+  }
+  syncLog_("pushGeneralNotes done", {
+    sub: redactSub_(googleSub),
+    incoming: incoming.length,
+    updated: updated,
+    inserted: inserted,
   });
   return { ok: true };
 }

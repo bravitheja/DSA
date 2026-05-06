@@ -135,6 +135,12 @@
             </div>
           </section>
         </div>
+
+        <div class="sidebar-general-notes-wrap">
+          <button type="button" id="generalNotesOpenBtn" class="sidebar-general-notes-btn">
+            General notes
+          </button>
+        </div>
       </aside>
 
       <main class="main-pane">
@@ -315,13 +321,14 @@
         </div>
       </div>
 
+      <div id="sheetNotesToolbarHost" class="notes-rich-toolbar-host"></div>
       <div class="notes-container">
         <div
           id="sheetNotesEditorHost"
           class="notes-editor-host"
           role="textbox"
           aria-multiline="true"
-          aria-label="Problem notes (Markdown)"
+          aria-label="Problem notes"
         ></div>
         <div id="notesPreview" class="notes-preview hidden"></div>
       </div>
@@ -331,6 +338,70 @@
         <button type="button" id="sheetSaveBtn" class="save-btn">Close & Save</button>
       </div>
     </aside>
+
+    <div
+      id="generalNotesModal"
+      class="general-notes-modal"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="generalNotesModalTitle"
+    >
+      <div id="generalNotesBackdrop" class="general-notes-backdrop" aria-hidden="true"></div>
+      <div id="generalNotesCard" class="general-notes-card">
+        <header class="general-notes-chrome">
+          <div class="general-notes-chrome-left">
+            <button
+              type="button"
+              id="generalNotesExpandBtn"
+              class="general-notes-icon-btn"
+              aria-pressed="false"
+              aria-label="Expand editor"
+              title="Expand"
+            >
+              ⤢
+            </button>
+            <span class="general-notes-context">General notes</span>
+            <div class="general-notes-picker-wrap">
+              <button
+                type="button"
+                id="generalNotesPickerBtn"
+                class="general-notes-picker-btn"
+                aria-expanded="false"
+                aria-haspopup="listbox"
+              >
+                <span id="generalNotesPickerLabel">Select note</span>
+                <span class="general-notes-chevron" aria-hidden="true">▾</span>
+              </button>
+              <div id="generalNotesPickerMenu" class="general-notes-picker-menu hidden" role="listbox" hidden></div>
+            </div>
+          </div>
+          <div class="general-notes-chrome-right">
+            <button type="button" id="generalNotesOverflowBtn" class="general-notes-icon-btn" aria-label="More options" title="More">
+              ⋯
+            </button>
+            <div id="generalNotesOverflowMenu" class="general-notes-overflow-menu hidden" role="menu" hidden></div>
+          </div>
+        </header>
+        <div class="general-notes-scroll">
+          <h2 id="generalNotesModalTitle" class="general-notes-sr-only">General notes</h2>
+          <input
+            type="text"
+            id="generalNotesTitleInput"
+            class="general-notes-title-input"
+            placeholder="Untitled"
+            maxlength="240"
+            autocomplete="off"
+            aria-label="Note title"
+          />
+          <div id="generalNotesEditorHost" class="notes-rich-body-host"></div>
+          <div
+            id="generalNotesToolbarHost"
+            class="notes-rich-toolbar-host notes-rich-toolbar-host--body general-notes-format-bar"
+          ></div>
+        </div>
+      </div>
+    </div>
 
     <template id="problemRowTemplate">
       <tr>
