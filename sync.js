@@ -615,10 +615,11 @@
                 btnHost.innerHTML = "";
                 google.accounts.id.renderButton(btnHost, {
                     type: "standard",
-                    theme: "outline",
-                    size: "medium",
+                    theme: "filled_blue",
+                    size: "large",
                     text: "signin_with",
-                    width: 220,
+                    shape: "pill",
+                    width: 260,
                     locale: "en",
                 });
             }
