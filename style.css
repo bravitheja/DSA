@@ -1300,6 +1300,12 @@ body.general-notes-modal-open {
     .timer-mobile-toggle {
         display: inline-flex !important;
     }
+    .timer-dock.timer-dock--open.timer-dock--mobile-timer .timer-sticky-dock {
+        display: none !important;
+    }
+    .timer-dock.timer-dock--open.timer-dock--mobile-sticky .timer-panel {
+        display: none !important;
+    }
 
     .dashboard-shell { display: flex; flex-direction: column; height: auto; min-height: 100vh; overflow-y: auto; }
     .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); position: relative; }
@@ -1660,6 +1666,12 @@ body.general-notes-modal-open {
   min-width: 0;
 }
 
+.notes-editor-host .notes-rich-prose-host {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .notes-rich-prosemirror {
   outline: none;
   flex: 1;
@@ -1670,6 +1682,13 @@ body.general-notes-modal-open {
   color: var(--text);
   user-select: text;
   -webkit-user-select: text;
+}
+
+.notes-editor-host .notes-rich-prosemirror {
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .notes-rich-prosemirror p {

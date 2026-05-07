@@ -120,6 +120,7 @@ const elements = {
     timerResetBtn: getEl("timerResetBtn"),
     timerDock: getEl("timerDock"),
     timerMobileToggle: getEl("timerMobileToggle"),
+    timerStickyMobileToggle: getEl("timerStickyMobileToggle"),
     timerDragHandle: getEl("timerDragHandle"),
     timerStickySection: getEl("timerStickySection"),
     timerStickyDock: getEl("timerStickyDock"),
@@ -884,18 +885,51 @@ function playTimerBeep() {
 }
 
 function setMobileTimerDockOpen(open) {
-    if (!elements.timerDock || !elements.timerMobileToggle) return;
+    if (!elements.timerDock) return;
+    const mobileView = open
+        ? elements.timerDock.classList.contains("timer-dock--mobile-sticky")
+            ? "sticky"
+            : "timer"
+        : null;
+    const showTimer = mobileView === "timer";
+    const showSticky = mobileView === "sticky";
     elements.timerDock.classList.toggle("timer-dock--open", open);
-    elements.timerMobileToggle.setAttribute("aria-expanded", open ? "true" : "false");
-    elements.timerMobileToggle.setAttribute("aria-label", open ? "Hide timer" : "Show timer");
+    elements.timerDock.classList.toggle("timer-dock--mobile-timer", showTimer);
+    elements.timerDock.classList.toggle("timer-dock--mobile-sticky", showSticky);
+    if (elements.timerMobileToggle) {
+        elements.timerMobileToggle.setAttribute("aria-expanded", showTimer ? "true" : "false");
+        elements.timerMobileToggle.setAttribute("aria-label", showTimer ? "Hide timer" : "Show timer");
+    }
+    if (elements.timerStickyMobileToggle) {
+        elements.timerStickyMobileToggle.setAttribute("aria-expanded", showSticky ? "true" : "false");
+        elements.timerStickyMobileToggle.setAttribute(
+            "aria-label",
+            showSticky ? "Hide stickies" : "Show stickies"
+        );
+    }
     if (open && window.innerWidth <= 850) {
         applyTimerFloatPosition();
         clampTimerFloatToViewport();
     }
 }
 
+/**
+ * @param {null | "timer" | "sticky"} mode
+ */
+function setMobileTimerDockMode(mode) {
+    if (!elements.timerDock) return;
+    if (mode === null) {
+        elements.timerDock.classList.remove("timer-dock--mobile-timer", "timer-dock--mobile-sticky");
+        setMobileTimerDockOpen(false);
+        return;
+    }
+    elements.timerDock.classList.toggle("timer-dock--mobile-timer", mode === "timer");
+    elements.timerDock.classList.toggle("timer-dock--mobile-sticky", mode === "sticky");
+    setMobileTimerDockOpen(true);
+}
+
 function closeMobileTimerDock() {
-    setMobileTimerDockOpen(false);
+    setMobileTimerDockMode(null);
 }
 
 function loadDesktopTimerPipEnabled() {
@@ -1740,8 +1774,18 @@ function bindSessionTimer() {
 
     if (elements.timerMobileToggle) {
         elements.timerMobileToggle.addEventListener("click", () => {
-            const open = !elements.timerDock.classList.contains("timer-dock--open");
-            setMobileTimerDockOpen(open);
+            const showingTimer =
+                elements.timerDock.classList.contains("timer-dock--open") &&
+                elements.timerDock.classList.contains("timer-dock--mobile-timer");
+            setMobileTimerDockMode(showingTimer ? null : "timer");
+        });
+    }
+    if (elements.timerStickyMobileToggle) {
+        elements.timerStickyMobileToggle.addEventListener("click", () => {
+            const showingSticky =
+                elements.timerDock.classList.contains("timer-dock--open") &&
+                elements.timerDock.classList.contains("timer-dock--mobile-sticky");
+            setMobileTimerDockMode(showingSticky ? null : "sticky");
         });
     }
 
