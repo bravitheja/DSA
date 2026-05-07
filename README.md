@@ -1,6 +1,15 @@
-# Advanced LeetCode-Style DSA Tracker
+# AlgoInsight – DSA Tracker, Notes & Interview Prep Workspace
 
-A static GitHub Pages-ready web app to track DSA preparation with richer interview metadata per problem.
+AlgoInsight is a lightweight, SEO-friendly GitHub Pages SPA for **DSA tracking**, **coding interview preparation**, **LeetCode progress management**, and **structured interview notes**.
+
+- **Live demo:** https://bravitheja.github.io/DSA/
+- **Repository:** https://github.com/bravitheja/DSA
+
+## Screenshot
+
+> Add a screenshot at `assets/screenshot-home.svg` and keep this section for social proof in GitHub/AI search previews.
+
+![AlgoInsight app screenshot](assets/screenshot-home.svg)
 
 ## Features
 
@@ -28,6 +37,27 @@ A static GitHub Pages-ready web app to track DSA preparation with richer intervi
   - **General notes** (multiple documents) under `dsa-general-notes-v1:user:<googleSub>` (or `:signed-out` when not signed in)
   - theme
   - column visibility
+- SEO readiness for GitHub Pages:
+  - crawlable landing content in semantic HTML
+  - Open Graph + Twitter social preview metadata
+  - canonical tags, robots directives, `robots.txt`, `sitemap.xml`
+  - `llms.txt` for AI search engine discoverability
+
+## SEO & Indexing
+
+AlgoInsight is optimized for discoverability on Google and AI search engines with static-first, GitHub Pages-compatible SEO:
+
+- Canonical URL and indexable `robots` settings
+- Descriptive page title and meta description with DSA/interview keywords
+- Structured data (`SoftwareApplication` JSON-LD)
+- Social sharing metadata (Open Graph + Twitter card)
+- Crawl hints (`robots.txt`, `sitemap.xml`, `llms.txt`)
+
+### Open Graph image recommendation
+
+- Path configured in metadata: `assets/og-image-1200x630.png`
+- Recommended size: **1200 × 630 px**
+- Format: PNG or JPEG, under ~1 MB for faster social unfurl
 
 ## Project Structure
 
@@ -92,4 +122,3 @@ The **Progress** tab uses columns: `googleSub`, `problemKey`, `status`, `notes`,
 Add a **GeneralNotes** tab (created automatically on first sync) with headers: `googleSub`, `noteId`, `title`, `body`, `noteFlag`, `updatedAt`. The `body` cell stores sanitized HTML (same size limits as problem notes).
 
 **Redeploy** the Apps Script web app after editing `SyncWebApp.gs` so `pullGeneralNotes` / `pushGeneralNotes` are available; older deployments will log a skipped pull for general notes until upgraded.
-
