@@ -3,10 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>AlgoInsight | Senior DSA Tracker</title>
+    <title>AlgoInsight – DSA Tracker, Notes &amp; Interview Prep Workspace</title>
+    <meta
+      name="description"
+      content="Track DSA progress, manage interview preparation, take rich notes, and improve coding workflow with AlgoInsight."
+    />
+    <meta
+      name="keywords"
+      content="DSA tracker, coding interview prep, LeetCode tracker, interview notes, coding workspace, algorithm practice"
+    />
+    <meta name="author" content="AlgoInsight" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#6366f1" />
+    <link rel="canonical" href="https://bravitheja.github.io/DSA/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="AlgoInsight" />
+    <meta property="og:title" content="AlgoInsight – DSA Tracker, Notes &amp; Interview Prep Workspace" />
+    <meta
+      property="og:description"
+      content="Track DSA progress, manage interview preparation, take rich notes, and improve coding workflow with AlgoInsight."
+    />
+    <meta property="og:url" content="https://bravitheja.github.io/DSA/" />
+    <meta property="og:image" content="https://bravitheja.github.io/DSA/assets/og-image-1200x630.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="AlgoInsight – DSA Tracker, Notes &amp; Interview Prep Workspace" />
+    <meta
+      property="twitter:description"
+      content="Track DSA progress, manage interview preparation, take rich notes, and improve coding workflow with AlgoInsight."
+    />
+    <meta property="twitter:image" content="https://bravitheja.github.io/DSA/assets/og-image-1200x630.png" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+      as="style"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
       rel="stylesheet"
@@ -23,11 +58,66 @@
       href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css"
       disabled
     />
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
+    <header class="seo-hero" aria-label="AlgoInsight overview">
+      <nav class="seo-hero__nav" aria-label="Quick links">
+        <a href="#appRoot">Jump to tracker app</a>
+        <a href="#seo-features">Features</a>
+        <a href="#seo-workflow">Workflow</a>
+      </nav>
+      <section class="seo-hero__content">
+        <h1>AlgoInsight: your DSA tracker, notes hub, and interview prep workspace</h1>
+        <p>
+          AlgoInsight helps you organize algorithm practice, prioritize high-impact questions, and keep interview
+          notes in one searchable workspace.
+        </p>
+      </section>
+      <details class="seo-hero__details" open>
+        <summary>About AlgoInsight</summary>
+        <div class="seo-hero__grid">
+          <section aria-labelledby="seo-what">
+            <h2 id="seo-what">What is AlgoInsight?</h2>
+            <p>
+              A lightweight GitHub Pages app for tracking solved DSA problems, capturing rich notes, and planning
+              interview preparation without a heavy framework.
+            </p>
+          </section>
+          <section id="seo-features" aria-labelledby="seo-features-heading">
+            <h2 id="seo-features-heading">Features</h2>
+            <ul>
+              <li>DSA progress tracker with difficulty and pattern filters</li>
+              <li>Interview-focused notes with flags, rich text, and quick search</li>
+              <li>Focused productivity tools like timer + sticky notes</li>
+            </ul>
+          </section>
+          <section aria-labelledby="seo-why">
+            <h2 id="seo-why">Why use it?</h2>
+            <p>
+              Keep prep consistent, reduce context switching, and improve recall with structured workflows designed
+              for coding interviews.
+            </p>
+          </section>
+          <section id="seo-workflow" aria-labelledby="seo-workflow-heading">
+            <h2 id="seo-workflow-heading">Productivity workflow</h2>
+            <p>
+              Pick a topic, solve targeted problems, capture insights, then review gaps through searchable notes and
+              interview metadata.
+            </p>
+          </section>
+          <section aria-labelledby="seo-interview">
+            <h2 id="seo-interview">Interview preparation support</h2>
+            <p>
+              Track company-specific frequency trends, revisit weak concepts, and maintain a reusable interview prep
+              system you can access from anywhere.
+            </p>
+          </section>
+        </div>
+      </details>
+    </header>
     <!-- auth-config.js: committed defaults (empty); edit locally or let CI overwrite from secrets. -->
     <script src="auth-config.js"></script>
     <script>
@@ -67,7 +157,7 @@
 
     <div id="appRoot" class="app-root">
     <div class="dashboard-shell">
-      <aside class="sidebar">
+      <aside class="sidebar" aria-label="Progress and tools sidebar">
         <div class="brand-row">
           <div>
             <h1>AlgoInsight</h1>
@@ -188,7 +278,7 @@
         </div>
       </aside>
 
-      <main class="main-pane">
+      <main class="main-pane" id="mainContent">
         <header class="filter-bar" aria-label="Global filters">
           <label class="search-wrap" for="searchInput">
             <span>🔍</span>
@@ -292,7 +382,7 @@
           </div>
         </header>
 
-        <section class="table-shell">
+        <section class="table-shell" aria-label="DSA problems table">
           <table>
             <thead>
               <tr>
@@ -493,7 +583,21 @@
     <!-- interview-data.js: from data/sheets/interview-tracker.json — run: node scripts/generate-interview-sheets.mjs && node scripts/build-interview-data-js.mjs -->
     <script src="interview-data.js" defer></script>
     <script src="sync.js" defer></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "AlgoInsight",
+        "description": "Track DSA progress, manage interview preparation, take rich notes, and improve coding workflow with AlgoInsight.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web Browser",
+        "url": "https://bravitheja.github.io/DSA/"
+      }
+    </script>
     <script type="module" src="app.js"></script>
     <script src="auth.js" defer></script>
+    <footer class="seo-footer">
+      <p>AlgoInsight is a GitHub Pages-compatible DSA tracker for interview preparation and algorithm practice.</p>
+    </footer>
   </body>
 </html>
