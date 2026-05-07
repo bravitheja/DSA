@@ -189,6 +189,96 @@ body.dark .user-chip__avatar {
 }
 .sidebar-card { border: 1px solid var(--border); border-radius: 12px; padding: 1rem; margin-top: 1.5rem; }
 
+/* --- Mastery Progress — dashboard typography --- */
+.sidebar-card--mastery {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-feature-settings: "tnum" 1;
+}
+
+.sidebar-card--mastery .mastery-progress__title {
+  margin: 0 0 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.25;
+}
+
+.sidebar-card--mastery .mastery-progress__stat {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.875rem;
+  margin: 0 0 0.125rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
+}
+
+.sidebar-card--mastery .mastery-progress__stat-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--muted);
+}
+
+.sidebar-card--mastery .mastery-progress__stat-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.sidebar-card--mastery .mastery-progress__rings {
+  margin: 1rem 0 0;
+  gap: 0.35rem;
+}
+
+.sidebar-card--mastery .ring-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  text-align: center;
+}
+
+.sidebar-card--mastery .ring-wrap > span {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+.sidebar-card--mastery .ring {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+
+.sidebar-card--mastery .sidebar-breakdown {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  border-top-color: color-mix(in srgb, var(--border) 88%, transparent);
+  padding-top: 0.875rem;
+  margin-top: 0.875rem;
+}
+
+.sidebar-card--mastery .breakdown-item {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  margin-bottom: 0.35rem;
+}
+
+.sidebar-card--mastery .breakdown-item:last-child {
+  margin-bottom: 0;
+}
+
 .difficulty-rings { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 1rem 0; }
 .ring { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-size: 0.75rem; font-weight: bold; border: 1px solid var(--border); }
 .ring-easy { --ring-color: #10b981; }
@@ -199,7 +289,10 @@ body.dark .user-chip__avatar {
 .breakdown-item { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-weight: 500; }
 
 /* Minimal countdown timer — type MM:SS or H:MM:SS */
-.timer-dock { display: block; }
+.timer-dock {
+  display: block;
+  margin-top: 1.5rem; /* aligns with .sidebar-card spacing after General notes */
+}
 .timer-drag-handle {
   display: none;
   width: 100%;
@@ -1550,25 +1643,82 @@ body.general-notes-modal-open {
 
 /* --- Rich notes (TipTap) + general notes modal --- */
 .sidebar-general-notes-wrap {
-  padding: 0 0.75rem 0.75rem;
+  margin-top: 1.5rem; /* same rhythm as .sidebar-card */
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* Match vertical gap after button to the timer stack with mastery/card spacing (1.5rem), not margin + padding */
+.timer-dock > .sidebar-card:first-child {
+  margin-top: 0;
 }
 
 .sidebar-general-notes-btn {
   width: 100%;
-  padding: 0.55rem 0.75rem;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--panel-soft);
+  padding: 0.58rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--border) 65%, rgba(255, 255, 255, 0.35));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--panel-soft) 72%, transparent) 0%,
+    color-mix(in srgb, var(--panel) 45%, transparent) 100%
+  );
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 4px 16px rgba(15, 23, 42, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
   color: var(--text);
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
 }
 
 .sidebar-general-notes-btn:hover {
-  background: var(--panel);
-  border-color: var(--muted);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--panel-soft) 88%, transparent) 0%,
+    color-mix(in srgb, var(--panel) 62%, transparent) 100%
+  );
+  border-color: color-mix(in srgb, var(--muted) 45%, var(--border));
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.07),
+    0 8px 22px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.sidebar-general-notes-btn:active {
+  transform: scale(0.992);
+}
+
+body.dark .sidebar-general-notes-btn {
+  border-color: color-mix(in srgb, var(--border) 55%, rgba(255, 255, 255, 0.08));
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--panel) 58%, transparent) 0%,
+    color-mix(in srgb, var(--panel-soft) 42%, transparent) 100%
+  );
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+body.dark .sidebar-general-notes-btn:hover {
+  border-color: color-mix(in srgb, var(--muted) 38%, var(--border));
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--panel) 72%, transparent) 0%,
+    color-mix(in srgb, var(--panel-soft) 52%, transparent) 100%
+  );
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .notes-rich-toolbar-host {

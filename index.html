@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
@@ -77,13 +77,13 @@
           <button type="button" id="logoutBtn" class="logout-btn" hidden aria-label="Sign out">Sign out</button>
         </div>
 
-        <section class="sidebar-card">
-          <h2>Mastery Progress</h2>
-          <div class="stat-line">
-            <span>Total Solved</span>
-            <strong id="solvedCount">0 / 0</strong>
+        <section class="sidebar-card sidebar-card--mastery" aria-labelledby="masteryProgressHeading">
+          <h2 id="masteryProgressHeading" class="mastery-progress__title">Mastery Progress</h2>
+          <div class="stat-line mastery-progress__stat">
+            <span class="mastery-progress__stat-label">Total solved</span>
+            <strong id="solvedCount" class="mastery-progress__stat-value">0 / 0</strong>
           </div>
-          <div class="difficulty-rings">
+          <div class="difficulty-rings mastery-progress__rings">
             <div class="ring-wrap">
               <div id="easyRing" class="ring ring-easy">0%</div>
               <span>Easy</span>
@@ -99,6 +99,12 @@
           </div>
           <div id="sidebarBreakdown" class="sidebar-breakdown"></div>
         </section>
+
+        <div class="sidebar-general-notes-wrap">
+          <button type="button" id="generalNotesOpenBtn" class="sidebar-general-notes-btn">
+            General notes
+          </button>
+        </div>
 
         <div id="timerDock" class="timer-dock">
           <section class="sidebar-card timer-panel" id="timerPanel" aria-label="Timer">
@@ -179,12 +185,6 @@
               <button type="button" id="timerStickyCardNextBtn" class="timer-sticky-card-nav-btn timer-sticky-card-nav-btn--next" aria-label="Next note">›</button>
             </section>
           </div>
-        </div>
-
-        <div class="sidebar-general-notes-wrap">
-          <button type="button" id="generalNotesOpenBtn" class="sidebar-general-notes-btn">
-            General notes
-          </button>
         </div>
       </aside>
 
