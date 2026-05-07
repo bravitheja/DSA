@@ -2442,6 +2442,22 @@ body {
 
 h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.25; }
 .brand-row h1 { font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem); }
+.seo-hero__eyebrow {
+  margin: 0 0 var(--space-2);
+  font-size: 0.74rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--brand);
+  font-weight: 700;
+}
+.seo-hero__content h1 {
+  font-size: clamp(1.45rem, 1.1rem + 1.2vw, 2rem);
+  max-width: 24ch;
+  line-height: 1.22;
+}
+.seo-hero__content p { max-width: 74ch; }
+.seo-hero__grid section { padding: var(--space-4); }
+.seo-hero__grid h2 { font-size: 0.95rem; }
 
 .sidebar,
 .filter-bar,
@@ -2470,6 +2486,13 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.25; }
   align-items: center;
   gap: var(--space-3);
   flex: 1 1 560px;
+  flex-wrap: wrap;
+}
+.workflow-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+  flex: 1 1 100%;
 }
 .filter-bar__advanced {
   position: relative;
@@ -2524,6 +2547,9 @@ th {
   font-size: 0.68rem;
   letter-spacing: 0.08em;
   background: color-mix(in srgb, var(--panel-soft) 88%, var(--panel));
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 td {
   padding: 0.78rem 1rem;
@@ -2531,6 +2557,7 @@ td {
 }
 tr:hover td {
   background: color-mix(in srgb, var(--brand) 6%, var(--panel));
+  transform: translateY(-0.5px);
 }
 tr.selected td,
 tr[aria-selected="true"] td {
@@ -2557,6 +2584,10 @@ tr[aria-selected="true"] td {
   box-shadow: var(--shadow-sm);
   border-radius: var(--radius-md);
 }
+.notes-rich-toolbar {
+  background: color-mix(in srgb, var(--panel-soft) 68%, var(--panel));
+  border-color: color-mix(in srgb, var(--border) 76%, transparent);
+}
 
 .timer-dock.timer-dock--pip .timer-panel,
 .pip-root,
@@ -2570,6 +2601,9 @@ tr[aria-selected="true"] td {
 }
 .timer-dock.timer-dock--pip .timer-time-input {
   font-size: 0.92rem;
+}
+.timer-dock.timer-dock--pip .timer-inline-actions {
+  gap: var(--space-1);
 }
 
 button,
@@ -2619,6 +2653,7 @@ button:active,
     flex-wrap: wrap;
     min-width: 100%;
   }
+  .workflow-hint { order: 3; }
   .filter-bar__advanced-grid {
     position: static;
     width: 100%;
