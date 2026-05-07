@@ -70,14 +70,15 @@
         <a href="#seo-workflow">Workflow</a>
       </nav>
       <section class="seo-hero__content">
-        <h1>AlgoInsight: your DSA tracker, notes hub, and interview prep workspace</h1>
+        <p class="seo-hero__eyebrow">Developer interview workspace</p>
+        <h1>Prepare faster with one focused workspace for problems, notes, and interview review</h1>
         <p>
-          AlgoInsight helps you organize algorithm practice, prioritize high-impact questions, and keep interview
-          notes in one searchable workspace.
+          AlgoInsight turns scattered prep into a repeatable workflow: track the right problems, capture what matters,
+          and revise with context when it counts.
         </p>
       </section>
-      <details class="seo-hero__details" open>
-        <summary>About AlgoInsight</summary>
+      <details class="seo-hero__details">
+        <summary>Why AlgoInsight</summary>
         <div class="seo-hero__grid">
           <section aria-labelledby="seo-what">
             <h2 id="seo-what">What is AlgoInsight?</h2>
@@ -87,11 +88,11 @@
             </p>
           </section>
           <section id="seo-features" aria-labelledby="seo-features-heading">
-            <h2 id="seo-features-heading">Features</h2>
+            <h2 id="seo-features-heading">Key features</h2>
             <ul>
               <li>DSA progress tracker with difficulty and pattern filters</li>
-              <li>Interview-focused notes with flags, rich text, and quick search</li>
-              <li>Focused productivity tools like timer + sticky notes</li>
+              <li>Rich interview notes with flags, formatting, and quick recall</li>
+              <li>Floating PiP timer + stickies for focused practice blocks</li>
             </ul>
           </section>
           <section aria-labelledby="seo-why">
@@ -101,6 +102,13 @@
               for coding interviews.
             </p>
           </section>
+          <section aria-labelledby="seo-benefits">
+            <h2 id="seo-benefits">Benefits over spreadsheets</h2>
+            <p>
+              Traditional trackers force context switching across tabs and docs. AlgoInsight combines solved-state,
+              topic filtering, note capture, and revision signals in one workspace so your prep loop stays continuous.
+            </p>
+          </section>
           <section id="seo-workflow" aria-labelledby="seo-workflow-heading">
             <h2 id="seo-workflow-heading">Productivity workflow</h2>
             <p>
@@ -108,11 +116,26 @@
               interview metadata.
             </p>
           </section>
+          <section aria-labelledby="seo-pip">
+            <h2 id="seo-pip">Why PiP matters</h2>
+            <p>
+              Use floating timer and sticky notes while solving in another tab. You keep active thinking, edge cases,
+              and checkpoints visible without breaking coding flow.
+            </p>
+          </section>
           <section aria-labelledby="seo-interview">
             <h2 id="seo-interview">Interview preparation support</h2>
             <p>
               Track company-specific frequency trends, revisit weak concepts, and maintain a reusable interview prep
               system you can access from anywhere.
+            </p>
+          </section>
+          <section aria-labelledby="seo-process">
+            <h2 id="seo-process">Interview preparation workflow</h2>
+            <p>
+              Start with high-frequency sets, move into pattern mastery, annotate trade-offs in rich notes, and then
+              run timed practice rounds with PiP. This mirrors real interview pressure while preserving your reasoning
+              history for review.
             </p>
           </section>
         </div>
@@ -280,35 +303,11 @@
 
       <main class="main-pane" id="mainContent">
         <header class="filter-bar" aria-label="Global filters">
+          <div class="filter-bar__primary">
           <label class="search-wrap" for="searchInput">
             <span>🔍</span>
             <input id="searchInput" type="text" placeholder="Search by name, pattern, or logic..." />
           </label>
-
-          <select id="patternFilter" aria-label="Filter by pattern"></select>
-          <select id="difficultyFilter" aria-label="Filter by difficulty">
-            <option value="all">Difficulty: All</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
-
-          <select id="companyFilter" aria-label="Filter by company (interview data)">
-            <option value="all">Company: All</option>
-          </select>
-
-          <select id="flagFilter" aria-label="Filter by notes flag">
-            <option value="all">Flag: All</option>
-            <option value="none">No flag</option>
-            <option value="blue">Blue</option>
-            <option value="green">Green</option>
-            <option value="grey">Grey</option>
-            <option value="orange">Orange</option>
-            <option value="purple">Purple</option>
-            <option value="red">Red</option>
-            <option value="yellow">Yellow</option>
-          </select>
-
           <button
             type="button"
             onclick="pickRandom()"
@@ -317,6 +316,34 @@
           >
             🎲 Random
           </button>
+          <p class="workflow-hint" id="workflowHint">Tip: open notes on a row, then use PiP stickies while solving.</p>
+          </div>
+          <details class="filter-bar__advanced">
+            <summary>Advanced filters</summary>
+            <div class="filter-bar__advanced-grid">
+              <select id="patternFilter" aria-label="Filter by pattern"></select>
+              <select id="difficultyFilter" aria-label="Filter by difficulty">
+                <option value="all">Difficulty: All</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
+              <select id="companyFilter" aria-label="Filter by company (interview data)">
+                <option value="all">Company: All</option>
+              </select>
+              <select id="flagFilter" aria-label="Filter by notes flag">
+                <option value="all">Flag: All</option>
+                <option value="none">No flag</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="grey">Grey</option>
+                <option value="orange">Orange</option>
+                <option value="purple">Purple</option>
+                <option value="red">Red</option>
+                <option value="yellow">Yellow</option>
+              </select>
+            </div>
+          </details>
 
           <div class="filter-bar-split">
             <button
