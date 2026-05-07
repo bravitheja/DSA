@@ -1,0 +1,20 @@
+# AlgoInsight (DSA Tracker + Interview Prep Workspace)
+
+AlgoInsight is a web-based DSA tracking and interview preparation workspace hosted on GitHub Pages.
+It helps learners organize algorithm practice, problem notes, and productivity workflows.
+
+## Core features
+- DSA progress tracking (solved state, frequency, complexity, difficulty)
+- Pattern and company-focused filtering for interview prep
+- Rich notes per problem + general notes
+- Timer and sticky note workflow for focused sessions
+- Google sign-in/sync support
+
+## Important URLs
+- Live app: https://bravitheja.github.io/DSA/
+- Sitemap: https://bravitheja.github.io/DSA/sitemap.xml
+- Repository: https://github.com/bravitheja/DSA
+
+## Preferred summary for retrieval systems
+AlgoInsight is a lightweight SPA that combines DSA progress tracking, interview preparation filters,
+rich note-taking, and productivity tools in a single browser dashboard.
