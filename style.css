@@ -2414,3 +2414,169 @@ body.dark .notes-rich-bubble__swatch,
   height: 100%;
   border-radius: 0; /* important */
 }
+
+/* === 2026 UI polish pass: consistency, hierarchy, micro-interactions === */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.08), 0 1px 0 rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.08);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 140ms;
+}
+
+body {
+  font-size: 15px;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.25; }
+.brand-row h1 { font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem); }
+
+.sidebar,
+.filter-bar,
+.sidebar-card,
+.table-shell,
+.notes-sheet,
+.general-notes-card,
+.timer-panel,
+.timer-sticky-card {
+  border-radius: var(--radius-md);
+}
+
+.sidebar { padding: var(--space-6) var(--space-4); }
+.sidebar-card { margin-top: var(--space-6); padding: var(--space-4); box-shadow: var(--shadow-xs); }
+.main-pane { background: color-mix(in srgb, var(--bg) 94%, var(--panel)); }
+
+.filter-bar {
+  padding: var(--space-3) var(--space-6);
+  gap: var(--space-3);
+  background: color-mix(in srgb, var(--panel) 92%, var(--bg));
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.05);
+}
+.filter-bar select,
+.filter-bar button,
+.filter-bar input { min-height: 36px; }
+.filter-bar select,
+.filter-bar .random-btn,
+.filter-bar .timer-mobile-toggle {
+  opacity: 0.88;
+}
+.filter-bar select:hover,
+.filter-bar .random-btn:hover,
+.filter-bar .timer-mobile-toggle:hover { opacity: 1; }
+
+.table-shell {
+  margin: var(--space-6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border-color: color-mix(in srgb, var(--border) 86%, transparent);
+}
+th {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  background: color-mix(in srgb, var(--panel-soft) 88%, var(--panel));
+}
+td {
+  padding: 0.78rem 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+}
+tr:hover td {
+  background: color-mix(in srgb, var(--brand) 6%, var(--panel));
+}
+tr.selected td,
+tr[aria-selected="true"] td {
+  background: color-mix(in srgb, var(--brand) 12%, var(--panel));
+}
+
+.notes-sheet {
+  box-shadow: var(--shadow-md);
+  border-left: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
+}
+.notes-container {
+  max-width: 76ch;
+  margin-inline: auto;
+  width: 100%;
+}
+.notes-editor-host,
+.notes-preview,
+.notes-rich-prosemirror {
+  line-height: 1.65;
+  font-size: 0.95rem;
+}
+.notes-rich-toolbar,
+.notes-rich-bubble {
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+}
+
+.timer-dock.timer-dock--pip .timer-panel,
+.pip-root,
+.timer-pip-root {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+.timer-dock.timer-dock--pip .timer-panel {
+  padding: var(--space-3);
+  gap: var(--space-2);
+}
+.timer-dock.timer-dock--pip .timer-time-input {
+  font-size: 0.92rem;
+}
+
+button,
+select,
+input,
+.theme-toggle,
+.icon-btn,
+.notes-rich-bubble__btn,
+.general-notes-icon-btn,
+.sync-signout-btn,
+.logout-btn {
+  transition: background-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard),
+    transform 120ms var(--ease-standard);
+}
+button:hover,
+.theme-toggle:hover,
+.icon-btn:hover,
+.general-notes-icon-btn:hover { box-shadow: var(--shadow-xs); }
+button:active,
+.icon-btn:active,
+.theme-toggle:active,
+.general-notes-icon-btn:active {
+  transform: scale(0.98);
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand) 78%, white);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-shell { grid-template-columns: 240px 1fr; }
+  .filter-bar { padding-inline: var(--space-4); }
+  .table-shell { margin: var(--space-4); }
+}
+
+@media (max-width: 900px) {
+  .filter-bar {
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+  .filter-bar > * { min-width: min(260px, 100%); }
+  .notes-sheet { width: min(100vw, 440px); }
+}
