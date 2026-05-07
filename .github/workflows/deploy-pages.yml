@@ -10,7 +10,7 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [main, master, colour_tags]
+    branches: [main, master, colour_tags, codex/improve-seo-for-github-pages-spa]
   workflow_dispatch: # manual run: Actions → Deploy GitHub Pages → Run workflow
 
 permissions:
