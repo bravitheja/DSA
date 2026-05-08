@@ -1617,17 +1617,31 @@ async function setDesktopTimerPip(enabled, persist = true) {
         try {
             await openDocumentPipWindow("timer");
         } catch (err) {
-            console.error("Document PiP failed, falling back to in-page PiP:", err);
-            elements.timerDock.classList.add("timer-dock--pip");
-            applyDesktopTimerPipPosition();
-            clampDesktopTimerPipToViewport();
+            console.error("Document PiP failed; disabling timer PiP to avoid coupling sticky dock:", err);
+            timerPipEnabled = false;
+            try {
+                localStorage.setItem(TIMER_PIP_ENABLED_KEY, "0");
+            } catch (_) {
+                /* ignore */
+            }
+            elements.timerDock.classList.remove("timer-dock--pip");
+            clearDesktopTimerPipPositionStyles();
         }
         refreshDocumentPipToggleUIs();
         return;
     }
-    elements.timerDock.classList.add("timer-dock--pip");
-    applyDesktopTimerPipPosition();
-    clampDesktopTimerPipToViewport();
+    // No in-page fallback: it repositions the whole timer dock and unintentionally
+    // carries sticky notes with timer PiP. Keep them decoupled.
+    timerPipEnabled = false;
+    if (persist) {
+        try {
+            localStorage.setItem(TIMER_PIP_ENABLED_KEY, "0");
+        } catch (_) {
+            /* ignore */
+        }
+    }
+    elements.timerDock.classList.remove("timer-dock--pip");
+    clearDesktopTimerPipPositionStyles();
     refreshDocumentPipToggleUIs();
 }
 
