@@ -2841,6 +2841,9 @@ button:active,
     border-bottom: 1px solid var(--border);
   }
   .filter-bar {
+    position: static;
+    top: auto;
+    z-index: auto;
     display: flex;
     flex-direction: column;
     align-items: stretch;
