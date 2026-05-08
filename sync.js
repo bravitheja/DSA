@@ -582,6 +582,31 @@
         });
 
         const token = getUsableToken();
+
+        function getGoogleSignInButtonOptions() {
+            const narrow = typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches;
+            const vw =
+                typeof window !== "undefined" && Number.isFinite(window.innerWidth)
+                    ? window.innerWidth
+                    : 400;
+            const widthPx = narrow ? Math.max(220, Math.min(340, vw - 40)) : 280;
+            return {
+                type: "standard",
+                theme: "outline",
+                size: narrow ? "medium" : "large",
+                text: "signin_with",
+                shape: "rectangular",
+                width: widthPx,
+                locale: "en",
+            };
+        }
+
+        function renderGoogleToolbarButton() {
+            if (!btnHost || !window.google?.accounts?.id) return;
+            btnHost.innerHTML = "";
+            google.accounts.id.renderButton(btnHost, getGoogleSignInButtonOptions());
+        }
+
         if (token) {
             try {
                 const payload = parseJwtPayload(token);
@@ -612,16 +637,7 @@
             if (labelEl) labelEl.hidden = true;
             if (signedInEl) signedInEl.hidden = true;
             if (btnHost) {
-                btnHost.innerHTML = "";
-                google.accounts.id.renderButton(btnHost, {
-                    type: "standard",
-                    theme: "filled_blue",
-                    size: "large",
-                    text: "signin_with",
-                    shape: "pill",
-                    width: 260,
-                    locale: "en",
-                });
+                renderGoogleToolbarButton();
             }
         }
 
