@@ -43,9 +43,10 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color
 }
 
 /* Desktop Grid */
-.dashboard-shell { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+.dashboard-shell { display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); min-height: 100vh; }
 
 .sidebar { border-right: 1px solid var(--border); padding: 1.5rem 1rem; background: var(--panel); }
+.main-pane { min-width: 0; }
 .brand-row {
   display: flex;
   align-items: flex-start;
@@ -2666,12 +2667,19 @@ button:active,
 }
 
 @media (max-width: 1200px) {
-  .dashboard-shell { grid-template-columns: 240px 1fr; }
+  .dashboard-shell { grid-template-columns: minmax(200px, 240px) minmax(0, 1fr); }
   .filter-bar { padding-inline: var(--space-4); }
   .table-shell { margin: var(--space-4); }
 }
 
 @media (max-width: 900px) {
+  .dashboard-shell {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
   .filter-bar {
     gap: 0.65rem;
     padding: 0.75rem;
