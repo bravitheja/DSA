@@ -204,7 +204,8 @@ function loadRichNotesEditorModule() {
 function looksLikeStoredHtml(s) {
     const t = String(s || "").trim();
     if (!t) return false;
-    return /^\s*</.test(t) && /<(p|div|ul|ol|h[1-6]|blockquote|pre|span)\b/i.test(t);
+    if (!/^\s*</.test(t)) return false;
+    return /<(p|div|ul|ol|h[1-6]|blockquote|pre|span|table|thead|tbody|tr|td|th|colgroup|col)\b/i.test(t);
 }
 
 function normalizeStoredNotesFormat(stored) {
@@ -329,6 +330,7 @@ async function init() {
     applyTheme(localStorage.getItem(THEME_KEY) || "light");
     try {
         bindControls();
+        installNotesPersistenceFlushListeners();
         timerPipEnabled = loadDesktopTimerPipEnabled();
         setDesktopTimerPip(timerPipEnabled, false);
         applyNotesSheetWidth(loadStoredNotesSheetWidth(), false);
@@ -2776,6 +2778,30 @@ function persistActiveGeneralNote() {
         window.dsaScheduleGeneralNotePush(activeGeneralNoteId);
     }
     renderGeneralNotesPickerLabel();
+}
+
+/** Flush debounced note writes before reload/navigation so tables/HTML are not lost mid-timeout. */
+function flushDebouncedNotesPersistence() {
+    if (saveTimeout) {
+        clearTimeout(saveTimeout);
+        saveTimeout = undefined;
+        saveNotesNow();
+    }
+    if (generalNotesSaveTimer) {
+        clearTimeout(generalNotesSaveTimer);
+        generalNotesSaveTimer = null;
+        persistActiveGeneralNote();
+    }
+}
+
+let notesPersistenceFlushInstalled = false;
+function installNotesPersistenceFlushListeners() {
+    if (notesPersistenceFlushInstalled) return;
+    notesPersistenceFlushInstalled = true;
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") flushDebouncedNotesPersistence();
+    });
+    window.addEventListener("pagehide", flushDebouncedNotesPersistence);
 }
 
 function renderGeneralNotesPickerLabel() {

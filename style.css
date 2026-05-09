@@ -1948,6 +1948,125 @@ body.dark .sidebar-general-notes-btn:hover {
   padding: 0;
 }
 
+/* Highlight.js token colors (light theme) */
+.notes-rich-prosemirror .hljs-comment,
+.notes-rich-prosemirror .hljs-quote {
+  color: #6b7280;
+  font-style: italic;
+}
+.notes-rich-prosemirror .hljs-keyword,
+.notes-rich-prosemirror .hljs-selector-tag,
+.notes-rich-prosemirror .hljs-meta .hljs-keyword {
+  color: #7c3aed;
+}
+.notes-rich-prosemirror .hljs-title,
+.notes-rich-prosemirror .hljs-title.function_,
+.notes-rich-prosemirror .hljs-section,
+.notes-rich-prosemirror .hljs-selector-id {
+  color: #1d4ed8;
+}
+.notes-rich-prosemirror .hljs-string,
+.notes-rich-prosemirror .hljs-attr,
+.notes-rich-prosemirror .hljs-selector-class,
+.notes-rich-prosemirror .hljs-selector-attr,
+.notes-rich-prosemirror .hljs-template-tag {
+  color: #15803d;
+}
+.notes-rich-prosemirror .hljs-number,
+.notes-rich-prosemirror .hljs-literal,
+.notes-rich-prosemirror .hljs-built_in,
+.notes-rich-prosemirror .hljs-type {
+  color: #b45309;
+}
+.notes-rich-prosemirror .hljs-variable,
+.notes-rich-prosemirror .hljs-params,
+.notes-rich-prosemirror .hljs-property {
+  color: #be123c;
+}
+
+/* Highlight.js token colors (dark theme) */
+body.dark .notes-rich-prosemirror .hljs-comment,
+body.dark .notes-rich-prosemirror .hljs-quote,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-comment,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-quote {
+  color: #9ca3af;
+}
+body.dark .notes-rich-prosemirror .hljs-keyword,
+body.dark .notes-rich-prosemirror .hljs-selector-tag,
+body.dark .notes-rich-prosemirror .hljs-meta .hljs-keyword,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-keyword,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-selector-tag,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-meta .hljs-keyword {
+  color: #c4b5fd;
+}
+body.dark .notes-rich-prosemirror .hljs-title,
+body.dark .notes-rich-prosemirror .hljs-title.function_,
+body.dark .notes-rich-prosemirror .hljs-section,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-title,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-title.function_,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-section {
+  color: #93c5fd;
+}
+body.dark .notes-rich-prosemirror .hljs-string,
+body.dark .notes-rich-prosemirror .hljs-attr,
+body.dark .notes-rich-prosemirror .hljs-selector-class,
+body.dark .notes-rich-prosemirror .hljs-selector-attr,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-string,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-attr,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-selector-class,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-selector-attr {
+  color: #86efac;
+}
+body.dark .notes-rich-prosemirror .hljs-number,
+body.dark .notes-rich-prosemirror .hljs-literal,
+body.dark .notes-rich-prosemirror .hljs-built_in,
+body.dark .notes-rich-prosemirror .hljs-type,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-number,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-literal,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-built_in,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-type {
+  color: #fcd34d;
+}
+body.dark .notes-rich-prosemirror .hljs-variable,
+body.dark .notes-rich-prosemirror .hljs-params,
+body.dark .notes-rich-prosemirror .hljs-property,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-variable,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-params,
+.notes-rich-editor--dark .notes-rich-prosemirror .hljs-property {
+  color: #fda4af;
+}
+
+.notes-rich-prosemirror table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  margin: 0.6rem 0;
+}
+
+.notes-rich-prosemirror th,
+.notes-rich-prosemirror td {
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.55rem;
+  vertical-align: top;
+}
+
+.notes-rich-prosemirror th {
+  font-weight: 600;
+  background: var(--panel-soft);
+}
+
+.notes-rich-prosemirror .selectedCell {
+  position: relative;
+}
+
+.notes-rich-prosemirror .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--brand) 14%, transparent);
+}
+
 .notes-rich-editor--dark .notes-rich-prosemirror {
   color: var(--text);
 }
@@ -2196,7 +2315,7 @@ body.dark .general-notes-backdrop {
   background: transparent;
   font-size: 1.65rem;
   font-weight: 600;
-  color: var(--text);
+  color: #0052cc;
   padding: 0.35rem 0.35rem 0.75rem 1.5rem;
   margin-bottom: 0.25rem;
   outline: none;
@@ -2210,6 +2329,39 @@ body.dark .general-notes-backdrop {
 .general-notes-modal .notes-rich-prosemirror p {
   margin: 0.4rem 0;
 }
+
+/* Confluence-style heading color system for notes content. */
+.notes-rich-prosemirror h1,
+.notes-rich-prosemirror h2,
+.notes-rich-prosemirror h3,
+.notes-rich-prosemirror h4,
+.notes-rich-prosemirror h5,
+.notes-rich-prosemirror h6,
+.notes-preview h1,
+.notes-preview h2,
+.notes-preview h3,
+.notes-preview h4,
+.notes-preview h5,
+.notes-preview h6 {
+  color: #0052cc;
+}
+
+body.dark .general-notes-title-input,
+body.dark .notes-rich-prosemirror h1,
+body.dark .notes-rich-prosemirror h2,
+body.dark .notes-rich-prosemirror h3,
+body.dark .notes-rich-prosemirror h4,
+body.dark .notes-rich-prosemirror h5,
+body.dark .notes-rich-prosemirror h6,
+body.dark .notes-preview h1,
+body.dark .notes-preview h2,
+body.dark .notes-preview h3,
+body.dark .notes-preview h4,
+body.dark .notes-preview h5,
+body.dark .notes-preview h6 {
+  color: #4c9aff;
+}
+
 .general-notes-modal .notes-rich-prosemirror:focus-visible {
   outline: none !important;
   box-shadow: none !important;

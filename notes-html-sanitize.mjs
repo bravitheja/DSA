@@ -4,7 +4,15 @@
  */
 import DOMPurify from "https://esm.sh/dompurify@3.1.7?target=es2022";
 
-const ALLOW_STYLE_PROPS = new Set(["color", "font-size", "background-color"]);
+/** Include sizing props so TipTap table/colgroup markup survives round-trip sanitize. */
+const ALLOW_STYLE_PROPS = new Set([
+    "color",
+    "font-size",
+    "background-color",
+    "width",
+    "min-width",
+    "max-width",
+]);
 
 DOMPurify.addHook("uponSanitizeElement", (node) => {
     if (node.nodeType !== 1 || node.nodeName !== "INPUT") return;
@@ -61,6 +69,14 @@ const SANITIZE_CONFIG = {
         "blockquote",
         "pre",
         "code",
+        "table",
+        "thead",
+        "tbody",
+        "tr",
+        "th",
+        "td",
+        "colgroup",
+        "col",
         "h1",
         "h2",
         "h3",
@@ -83,8 +99,12 @@ const SANITIZE_CONFIG = {
         "data-color",
         "data-type",
         "data-checked",
+        "data-colwidth",
         "type",
         "checked",
+        "colspan",
+        "rowspan",
+        "colwidth",
     ],
     ALLOW_DATA_ATTR: false,
 };

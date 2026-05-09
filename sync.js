@@ -15,6 +15,8 @@
     const GENERAL_NOTES_BASE_KEY = "dsa-general-notes-v1";
     const SIGNED_OUT_GENERAL_NOTES_KEY = GENERAL_NOTES_BASE_KEY + ":signed-out";
     const TOKEN_KEY = "dsa-google-id-token";
+    const TOKEN_STORED_AT_KEY = "dsa-google-id-token-stored-at";
+    const SESSION_MAX_AGE_SEC = 24 * 60 * 60;
     const DEBOUNCE_MS = 4000;
 
     const cfg = window.__DSA_CONFIG__ || {};
@@ -46,7 +48,10 @@
         }
     }
 
-    /** Returns stored ID token only if it looks valid and not expired; otherwise removes it. */
+    /**
+     * Returns stored ID token only if it looks valid and is within local session max age.
+     * NOTE: We intentionally keep a 24h app session window instead of hard-cutting at JWT exp.
+     */
     function getUsableToken() {
         const t = getToken();
         if (!t || typeof t !== "string") return null;
@@ -60,18 +65,37 @@
             return null;
         }
         const payload = parseJwtPayload(t);
-        if (!payload || typeof payload.exp !== "number") {
+        if (!payload) {
             try {
                 localStorage.removeItem(TOKEN_KEY);
+                localStorage.removeItem(TOKEN_STORED_AT_KEY);
             } catch (_) {
                 /* ignore */
             }
             return null;
         }
         const now = Math.floor(Date.now() / 1000);
-        if (payload.exp <= now + 30) {
+        let storedAt = 0;
+        try {
+            const raw = localStorage.getItem(TOKEN_STORED_AT_KEY) || "";
+            const parsed = Number.parseInt(raw, 10);
+            if (Number.isFinite(parsed) && parsed > 0) storedAt = parsed;
+        } catch (_) {
+            /* ignore */
+        }
+        if (!storedAt && typeof payload.iat === "number" && payload.iat > 0) {
+            storedAt = payload.iat;
+        }
+        if (!storedAt && typeof payload.exp === "number" && payload.exp > 0) {
+            storedAt = payload.exp - 3600;
+        }
+        if (!storedAt) {
+            storedAt = now;
+        }
+        if (now - storedAt >= SESSION_MAX_AGE_SEC) {
             try {
                 localStorage.removeItem(TOKEN_KEY);
+                localStorage.removeItem(TOKEN_STORED_AT_KEY);
             } catch (_) {
                 /* ignore */
             }
@@ -536,6 +560,7 @@
         if (uk) mergeSignedOutIntoUserKey_(uk);
         try {
             localStorage.setItem(TOKEN_KEY, response.credential);
+            localStorage.setItem(TOKEN_STORED_AT_KEY, String(Math.floor(Date.now() / 1000)));
         } catch (_) {
             /* ignore */
         }
@@ -653,6 +678,7 @@
                 generalDirty.clear();
                 try {
                     localStorage.removeItem(TOKEN_KEY);
+                    localStorage.removeItem(TOKEN_STORED_AT_KEY);
                 } catch (_) {
                     /* ignore */
                 }
