@@ -631,12 +631,18 @@
                 if (emailEl) emailEl.textContent = "Signed in";
             }
             if (labelEl) labelEl.hidden = true;
-            if (btnHost) btnHost.innerHTML = "";
+            if (btnHost) {
+                btnHost.innerHTML = "";
+                btnHost.hidden = true;
+                btnHost.style.display = "none";
+            }
             if (signedInEl) signedInEl.hidden = false;
         } else {
             if (labelEl) labelEl.hidden = true;
             if (signedInEl) signedInEl.hidden = true;
             if (btnHost) {
+                btnHost.hidden = false;
+                btnHost.style.display = "";
                 renderGoogleToolbarButton();
             }
         }
