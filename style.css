@@ -53,6 +53,27 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color
   overflow-x: clip;
 }
 
+/* Viewport-bound row so sidebar flex children get a real max height (sticky editor scrolls inside) */
+@media (min-width: 901px) {
+  .dashboard-shell {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .dashboard-shell > .sidebar {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: clip;
+    align-self: stretch;
+  }
+  .dashboard-shell > .main-pane {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: clip;
+  }
+}
+
 .sidebar { border-right: 1px solid var(--border); padding: 1.5rem 1rem; background: var(--panel); }
 
 /* Session sticky: let the timer stack grow so the note editor can fill the peach card (desktop sidebar). */
@@ -69,7 +90,7 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color
     flex-shrink: 0;
   }
   #timerDock.timer-dock {
-    flex: 1 1 auto;
+    flex: 1 1 0%;
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -78,14 +99,16 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color
     flex-shrink: 0;
   }
   .sidebar #timerDock > .timer-sticky-dock.sidebar-card {
-    flex: 1 1 auto;
+    flex: 1 1 0%;
     display: flex;
     flex-direction: column;
     min-height: 0;
+    overflow: hidden;
   }
   .sidebar #timerDock > .timer-sticky-dock .timer-sticky-card {
-    flex: 1 1 auto;
+    flex: 1 1 0%;
     min-height: 0;
+    max-height: 100%;
   }
 }
 .main-pane {
@@ -758,7 +781,7 @@ body.dark .timer-sticky-card {
 }
 
 .timer-sticky-editor-host {
-  flex: 1 1 auto;
+  flex: 1 1 0%;
   align-self: stretch;
   min-height: 0;
   margin: 0 2.35rem 0.45rem;
@@ -770,16 +793,23 @@ body.dark .timer-sticky-card {
 }
 
 .timer-sticky-editor-host.notes-rich-body-host {
+  flex: 1 1 0%;
+  min-height: 0;
   justify-content: flex-start;
 }
 
-.timer-sticky-editor-host .notes-rich-prose-host {
+/* Same flex chain as .notes-editor-host .notes-rich-prose-host — without this, PM stays block layout and the sticky grows on every Enter instead of scrolling */
+.timer-sticky-editor-host > .timer-sticky-prose-mount,
+.timer-sticky-editor-host > .notes-rich-prose-host {
+  flex: 1 1 0%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+.timer-sticky-editor-host .notes-rich-prose-host {
   align-items: stretch;
   justify-content: flex-start;
-  flex: 1 1 auto;
-  min-height: 0;
 }
 #timerStickyColorRow {
   padding: 0.25rem 0.5rem 0.25rem;
@@ -806,14 +836,56 @@ body.dark .timer-sticky-editor-host {
   min-height: 3.5rem;
 }
 
-.timer-sticky-dock .notes-rich-prosemirror {
+/* flex item min-height:auto prevents shrinking below content; 0 + overflow yields inner scroll */
+.timer-sticky-editor-host .notes-rich-prosemirror {
   flex: 1 1 auto;
   align-self: stretch;
-  min-height: 3.25rem;
+  min-height: 0;
   overflow-y: auto;
   padding: 0.4rem 0.5rem 0.65rem;
   font-size: 0.9rem;
   line-height: 1.5;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* TipTap load failure: still show an editor so session stickies are not a blank box */
+.timer-sticky-editor-host .timer-sticky-fallback-wrap {
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow: hidden;
+}
+.timer-sticky-fallback-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.timer-sticky-fallback-hint {
+  margin: 0;
+  font-size: 0.65rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+.timer-sticky-fallback-ta {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, #fff 30%, var(--timer-sticky-paper));
+  color: var(--text);
+  font: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  overflow-y: auto;
+  resize: none;
+}
+body.dark .timer-sticky-fallback-ta {
+  background: color-mix(in srgb, var(--panel) 25%, var(--timer-sticky-paper));
 }
 
 @media (max-width: 850px) {
@@ -2627,10 +2699,11 @@ body.dark .notes-rich-bubble__swatch,
   height: 100%;
 }
 
-.timer-sticky-card {
+/* PiP document only — global height:100% breaks sidebar flex (card grows with every Enter; no inner scroll) */
+.timer-pip-root .timer-sticky-card {
   width: 100%;
   height: 100%;
-  border-radius: 0; /* important */
+  border-radius: 0;
 }
 
 /* === 2026 UI polish pass: consistency, hierarchy, micro-interactions === */
