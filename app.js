@@ -1999,6 +1999,15 @@ function persistTimerStickyStateFromUi() {
     persistCurrentTimerStickyEditor();
 }
 
+/** Cancel pending debounced sticky save and persist latest editor HTML/bg immediately (same idea as general notes flush). */
+function flushTimerStickyDebouncedPersist() {
+    if (timerStickySaveTimer) {
+        clearTimeout(timerStickySaveTimer);
+        timerStickySaveTimer = null;
+    }
+    persistCurrentTimerStickyEditor();
+}
+
 function scheduleTimerStickyPersist() {
     if (timerStickySaveTimer) clearTimeout(timerStickySaveTimer);
     timerStickySaveTimer = setTimeout(() => {
@@ -2013,10 +2022,7 @@ function scheduleTimerStickyPersist() {
 }
 
 function destroyTimerStickyEditor() {
-    if (timerStickySaveTimer) {
-        clearTimeout(timerStickySaveTimer);
-        timerStickySaveTimer = null;
-    }
+    flushTimerStickyDebouncedPersist();
     if (timerStickyEditorHandle) {
         timerStickyEditorHandle.destroy();
         timerStickyEditorHandle = null;
@@ -2028,10 +2034,7 @@ function destroyTimerStickyEditor() {
 
 /** @param {Document | null} pipDoc */
 function destroyTimerStickyPipEditor(pipDoc) {
-    if (timerStickySaveTimer) {
-        clearTimeout(timerStickySaveTimer);
-        timerStickySaveTimer = null;
-    }
+    flushTimerStickyDebouncedPersist();
     if (timerStickyPipEditorHandle) {
         timerStickyPipEditorHandle.destroy();
         timerStickyPipEditorHandle = null;
@@ -2877,6 +2880,7 @@ function flushDebouncedNotesPersistence() {
         generalNotesSaveTimer = null;
         persistActiveGeneralNote();
     }
+    flushTimerStickyDebouncedPersist();
 }
 
 let notesPersistenceFlushInstalled = false;
