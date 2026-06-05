@@ -9,6 +9,7 @@
 import { Extension, Editor } from "https://esm.sh/@tiptap/core@2.27.2?deps=@tiptap/pm@2.27.2&target=es2022";
 import { TextSelection } from "https://esm.sh/@tiptap/pm@2.27.2/state?target=es2022";
 import StarterKit from "https://esm.sh/@tiptap/starter-kit@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
+import CodeBlockLowlight from "https://esm.sh/@tiptap/extension-code-block-lowlight@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2,lowlight@3.1.0&target=es2022";
 import TextStyle from "https://esm.sh/@tiptap/extension-text-style@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
 import Color from "https://esm.sh/@tiptap/extension-color@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2,@tiptap/extension-text-style@2.27.2&target=es2022";
 import Underline from "https://esm.sh/@tiptap/extension-underline@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
@@ -18,6 +19,19 @@ import Placeholder from "https://esm.sh/@tiptap/extension-placeholder@2.27.2?dep
 import BubbleMenu from "https://esm.sh/@tiptap/extension-bubble-menu@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
 import TaskList from "https://esm.sh/@tiptap/extension-task-list@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
 import TaskItem from "https://esm.sh/@tiptap/extension-task-item@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
+import Table from "https://esm.sh/@tiptap/extension-table@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2,@tiptap/extension-table-row@2.27.2,@tiptap/extension-table-cell@2.27.2,@tiptap/extension-table-header@2.27.2&target=es2022";
+import TableRow from "https://esm.sh/@tiptap/extension-table-row@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
+import TableHeader from "https://esm.sh/@tiptap/extension-table-header@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
+import TableCell from "https://esm.sh/@tiptap/extension-table-cell@2.27.2?deps=@tiptap/core@2.27.2,@tiptap/pm@2.27.2&target=es2022";
+import { createLowlight } from "https://esm.sh/lowlight@3.1.0?target=es2022";
+import pythonLang from "https://esm.sh/highlight.js@11.11.1/lib/languages/python?target=es2022";
+import javascriptLang from "https://esm.sh/highlight.js@11.11.1/lib/languages/javascript?target=es2022";
+import typescriptLang from "https://esm.sh/highlight.js@11.11.1/lib/languages/typescript?target=es2022";
+import bashLang from "https://esm.sh/highlight.js@11.11.1/lib/languages/bash?target=es2022";
+import jsonLang from "https://esm.sh/highlight.js@11.11.1/lib/languages/json?target=es2022";
+import sqlLang from "https://esm.sh/highlight.js@11.11.1/lib/languages/sql?target=es2022";
+import xmlLang from "https://esm.sh/highlight.js@11.11.1/lib/languages/xml?target=es2022";
+import cssLang from "https://esm.sh/highlight.js@11.11.1/lib/languages/css?target=es2022";
 
 const FontSize = Extension.create({
     name: "fontSize",
@@ -44,6 +58,27 @@ const FontSize = Extension.create({
 });
 
 const FONT_SIZES = ["12px", "14px", "16px", "18px", "22px"];
+const CODE_LANGS = [
+    { value: "plaintext", label: "plain" },
+    { value: "python", label: "python" },
+    { value: "javascript", label: "javascript" },
+    { value: "typescript", label: "typescript" },
+    { value: "bash", label: "bash" },
+    { value: "json", label: "json" },
+    { value: "sql", label: "sql" },
+    { value: "html", label: "html" },
+    { value: "css", label: "css" },
+];
+
+const lowlight = createLowlight();
+lowlight.register("python", pythonLang);
+lowlight.register("javascript", javascriptLang);
+lowlight.register("typescript", typescriptLang);
+lowlight.register("bash", bashLang);
+lowlight.register("json", jsonLang);
+lowlight.register("sql", sqlLang);
+lowlight.register("html", xmlLang);
+lowlight.register("css", cssLang);
 
 /** Fixed text colors (Notion-like restraint vs free-form picker). */
 const DOC_TEXT_COLORS = ["#111827", "#b91c1c", "#c2410c", "#15803d", "#1d4ed8", "#7c3aed"];
@@ -87,6 +122,19 @@ function mkBubbleBtn(editor, label, title, run, extraClass, activeKind) {
     return b;
 }
 
+function insertDefaultTable(editor) {
+    editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+}
+
+function applyCodeLanguage(editor, language) {
+    const lang = String(language || "plaintext");
+    const chain = editor.chain().focus();
+    if (!editor.isActive("codeBlock")) {
+        chain.toggleCodeBlock();
+    }
+    chain.updateAttributes("codeBlock", { language: lang }).run();
+}
+
 function bubbleVsep() {
     const n = el("span", "notes-rich-bubble__vsep");
     n.setAttribute("aria-hidden", "true");
@@ -123,6 +171,8 @@ function bubbleBtnActive(editor, kind) {
             return editor.isActive("paragraph");
         case "link":
             return editor.isActive("link");
+        case "table":
+            return editor.isActive("table");
         default:
             return false;
     }
@@ -164,6 +214,12 @@ function buildToolbar(editor) {
     bar.appendChild(mkToolbarBtn(editor, "H1", "Heading 1", () => editor.chain().focus().toggleHeading({ level: 1 }).run()));
     bar.appendChild(mkToolbarBtn(editor, "H2", "Heading 2", () => editor.chain().focus().toggleHeading({ level: 2 }).run()));
     bar.appendChild(mkToolbarBtn(editor, "¶", "Paragraph", () => editor.chain().focus().setParagraph().run()));
+    bar.appendChild(mkToolbarBtn(editor, "Tbl", "Insert 3x3 table", () => insertDefaultTable(editor)));
+    bar.appendChild(mkToolbarBtn(editor, "+R", "Add row after", () => editor.chain().focus().addRowAfter().run()));
+    bar.appendChild(mkToolbarBtn(editor, "-R", "Delete current row", () => editor.chain().focus().deleteRow().run()));
+    bar.appendChild(mkToolbarBtn(editor, "+C", "Add column after", () => editor.chain().focus().addColumnAfter().run()));
+    bar.appendChild(mkToolbarBtn(editor, "-C", "Delete current column", () => editor.chain().focus().deleteColumn().run()));
+    bar.appendChild(mkToolbarBtn(editor, "DelTbl", "Delete table", () => editor.chain().focus().deleteTable().run()));
 
     const colorWrap = el("label", "notes-rich-toolbar__color");
     const colorLab = el("span", null, "A");
@@ -208,9 +264,23 @@ function buildToolbar(editor) {
         editor.chain().focus().setMark("textStyle", { ...cur, fontSize: v }).run();
     });
 
+    const codeSel = el("select", "notes-rich-toolbar__select");
+    codeSel.title = "Code language";
+    for (const lang of CODE_LANGS) {
+        const o = document.createElement("option");
+        o.value = lang.value;
+        o.textContent = lang.label;
+        codeSel.appendChild(o);
+    }
+    codeSel.value = "plaintext";
+    codeSel.addEventListener("change", () => {
+        applyCodeLanguage(editor, codeSel.value);
+    });
+
     bar.appendChild(colorWrap);
     bar.appendChild(hiWrap);
     bar.appendChild(sizeSel);
+    bar.appendChild(codeSel);
 
     bar.appendChild(
         mkToolbarBtn(editor, "🔗", "Add link", () => {
@@ -260,6 +330,7 @@ function buildBubbleToolbar(editor) {
     rowMain.appendChild(bubbleVsep());
     const sizeSel = document.createElement("select");
     sizeSel.className = "notes-rich-bubble__select notes-rich-bubble__select--notion";
+    sizeSel.dataset.role = "font-size";
     sizeSel.title = "Font size";
     for (const fs of FONT_SIZES) {
         const o = document.createElement("option");
@@ -274,6 +345,21 @@ function buildBubbleToolbar(editor) {
         editor.chain().focus().setMark("textStyle", { ...cur, fontSize: v }).run();
     });
     rowMain.appendChild(sizeSel);
+    const codeSel = document.createElement("select");
+    codeSel.className = "notes-rich-bubble__select notes-rich-bubble__select--notion";
+    codeSel.dataset.role = "code-lang";
+    codeSel.title = "Code language";
+    for (const lang of CODE_LANGS) {
+        const o = document.createElement("option");
+        o.value = lang.value;
+        o.textContent = lang.label;
+        codeSel.appendChild(o);
+    }
+    codeSel.value = "plaintext";
+    codeSel.addEventListener("change", () => {
+        applyCodeLanguage(editor, codeSel.value);
+    });
+    rowMain.appendChild(codeSel);
     body.appendChild(rowMain);
 
     body.appendChild(el("div", "notes-rich-bubble__sep"));
@@ -326,6 +412,27 @@ function buildBubbleToolbar(editor) {
     );
     rowLink.appendChild(mkBubbleBtn(editor, "⌫", "Remove link", () => editor.chain().focus().unsetLink().run()));
     body.appendChild(rowLink);
+
+    const rowTable = el("div", "notes-rich-bubble__row notes-rich-bubble__row--notion-link");
+    rowTable.appendChild(
+        mkBubbleBtn(editor, "Tbl", "Insert 3x3 table", () => insertDefaultTable(editor), "notes-rich-bubble__btn--compact", "table")
+    );
+    rowTable.appendChild(
+        mkBubbleBtn(editor, "+R", "Add row after", () => editor.chain().focus().addRowAfter().run(), "notes-rich-bubble__btn--compact")
+    );
+    rowTable.appendChild(
+        mkBubbleBtn(editor, "-R", "Delete current row", () => editor.chain().focus().deleteRow().run(), "notes-rich-bubble__btn--compact")
+    );
+    rowTable.appendChild(
+        mkBubbleBtn(editor, "+C", "Add column after", () => editor.chain().focus().addColumnAfter().run(), "notes-rich-bubble__btn--compact")
+    );
+    rowTable.appendChild(
+        mkBubbleBtn(editor, "-C", "Delete current column", () => editor.chain().focus().deleteColumn().run(), "notes-rich-bubble__btn--compact")
+    );
+    rowTable.appendChild(
+        mkBubbleBtn(editor, "DelTbl", "Delete table", () => editor.chain().focus().deleteTable().run(), "notes-rich-bubble__btn--compact")
+    );
+    body.appendChild(rowTable);
 
     panel.appendChild(body);
     return panel;
@@ -455,10 +562,22 @@ export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
     const extensions = [
         StarterKit.configure({
             heading: { levels: [1, 2, 3] },
-            codeBlock: { HTMLAttributes: { class: "notes-rich-codeblock" } },
+            codeBlock: false,
+        }),
+        CodeBlockLowlight.configure({
+            lowlight,
+            defaultLanguage: "plaintext",
+            languageClassPrefix: "language-",
+            HTMLAttributes: { class: "notes-rich-codeblock" },
         }),
         TaskList,
         TaskItem,
+        Table.configure({
+            resizable: true,
+        }),
+        TableRow,
+        TableHeader,
+        TableCell,
         TextStyle,
         FontSize,
         Color,
@@ -466,7 +585,7 @@ export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
         Underline,
         Link.configure({ openOnClick: false, autolink: true, defaultProtocol: "https" }),
         Placeholder.configure({
-            placeholder: opts.placeholder ?? "Write notes… Use the toolbar for colors, lists, and code blocks.",
+            placeholder: opts.placeholder ?? "Write notes… Use the toolbar for colors, lists, code blocks, and tables.",
         }),
     ];
 
@@ -516,17 +635,30 @@ export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
         bubbleRoot.appendChild(bubblePanel);
         const dragClean = attachBubbleDrag(editor, bubbleRoot);
         const stateClean = wireBubbleToolbarState(editor, bubblePanel);
-        const sizeSel = bubblePanel.querySelector("select.notes-rich-bubble__select");
+        const sizeSel = bubblePanel.querySelector('select.notes-rich-bubble__select[data-role="font-size"]');
+        const codeSel = bubblePanel.querySelector('select.notes-rich-bubble__select[data-role="code-lang"]');
         const syncBubbleFontSize = () => {
             if (!(sizeSel instanceof HTMLSelectElement)) return;
             const a = editor.getAttributes("textStyle");
             const fs = (a && a.fontSize) || "16px";
             sizeSel.value = FONT_SIZES.includes(fs) ? fs : "16px";
         };
+        const syncBubbleCodeLang = () => {
+            if (!(codeSel instanceof HTMLSelectElement)) return;
+            const attrs = editor.getAttributes("codeBlock") || {};
+            const lang = String(attrs.language || "plaintext");
+            const known = CODE_LANGS.some((x) => x.value === lang);
+            codeSel.value = known ? lang : "plaintext";
+        };
         if (sizeSel instanceof HTMLSelectElement) {
             syncBubbleFontSize();
             editor.on("selectionUpdate", syncBubbleFontSize);
             editor.on("transaction", syncBubbleFontSize);
+        }
+        if (codeSel instanceof HTMLSelectElement) {
+            syncBubbleCodeLang();
+            editor.on("selectionUpdate", syncBubbleCodeLang);
+            editor.on("transaction", syncBubbleCodeLang);
         }
         bubbleDragDispose = () => {
             dragClean();
@@ -534,6 +666,10 @@ export function mountRichNotesEditor(toolbarHost, editorHost, opts) {
             if (sizeSel instanceof HTMLSelectElement) {
                 editor.off("selectionUpdate", syncBubbleFontSize);
                 editor.off("transaction", syncBubbleFontSize);
+            }
+            if (codeSel instanceof HTMLSelectElement) {
+                editor.off("selectionUpdate", syncBubbleCodeLang);
+                editor.off("transaction", syncBubbleCodeLang);
             }
         };
     }

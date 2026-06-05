@@ -24,6 +24,11 @@ const TIMER_FLOAT_POS_KEY = "dsa-timer-float-pos-v1";
 const TIMER_PIP_ENABLED_KEY = "dsa-timer-pip-enabled-v1";
 const TIMER_PIP_POS_KEY = "dsa-timer-pip-pos-v1";
 const TIMER_STICKY_KEY = "dsa-timer-sticky-v1";
+const SIDEBAR_WIDTH_KEY = "dsa-sidebar-width-px";
+const SIDEBAR_WIDTH_MIN = 220;
+const SIDEBAR_WIDTH_DEFAULT = 280;
+const SIDEBAR_WIDTH_MAX = 520;
+const SIDEBAR_RESIZE_DESKTOP_MIN = 901;
 const TIMER_MAX_DURATION_SEC = 24 * 3600;
 
 /** Post-it backgrounds for the timer sticky card (local only, not synced). */
@@ -96,6 +101,9 @@ const elements = {
     mediumRing: getEl("mediumRing"),
     hardRing: getEl("hardRing"),
     breakdown: getEl("sidebarBreakdown"),
+    dashboardShell: getEl("dashboardShell"),
+    sidebarPanel: getEl("sidebarPanel"),
+    sidebarResize: getEl("sidebarResize"),
     notesSheet: getEl("notesSheet"),
     notesSheetResize: getEl("notesSheetResize"),
     sheetTitle: getEl("sheetTitle"),
@@ -204,7 +212,8 @@ function loadRichNotesEditorModule() {
 function looksLikeStoredHtml(s) {
     const t = String(s || "").trim();
     if (!t) return false;
-    return /^\s*</.test(t) && /<(p|div|ul|ol|h[1-6]|blockquote|pre|span)\b/i.test(t);
+    if (!/^\s*</.test(t)) return false;
+    return /<(p|div|ul|ol|h[1-6]|blockquote|pre|span|table|thead|tbody|tr|td|th|colgroup|col)\b/i.test(t);
 }
 
 function normalizeStoredNotesFormat(stored) {
@@ -322,13 +331,20 @@ let curatedOrderIndex = new Map();
 window.__DSA_START_APP__ = init;
 
 let __dsaAppStarted = false;
+/** False until data load + optional cloud merge finish — avoids saving empty notes before pull completes. */
+let __dsaAppReady = false;
 
 async function init() {
     if (__dsaAppStarted) return;
     __dsaAppStarted = true;
+    __dsaAppReady = false;
+    window.__DSA_APP_READY__ = false;
     applyTheme(localStorage.getItem(THEME_KEY) || "light");
+    applySidebarWidth(loadStoredSidebarWidth(), false);
     try {
         bindControls();
+        setGeneralNotesUiReady(false);
+        installNotesPersistenceFlushListeners();
         timerPipEnabled = loadDesktopTimerPipEnabled();
         setDesktopTimerPip(timerPipEnabled, false);
         applyNotesSheetWidth(loadStoredNotesSheetWidth(), false);
@@ -338,6 +354,9 @@ async function init() {
         if (typeof window.dsaMergeCloudBeforeNormalize === "function") {
             await window.dsaMergeCloudBeforeNormalize();
         }
+        __dsaAppReady = true;
+        window.__DSA_APP_READY__ = true;
+        setGeneralNotesUiReady(true);
         trackerState =
             JSON.parse(localStorage.getItem(getTrackerLocalStorageKey()) || "{}") || {};
         let items = normalizeProblemData(raw);
@@ -354,6 +373,9 @@ async function init() {
         applyAndRender();
     } catch (err) {
         console.error(err);
+        __dsaAppReady = true;
+        window.__DSA_APP_READY__ = true;
+        setGeneralNotesUiReady(true);
         elements.body.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center; padding:2rem;">Could not load problem data. Use a local server (e.g. <code>python3 -m http.server</code>) or ensure <code>data.js</code> exists next to index.html (run <code>node scripts/build-data-js.mjs</code>). See console for details.</td></tr>`;
     }
 }
@@ -551,6 +573,7 @@ function bindControls() {
         }
         syncPageSizeFromViewportIfAuto();
         clampNotesSheetWidthToViewport();
+        clampSidebarWidthToViewport();
         const totalPages = getTotalPages(filteredProblems.length);
         currentPage = Math.min(currentPage, totalPages);
         renderProblems();
@@ -558,9 +581,125 @@ function bindControls() {
     });
 
     initNotesSheetResize();
+    initSidebarResize();
     bindSessionTimer();
     initGeneralNotesModal();
     initTimerSticky();
+}
+
+function clampSidebarWidth(w) {
+    const max = Math.min(SIDEBAR_WIDTH_MAX, Math.floor(window.innerWidth * 0.45));
+    return Math.max(SIDEBAR_WIDTH_MIN, Math.min(max, Math.round(w)));
+}
+
+function loadStoredSidebarWidth() {
+    try {
+        const raw = localStorage.getItem(SIDEBAR_WIDTH_KEY);
+        if (raw == null) return SIDEBAR_WIDTH_DEFAULT;
+        const n = parseInt(raw, 10);
+        if (!Number.isFinite(n)) return SIDEBAR_WIDTH_DEFAULT;
+        return clampSidebarWidth(n);
+    } catch (_) {
+        return SIDEBAR_WIDTH_DEFAULT;
+    }
+}
+
+function applySidebarWidth(px, persist) {
+    const shell = elements.dashboardShell;
+    if (!shell) return;
+    const w = clampSidebarWidth(px);
+    shell.style.setProperty("--sidebar-w", `${w}px`);
+    if (persist) {
+        try {
+            localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w));
+        } catch (_) {
+            /* ignore */
+        }
+    }
+}
+
+function clampSidebarWidthToViewport() {
+    const shell = elements.dashboardShell;
+    if (!shell || window.innerWidth < SIDEBAR_RESIZE_DESKTOP_MIN) return;
+    const raw = shell.style.getPropertyValue("--sidebar-w").trim();
+    if (!raw) return;
+    const n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) return;
+    const next = clampSidebarWidth(n);
+    if (next !== n) {
+        applySidebarWidth(next, true);
+    }
+}
+
+function initSidebarResize() {
+    const handle = elements.sidebarResize;
+    const shell = elements.dashboardShell;
+    if (!handle || !shell) return;
+
+    let dragging = false;
+    let startX = 0;
+    let startW = SIDEBAR_WIDTH_DEFAULT;
+
+    const endDrag = (e) => {
+        if (!dragging) return;
+        dragging = false;
+        shell.classList.remove("dashboard-shell--sidebar-resizing");
+        document.body.classList.remove("sidebar-resizing");
+        try {
+            handle.releasePointerCapture(e.pointerId);
+        } catch (_) {
+            /* ignore */
+        }
+        const raw = shell.style.getPropertyValue("--sidebar-w").trim();
+        const w = parseInt(raw, 10);
+        if (Number.isFinite(w)) {
+            applySidebarWidth(w, true);
+        }
+    };
+
+    handle.addEventListener("pointerdown", (e) => {
+        if (window.innerWidth < SIDEBAR_RESIZE_DESKTOP_MIN) return;
+        if (e.button !== 0) return;
+        e.preventDefault();
+        dragging = true;
+        startX = e.clientX;
+        const raw = shell.style.getPropertyValue("--sidebar-w").trim();
+        startW = parseInt(raw, 10) || SIDEBAR_WIDTH_DEFAULT;
+        shell.classList.add("dashboard-shell--sidebar-resizing");
+        document.body.classList.add("sidebar-resizing");
+        handle.setPointerCapture(e.pointerId);
+    });
+
+    handle.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        const delta = e.clientX - startX;
+        applySidebarWidth(startW + delta, false);
+    });
+
+    handle.addEventListener("pointerup", endDrag);
+    handle.addEventListener("pointercancel", endDrag);
+
+    handle.addEventListener("dblclick", () => {
+        if (window.innerWidth < SIDEBAR_RESIZE_DESKTOP_MIN) return;
+        applySidebarWidth(SIDEBAR_WIDTH_DEFAULT, true);
+    });
+
+    handle.addEventListener("keydown", (e) => {
+        if (window.innerWidth < SIDEBAR_RESIZE_DESKTOP_MIN) return;
+        const step = e.shiftKey ? 40 : 16;
+        const raw = shell.style.getPropertyValue("--sidebar-w").trim();
+        const cur = parseInt(raw, 10) || SIDEBAR_WIDTH_DEFAULT;
+        if (e.key === "ArrowRight") {
+            e.preventDefault();
+            applySidebarWidth(cur + step, true);
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            applySidebarWidth(cur - step, true);
+        } else if (e.key === "Home") {
+            e.preventDefault();
+            applySidebarWidth(SIDEBAR_WIDTH_DEFAULT, true);
+        }
+    });
 }
 
 function clampNotesSheetWidth(w) {
@@ -1617,17 +1756,31 @@ async function setDesktopTimerPip(enabled, persist = true) {
         try {
             await openDocumentPipWindow("timer");
         } catch (err) {
-            console.error("Document PiP failed, falling back to in-page PiP:", err);
-            elements.timerDock.classList.add("timer-dock--pip");
-            applyDesktopTimerPipPosition();
-            clampDesktopTimerPipToViewport();
+            console.error("Document PiP failed; disabling timer PiP to avoid coupling sticky dock:", err);
+            timerPipEnabled = false;
+            try {
+                localStorage.setItem(TIMER_PIP_ENABLED_KEY, "0");
+            } catch (_) {
+                /* ignore */
+            }
+            elements.timerDock.classList.remove("timer-dock--pip");
+            clearDesktopTimerPipPositionStyles();
         }
         refreshDocumentPipToggleUIs();
         return;
     }
-    elements.timerDock.classList.add("timer-dock--pip");
-    applyDesktopTimerPipPosition();
-    clampDesktopTimerPipToViewport();
+    // No in-page fallback: it repositions the whole timer dock and unintentionally
+    // carries sticky notes with timer PiP. Keep them decoupled.
+    timerPipEnabled = false;
+    if (persist) {
+        try {
+            localStorage.setItem(TIMER_PIP_ENABLED_KEY, "0");
+        } catch (_) {
+            /* ignore */
+        }
+    }
+    elements.timerDock.classList.remove("timer-dock--pip");
+    clearDesktopTimerPipPositionStyles();
     refreshDocumentPipToggleUIs();
 }
 
@@ -1953,20 +2106,31 @@ function persistCurrentTimerStickyEditor() {
 function persistTimerStickyFromEditor(editorHandle, doc) {
     const card = doc.getElementById("timerStickySection");
     if (!card) return;
-    let html = "<p></p>";
-    if (editorHandle && typeof editorHandle.getHtml === "function") {
-        html = sanitizeNotesHtml(editorHandle.getHtml());
-    }
     const bgId = card.dataset.stickyBg || getDefaultTimerStickyBgId();
     const store = readTimerStickyStore();
     const idx = Math.max(0, Math.min(store.notes.length - 1, timerStickyActiveIndex));
     const prev = store.notes[idx] || { id: newStickyNoteId(), html: "<p></p>", bgId };
+    /** Never overwrite note HTML when the editor isn't mounted (race during remount / failed load). */
+    let html =
+        prev.html != null && String(prev.html).trim() !== "" ? String(prev.html) : "<p></p>";
+    if (editorHandle && typeof editorHandle.getHtml === "function") {
+        html = sanitizeNotesHtml(editorHandle.getHtml()) || "<p></p>";
+    }
     store.notes[idx] = { ...prev, html, bgId };
     store.activeIndex = idx;
     writeTimerStickyStore(store);
 }
 
 function persistTimerStickyStateFromUi() {
+    persistCurrentTimerStickyEditor();
+}
+
+/** Cancel pending debounced sticky save and persist latest editor HTML/bg immediately (same idea as general notes flush). */
+function flushTimerStickyDebouncedPersist() {
+    if (timerStickySaveTimer) {
+        clearTimeout(timerStickySaveTimer);
+        timerStickySaveTimer = null;
+    }
     persistCurrentTimerStickyEditor();
 }
 
@@ -1984,6 +2148,7 @@ function scheduleTimerStickyPersist() {
 }
 
 function destroyTimerStickyEditor() {
+    flushTimerStickyDebouncedPersist();
     if (timerStickyEditorHandle) {
         timerStickyEditorHandle.destroy();
         timerStickyEditorHandle = null;
@@ -1995,6 +2160,7 @@ function destroyTimerStickyEditor() {
 
 /** @param {Document | null} pipDoc */
 function destroyTimerStickyPipEditor(pipDoc) {
+    flushTimerStickyDebouncedPersist();
     if (timerStickyPipEditorHandle) {
         timerStickyPipEditorHandle.destroy();
         timerStickyPipEditorHandle = null;
@@ -2006,6 +2172,48 @@ function destroyTimerStickyPipEditor(pipDoc) {
 }
 
 /** @param {Document} pipDoc */
+/**
+ * Last-resort sticky editor when TipTap/esm.sh fails (still persists sanitized HTML).
+ * @param {string} initialHtml
+ * @param {Document | null} pipDoc
+ */
+function mountTimerStickyPlainFallback(initialHtml, pipDoc = null) {
+    const mount = pipDoc
+        ? pipDoc.getElementById("timerStickyEditorMount")
+        : elements.timerStickyEditorMount && elements.timerStickyEditorHost?.contains(elements.timerStickyEditorMount)
+          ? elements.timerStickyEditorMount
+          : elements.timerStickyEditorHost;
+    if (!mount) return;
+    mount.replaceChildren();
+    const wrap = document.createElement("div");
+    wrap.className = "timer-sticky-fallback-wrap";
+    const hint = document.createElement("p");
+    hint.className = "timer-sticky-fallback-hint";
+    hint.textContent =
+        "Rich editor failed to load — check the browser console. You can edit raw HTML below or reload.";
+    const ta = document.createElement("textarea");
+    ta.className = "timer-sticky-fallback-ta";
+    ta.setAttribute("aria-label", "Session sticky note");
+    ta.value = initialHtml && String(initialHtml).trim() ? String(initialHtml) : "<p></p>";
+    ta.addEventListener("input", () => scheduleTimerStickyPersist());
+    wrap.appendChild(hint);
+    wrap.appendChild(ta);
+    mount.appendChild(wrap);
+    const handle = {
+        getHtml: () => sanitizeNotesHtml(ta.value) || "<p></p>",
+        focus: () => ta.focus(),
+        setDark: () => {},
+        destroy: () => {
+            wrap.remove();
+        },
+    };
+    if (pipDoc) {
+        timerStickyPipEditorHandle = handle;
+    } else {
+        timerStickyEditorHandle = handle;
+    }
+}
+
 async function mountTimerStickyPipEditor(initialHtml, pipDoc) {
     destroyTimerStickyPipEditor(pipDoc);
     const mount = pipDoc.getElementById("timerStickyEditorMount");
@@ -2023,6 +2231,7 @@ async function mountTimerStickyPipEditor(initialHtml, pipDoc) {
         });
     } catch (e) {
         console.error("Timer sticky PiP editor failed:", e);
+        mountTimerStickyPlainFallback(initialHtml || "<p></p>", pipDoc);
     }
 }
 
@@ -2303,6 +2512,7 @@ async function mountTimerStickyEditor(initialHtml) {
         );
     } catch (e) {
         console.error("Timer sticky editor failed:", e);
+        mountTimerStickyPlainFallback(initialHtml || "<p></p>", null);
     }
 }
 
@@ -2681,6 +2891,21 @@ let generalNotesOverflowOpen = false;
 let generalNotesMountGeneration = 0;
 let generalNotesSaveTimer = null;
 
+function setGeneralNotesUiReady(ready) {
+    const btn = elements.generalNotesOpenBtn;
+    if (!btn) return;
+    btn.disabled = !ready;
+    btn.toggleAttribute("aria-busy", !ready);
+    btn.title = ready ? "" : "Loading workspace…";
+}
+
+function cancelGeneralNotesSaveTimer() {
+    if (generalNotesSaveTimer) {
+        clearTimeout(generalNotesSaveTimer);
+        generalNotesSaveTimer = null;
+    }
+}
+
 function getGeneralNotesStorageKey() {
     return typeof window.dsaGetGeneralNotesStorageKey === "function"
         ? window.dsaGetGeneralNotesStorageKey()
@@ -2743,9 +2968,14 @@ function persistActiveGeneralNote() {
     const doc = readGeneralNotesDoc();
     const prev = doc.notes[activeGeneralNoteId] || {};
     const title = elements.generalNotesTitleInput.value.trim();
-    let body = "<p></p>";
+    let body;
     if (generalNotesEditorHandle && typeof generalNotesEditorHandle.getHtml === "function") {
-        body = sanitizeNotesHtml(generalNotesEditorHandle.getHtml());
+        body = sanitizeNotesHtml(generalNotesEditorHandle.getHtml()) || "<p></p>";
+    } else {
+        /* Editor still loading or already destroyed — never replace real HTML with empty doc */
+        const prevBody = prev.body != null ? String(prev.body) : "";
+        body = prevBody.trim() ? sanitizeNotesHtml(prevBody) : "<p></p>";
+        if (!body || !String(body).trim()) body = "<p></p>";
     }
     const noteFlag = sanitizeNoteFlag(prev.noteFlag);
     const updatedAt = new Date().toISOString();
@@ -2762,6 +2992,31 @@ function persistActiveGeneralNote() {
         window.dsaScheduleGeneralNotePush(activeGeneralNoteId);
     }
     renderGeneralNotesPickerLabel();
+}
+
+/** Flush debounced note writes before reload/navigation so tables/HTML are not lost mid-timeout. */
+function flushDebouncedNotesPersistence() {
+    if (saveTimeout) {
+        clearTimeout(saveTimeout);
+        saveTimeout = undefined;
+        saveNotesNow();
+    }
+    if (generalNotesSaveTimer) {
+        clearTimeout(generalNotesSaveTimer);
+        generalNotesSaveTimer = null;
+        persistActiveGeneralNote();
+    }
+    flushTimerStickyDebouncedPersist();
+}
+
+let notesPersistenceFlushInstalled = false;
+function installNotesPersistenceFlushListeners() {
+    if (notesPersistenceFlushInstalled) return;
+    notesPersistenceFlushInstalled = true;
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") flushDebouncedNotesPersistence();
+    });
+    window.addEventListener("pagehide", flushDebouncedNotesPersistence);
 }
 
 function renderGeneralNotesPickerLabel() {
@@ -2900,9 +3155,11 @@ function duplicateActiveGeneralNote() {
 function deleteActiveGeneralNote() {
     if (!activeGeneralNoteId) return;
     if (!window.confirm("Delete this note? This cannot be undone.")) return;
+    cancelGeneralNotesSaveTimer();
     const doc = readGeneralNotesDoc();
     delete doc.notes[activeGeneralNoteId];
     writeGeneralNotesDoc(doc);
+    activeGeneralNoteId = null;
     const ids = Object.keys(doc.notes);
     if (ids.length) {
         void selectGeneralNote(
@@ -2978,6 +3235,14 @@ async function mountGeneralNotesEditor(html) {
 }
 
 async function selectGeneralNote(id) {
+    cancelGeneralNotesSaveTimer();
+    const outgoing = activeGeneralNoteId;
+    if (outgoing && outgoing !== id) {
+        const snap = readGeneralNotesDoc();
+        if (snap.notes[outgoing]) {
+            persistActiveGeneralNote();
+        }
+    }
     activeGeneralNoteId = id;
     const doc = readGeneralNotesDoc();
     const n = doc.notes[id];
@@ -3003,6 +3268,7 @@ async function selectGeneralNote(id) {
 }
 
 function openGeneralNotesModal() {
+    if (!__dsaAppReady) return;
     closeGeneralNotesPicker();
     closeGeneralNotesOverflow();
     generalNotesModalOpen = true;
@@ -3018,6 +3284,7 @@ function openGeneralNotesModal() {
 }
 
 function closeGeneralNotesModal() {
+    cancelGeneralNotesSaveTimer();
     persistActiveGeneralNote();
     generalNotesModalOpen = false;
     generalNotesMountGeneration += 1;
