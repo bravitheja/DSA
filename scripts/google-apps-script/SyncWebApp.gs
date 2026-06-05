@@ -315,6 +315,11 @@ function pullProgress_(googleSub) {
   return { ok: true, rows: rows };
 }
 
+function parseUpdatedAtMs_(s) {
+  var t = Date.parse(String(s != null ? s : ""));
+  return isFinite(t) ? t : 0;
+}
+
 function pushProgress_(googleSub, incoming) {
   googleSub = String(googleSub);
   var sh = getSh_().getSheetByName(PROGRESS_SHEET);
@@ -342,6 +347,7 @@ function pushProgress_(googleSub, incoming) {
 
   var skippedEmpty = 0;
   var skippedSubAsPk = 0;
+  var skippedStale = 0;
   var updated = 0;
   var inserted = 0;
 
@@ -372,6 +378,15 @@ function pushProgress_(googleSub, incoming) {
     var noteFlag = sanitizeNoteFlag_(row.noteFlag);
     var notesFormat = sanitizeNotesFormat_(row.notesFormat);
     var existingRow = rowIndexByKey[pk];
+    var incomingTs = parseUpdatedAtMs_(updatedAt);
+    if (existingRow) {
+      var existingVals = values[existingRow - 1];
+      var existingTs = parseUpdatedAtMs_(existingVals[4]);
+      if (existingTs > incomingTs) {
+        skippedStale++;
+        continue;
+      }
+    }
     var safeRow = [
       escapeSheetCell_(googleSub),
       escapeSheetCell_(pk),
@@ -400,6 +415,7 @@ function pushProgress_(googleSub, incoming) {
     inserted: inserted,
     skippedEmpty: skippedEmpty,
     skippedSubAsProblemKey: skippedSubAsPk,
+    skippedStale: skippedStale,
   });
   return { ok: true };
 }
@@ -446,6 +462,7 @@ function pushGeneralNotes_(googleSub, incoming) {
   }
   var updated = 0;
   var inserted = 0;
+  var skippedStale = 0;
   for (var i = 0; i < incoming.length; i++) {
     var row = incoming[i];
     var nid = String(row.noteId || "").trim();
@@ -464,6 +481,15 @@ function pushGeneralNotes_(googleSub, incoming) {
     var updatedAt = String(row.updatedAt || new Date().toISOString());
     var noteFlag = sanitizeNoteFlag_(row.noteFlag);
     var existingRow = rowIndexByNoteId[nid];
+    var incomingTs = parseUpdatedAtMs_(updatedAt);
+    if (existingRow) {
+      var existingVals = values[existingRow - 1];
+      var existingTs = parseUpdatedAtMs_(existingVals[5]);
+      if (existingTs > incomingTs) {
+        skippedStale++;
+        continue;
+      }
+    }
     var safeRow = [
       escapeSheetCell_(googleSub),
       escapeSheetCell_(nid),
@@ -489,6 +515,7 @@ function pushGeneralNotes_(googleSub, incoming) {
     incoming: incoming.length,
     updated: updated,
     inserted: inserted,
+    skippedStale: skippedStale,
   });
   return { ok: true };
 }

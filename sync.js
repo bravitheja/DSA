@@ -24,6 +24,7 @@
     let pushTimer = null;
     /** @type {Set<string>} */
     const dirty = new Set();
+    let pushRetryTimer = null;
 
     let generalPushTimer = null;
     /** @type {Set<string>} */
@@ -49,8 +50,8 @@
     }
 
     /**
-     * Returns stored ID token only if it looks valid and is within local session max age.
-     * NOTE: We intentionally keep a 24h app session window instead of hard-cutting at JWT exp.
+     * Returns stored ID token only if JWT is still valid (Apps Script verifies exp via tokeninfo).
+     * Also capped by a local session max age as a safety bound.
      */
     function getUsableToken() {
         const t = getToken();
@@ -75,6 +76,15 @@
             return null;
         }
         const now = Math.floor(Date.now() / 1000);
+        if (typeof payload.exp === "number" && payload.exp > 0 && now >= payload.exp - 30) {
+            try {
+                localStorage.removeItem(TOKEN_KEY);
+                localStorage.removeItem(TOKEN_STORED_AT_KEY);
+            } catch (_) {
+                /* ignore */
+            }
+            return null;
+        }
         let storedAt = 0;
         try {
             const raw = localStorage.getItem(TOKEN_STORED_AT_KEY) || "";
@@ -104,6 +114,33 @@
         return t;
     }
 
+    function clearGoogleSession() {
+        dirty.clear();
+        generalDirty.clear();
+        clearTimeout(pushTimer);
+        clearTimeout(pushRetryTimer);
+        clearTimeout(generalPushTimer);
+        pushTimer = null;
+        pushRetryTimer = null;
+        generalPushTimer = null;
+        try {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem(TOKEN_STORED_AT_KEY);
+        } catch (_) {
+            /* ignore */
+        }
+    }
+
+    function handleSyncAuthError(err) {
+        const msg = err && err.message ? String(err.message) : String(err || "");
+        if (/invalid token|token expired|Missing idToken/i.test(msg)) {
+            clearGoogleSession();
+            setSyncStatus("Session expired — sign in again to sync", true);
+            return true;
+        }
+        return false;
+    }
+
     function getTrackerStorageKey() {
         const t = getUsableToken();
         if (!t) return SIGNED_OUT_TRACKER_KEY;
@@ -122,19 +159,46 @@
         return GENERAL_NOTES_BASE_KEY + ":user:" + sub;
     }
 
+    function mergeTrackerStateEntry_(prev, incoming) {
+        const prevRow = prev && typeof prev === "object" ? prev : {};
+        const inRow = incoming && typeof incoming === "object" ? incoming : {};
+        const prevTs = prevRow.updatedAt ? Date.parse(prevRow.updatedAt) : 0;
+        const inTs = inRow.updatedAt ? Date.parse(inRow.updatedAt) : 0;
+        if (!Object.keys(prevRow).length) return { ...inRow };
+        if (!Object.keys(inRow).length) return { ...prevRow };
+        if (inTs > prevTs) return { ...inRow };
+        if (prevTs > inTs) return { ...prevRow };
+        if (inRow.status === "Mastered" && prevRow.status !== "Mastered") {
+            return {
+                ...inRow,
+                updatedAt: inRow.updatedAt || prevRow.updatedAt || new Date().toISOString(),
+            };
+        }
+        if (prevRow.status === "Mastered" && inRow.status !== "Mastered") {
+            return { ...prevRow };
+        }
+        return {
+            ...prevRow,
+            ...inRow,
+            updatedAt: prevRow.updatedAt || inRow.updatedAt || new Date().toISOString(),
+        };
+    }
+
+    function mergeTrackerStates_(base, overlay) {
+        const out = { ...(base || {}) };
+        for (const [key, row] of Object.entries(overlay || {})) {
+            if (!key) continue;
+            out[key] = mergeTrackerStateEntry_(out[key], row);
+        }
+        return out;
+    }
+
     function migrateLegacyTrackerIfNeeded() {
         const t = getUsableToken();
         if (!t) return;
         const key = getTrackerStorageKey();
         if (key === SIGNED_OUT_TRACKER_KEY) return;
         try {
-            let existing = {};
-            try {
-                existing = JSON.parse(localStorage.getItem(key) || "{}") || {};
-            } catch (_) {
-                existing = {};
-            }
-            if (Object.keys(existing).length > 0) return;
             const legRaw = localStorage.getItem(LEGACY_TRACKER_KEY);
             if (!legRaw || legRaw === "{}") return;
             let leg;
@@ -144,7 +208,15 @@
                 return;
             }
             if (!leg || typeof leg !== "object" || Object.keys(leg).length === 0) return;
-            localStorage.setItem(key, legRaw);
+
+            let existing = {};
+            try {
+                existing = JSON.parse(localStorage.getItem(key) || "{}") || {};
+            } catch (_) {
+                existing = {};
+            }
+            const merged = mergeTrackerStates_(existing, leg);
+            localStorage.setItem(key, JSON.stringify(merged));
             localStorage.removeItem(LEGACY_TRACKER_KEY);
         } catch (_) {
             /* ignore */
@@ -168,7 +240,7 @@
                 so = {};
             }
             if (Object.keys(so).length === 0) return;
-            const merged = { ...so, ...user };
+            const merged = mergeTrackerStates_(so, user);
             localStorage.setItem(userKey, JSON.stringify(merged));
         } catch (_) {
             /* ignore */
@@ -208,21 +280,18 @@
             if (!key) continue;
             if (selfSub && key === selfSub) continue;
             const prev = state[key] || {};
-            const prevTs = prev.updatedAt ? Date.parse(prev.updatedAt) : 0;
-            const remoteTs = r.updatedAt ? Date.parse(r.updatedAt) : 0;
-            if (remoteTs >= prevTs) {
-                const nfmt =
-                    r.notesFormat === "html" || r.notesFormat === "markdown"
-                        ? r.notesFormat
-                        : "";
-                state[key] = {
-                    status: r.status || "Not Started",
-                    notes: r.notes != null ? String(r.notes) : "",
-                    updatedAt: r.updatedAt || new Date().toISOString(),
-                    noteFlag: r.noteFlag != null ? String(r.noteFlag) : "",
-                    ...(nfmt ? { notesFormat: nfmt } : {}),
-                };
-            }
+            const nfmt =
+                r.notesFormat === "html" || r.notesFormat === "markdown"
+                    ? r.notesFormat
+                    : "";
+            const remoteRow = {
+                status: r.status || "Not Started",
+                notes: r.notes != null ? String(r.notes) : "",
+                updatedAt: r.updatedAt || new Date().toISOString(),
+                noteFlag: r.noteFlag != null ? String(r.noteFlag) : "",
+                ...(nfmt ? { notesFormat: nfmt } : {}),
+            };
+            state[key] = mergeTrackerStateEntry_(prev, remoteRow);
         }
         if (selfSub && Object.prototype.hasOwnProperty.call(state, selfSub)) {
             delete state[selfSub];
@@ -316,9 +385,95 @@
             );
         }
         if (!data.ok) {
-            throw new Error(data.error || "Sync request failed");
+            const err = new Error(data.error || "Sync request failed");
+            handleSyncAuthError(err);
+            throw err;
         }
         return data;
+    }
+
+    function rowsByProblemKey(rows) {
+        const map = new Map();
+        for (const r of rows || []) {
+            const key = String(r.problemKey || "").trim();
+            if (key) map.set(key, r);
+        }
+        return map;
+    }
+
+    function rowsByNoteId(rows) {
+        const map = new Map();
+        for (const r of rows || []) {
+            const id = String(r.noteId || "").trim();
+            if (id) map.set(id, r);
+        }
+        return map;
+    }
+
+    function hasMeaningfulProgressRow(row) {
+        if (!row || typeof row !== "object") return false;
+        if (row.status && row.status !== "Not Started") return true;
+        if (row.notes && String(row.notes).trim()) return true;
+        if (row.noteFlag && String(row.noteFlag).trim()) return true;
+        return false;
+    }
+
+    /** Push local rows that are newer than cloud or absent from the last pull. */
+    function scheduleReconcilePushAfterPull(remoteRows) {
+        const selfSub = getGoogleSubFromUsableToken();
+        let state = {};
+        try {
+            state = JSON.parse(localStorage.getItem(getTrackerStorageKey()) || "{}");
+        } catch (_) {
+            return 0;
+        }
+        const remoteByKey = rowsByProblemKey(remoteRows);
+        let count = 0;
+        for (const [key, local] of Object.entries(state)) {
+            if (selfSub && key === selfSub) continue;
+            const remote = remoteByKey.get(key);
+            const localTs = local.updatedAt ? Date.parse(local.updatedAt) : 0;
+            const remoteTs = remote?.updatedAt ? Date.parse(remote.updatedAt) : 0;
+            if (!remote && hasMeaningfulProgressRow(local)) {
+                dirty.add(key);
+                count += 1;
+            } else if (remote && localTs > remoteTs) {
+                dirty.add(key);
+                count += 1;
+            }
+        }
+        return count;
+    }
+
+    function scheduleReconcileGeneralNotesAfterPull(remoteRows) {
+        const doc = readGeneralNotesDoc();
+        const remoteById = rowsByNoteId(remoteRows);
+        let count = 0;
+        for (const [id, local] of Object.entries(doc.notes || {})) {
+            const remote = remoteById.get(id);
+            const localTs = local.updatedAt ? Date.parse(local.updatedAt) : 0;
+            const remoteTs = remote?.updatedAt ? Date.parse(remote.updatedAt) : 0;
+            const hasBody =
+                (local.title && String(local.title).trim()) ||
+                (local.body && String(local.body).trim()) ||
+                (local.noteFlag && String(local.noteFlag).trim());
+            if (!remote && hasBody) {
+                generalDirty.add(id);
+                count += 1;
+            } else if (remote && localTs > remoteTs) {
+                generalDirty.add(id);
+                count += 1;
+            }
+        }
+        return count;
+    }
+
+    function schedulePushRetry() {
+        clearTimeout(pushRetryTimer);
+        pushRetryTimer = setTimeout(() => {
+            pushRetryTimer = null;
+            void flushPush();
+        }, 15000);
     }
 
     /**
@@ -328,21 +483,43 @@
         const token = getUsableToken();
         if (!token || !cfg.syncWebAppUrl) return;
         migrateLegacyTrackerIfNeeded();
+        let progressRows = [];
+        let generalRows = [];
         try {
             const progressData = await api({ action: "pullProgress", idToken: token });
-            if (progressData.rows && progressData.rows.length) {
-                mergeCloudIntoLocalStorage(progressData.rows);
+            progressRows = progressData.rows || [];
+            if (progressRows.length) {
+                mergeCloudIntoLocalStorage(progressRows);
             }
         } catch (e) {
             console.warn("[DSA sync] pullProgress failed:", e);
+            if (!handleSyncAuthError(e)) {
+                setSyncStatus("Could not load cloud progress — using local data", true);
+            }
         }
         try {
             const generalData = await api({ action: "pullGeneralNotes", idToken: token });
-            if (generalData.rows && generalData.rows.length) {
-                mergeGeneralNotesFromCloud(generalData.rows);
+            generalRows = generalData.rows || [];
+            if (generalRows.length) {
+                mergeGeneralNotesFromCloud(generalRows);
             }
         } catch (e) {
             console.warn("[DSA sync] pullGeneralNotes skipped (deploy latest SyncWebApp.gs):", e);
+            handleSyncAuthError(e);
+        }
+
+        const progressPending = scheduleReconcilePushAfterPull(progressRows);
+        const generalPending = scheduleReconcileGeneralNotesAfterPull(generalRows);
+        if (progressPending > 0) {
+            setSyncActivity("Syncing local changes…");
+            await flushPush();
+        }
+        if (generalPending > 0) {
+            setSyncActivity("Syncing notes…");
+            await flushGeneralPush();
+        }
+        if (progressPending === 0 && generalPending === 0) {
+            setSyncActivity("");
         }
     };
 
@@ -400,10 +577,14 @@
         try {
             await api({ action: "pushProgress", idToken: token, rows });
             setSyncActivity("Saved");
+            setSyncStatus("", false);
         } catch (e) {
             console.warn("[DSA sync] Push failed:", e);
             keys.forEach((k) => dirty.add(k));
-            setSyncStatus("Sync error · retrying", true);
+            if (!handleSyncAuthError(e)) {
+                setSyncStatus("Sync error · retrying", true);
+                schedulePushRetry();
+            }
         }
     }
 
@@ -674,14 +855,7 @@
 
         if (outBtn) {
             outBtn.onclick = () => {
-                dirty.clear();
-                generalDirty.clear();
-                try {
-                    localStorage.removeItem(TOKEN_KEY);
-                    localStorage.removeItem(TOKEN_STORED_AT_KEY);
-                } catch (_) {
-                    /* ignore */
-                }
+                clearGoogleSession();
                 try {
                     localStorage.setItem(SIGNED_OUT_TRACKER_KEY, "{}");
                 } catch (_) {

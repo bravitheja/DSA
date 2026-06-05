@@ -24,6 +24,11 @@ const TIMER_FLOAT_POS_KEY = "dsa-timer-float-pos-v1";
 const TIMER_PIP_ENABLED_KEY = "dsa-timer-pip-enabled-v1";
 const TIMER_PIP_POS_KEY = "dsa-timer-pip-pos-v1";
 const TIMER_STICKY_KEY = "dsa-timer-sticky-v1";
+const SIDEBAR_WIDTH_KEY = "dsa-sidebar-width-px";
+const SIDEBAR_WIDTH_MIN = 220;
+const SIDEBAR_WIDTH_DEFAULT = 280;
+const SIDEBAR_WIDTH_MAX = 520;
+const SIDEBAR_RESIZE_DESKTOP_MIN = 901;
 const TIMER_MAX_DURATION_SEC = 24 * 3600;
 
 /** Post-it backgrounds for the timer sticky card (local only, not synced). */
@@ -96,6 +101,9 @@ const elements = {
     mediumRing: getEl("mediumRing"),
     hardRing: getEl("hardRing"),
     breakdown: getEl("sidebarBreakdown"),
+    dashboardShell: getEl("dashboardShell"),
+    sidebarPanel: getEl("sidebarPanel"),
+    sidebarResize: getEl("sidebarResize"),
     notesSheet: getEl("notesSheet"),
     notesSheetResize: getEl("notesSheetResize"),
     sheetTitle: getEl("sheetTitle"),
@@ -332,6 +340,7 @@ async function init() {
     __dsaAppReady = false;
     window.__DSA_APP_READY__ = false;
     applyTheme(localStorage.getItem(THEME_KEY) || "light");
+    applySidebarWidth(loadStoredSidebarWidth(), false);
     try {
         bindControls();
         setGeneralNotesUiReady(false);
@@ -564,6 +573,7 @@ function bindControls() {
         }
         syncPageSizeFromViewportIfAuto();
         clampNotesSheetWidthToViewport();
+        clampSidebarWidthToViewport();
         const totalPages = getTotalPages(filteredProblems.length);
         currentPage = Math.min(currentPage, totalPages);
         renderProblems();
@@ -571,9 +581,125 @@ function bindControls() {
     });
 
     initNotesSheetResize();
+    initSidebarResize();
     bindSessionTimer();
     initGeneralNotesModal();
     initTimerSticky();
+}
+
+function clampSidebarWidth(w) {
+    const max = Math.min(SIDEBAR_WIDTH_MAX, Math.floor(window.innerWidth * 0.45));
+    return Math.max(SIDEBAR_WIDTH_MIN, Math.min(max, Math.round(w)));
+}
+
+function loadStoredSidebarWidth() {
+    try {
+        const raw = localStorage.getItem(SIDEBAR_WIDTH_KEY);
+        if (raw == null) return SIDEBAR_WIDTH_DEFAULT;
+        const n = parseInt(raw, 10);
+        if (!Number.isFinite(n)) return SIDEBAR_WIDTH_DEFAULT;
+        return clampSidebarWidth(n);
+    } catch (_) {
+        return SIDEBAR_WIDTH_DEFAULT;
+    }
+}
+
+function applySidebarWidth(px, persist) {
+    const shell = elements.dashboardShell;
+    if (!shell) return;
+    const w = clampSidebarWidth(px);
+    shell.style.setProperty("--sidebar-w", `${w}px`);
+    if (persist) {
+        try {
+            localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w));
+        } catch (_) {
+            /* ignore */
+        }
+    }
+}
+
+function clampSidebarWidthToViewport() {
+    const shell = elements.dashboardShell;
+    if (!shell || window.innerWidth < SIDEBAR_RESIZE_DESKTOP_MIN) return;
+    const raw = shell.style.getPropertyValue("--sidebar-w").trim();
+    if (!raw) return;
+    const n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) return;
+    const next = clampSidebarWidth(n);
+    if (next !== n) {
+        applySidebarWidth(next, true);
+    }
+}
+
+function initSidebarResize() {
+    const handle = elements.sidebarResize;
+    const shell = elements.dashboardShell;
+    if (!handle || !shell) return;
+
+    let dragging = false;
+    let startX = 0;
+    let startW = SIDEBAR_WIDTH_DEFAULT;
+
+    const endDrag = (e) => {
+        if (!dragging) return;
+        dragging = false;
+        shell.classList.remove("dashboard-shell--sidebar-resizing");
+        document.body.classList.remove("sidebar-resizing");
+        try {
+            handle.releasePointerCapture(e.pointerId);
+        } catch (_) {
+            /* ignore */
+        }
+        const raw = shell.style.getPropertyValue("--sidebar-w").trim();
+        const w = parseInt(raw, 10);
+        if (Number.isFinite(w)) {
+            applySidebarWidth(w, true);
+        }
+    };
+
+    handle.addEventListener("pointerdown", (e) => {
+        if (window.innerWidth < SIDEBAR_RESIZE_DESKTOP_MIN) return;
+        if (e.button !== 0) return;
+        e.preventDefault();
+        dragging = true;
+        startX = e.clientX;
+        const raw = shell.style.getPropertyValue("--sidebar-w").trim();
+        startW = parseInt(raw, 10) || SIDEBAR_WIDTH_DEFAULT;
+        shell.classList.add("dashboard-shell--sidebar-resizing");
+        document.body.classList.add("sidebar-resizing");
+        handle.setPointerCapture(e.pointerId);
+    });
+
+    handle.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        const delta = e.clientX - startX;
+        applySidebarWidth(startW + delta, false);
+    });
+
+    handle.addEventListener("pointerup", endDrag);
+    handle.addEventListener("pointercancel", endDrag);
+
+    handle.addEventListener("dblclick", () => {
+        if (window.innerWidth < SIDEBAR_RESIZE_DESKTOP_MIN) return;
+        applySidebarWidth(SIDEBAR_WIDTH_DEFAULT, true);
+    });
+
+    handle.addEventListener("keydown", (e) => {
+        if (window.innerWidth < SIDEBAR_RESIZE_DESKTOP_MIN) return;
+        const step = e.shiftKey ? 40 : 16;
+        const raw = shell.style.getPropertyValue("--sidebar-w").trim();
+        const cur = parseInt(raw, 10) || SIDEBAR_WIDTH_DEFAULT;
+        if (e.key === "ArrowRight") {
+            e.preventDefault();
+            applySidebarWidth(cur + step, true);
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            applySidebarWidth(cur - step, true);
+        } else if (e.key === "Home") {
+            e.preventDefault();
+            applySidebarWidth(SIDEBAR_WIDTH_DEFAULT, true);
+        }
+    });
 }
 
 function clampNotesSheetWidth(w) {

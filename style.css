@@ -47,8 +47,9 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color
 
 /* Desktop Grid */
 .dashboard-shell {
+  --sidebar-w: 280px;
   display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
   min-height: 100vh;
   overflow-x: clip;
 }
@@ -74,7 +75,58 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color
   }
 }
 
-.sidebar { border-right: 1px solid var(--border); padding: 1.5rem 1rem; background: var(--panel); }
+.sidebar {
+  position: relative;
+  border-right: 1px solid var(--border);
+  padding: 1.5rem 1rem;
+  background: var(--panel);
+}
+
+.sidebar-resize {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  z-index: 3;
+  cursor: ew-resize;
+  touch-action: none;
+  background: transparent;
+  transform: translateX(50%);
+}
+
+.sidebar-resize::after {
+  content: "";
+  position: absolute;
+  right: 3px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.sidebar-resize:hover::after,
+.sidebar-resize:focus-visible::after {
+  background: rgba(99, 102, 241, 0.35);
+}
+
+.dashboard-shell--sidebar-resizing {
+  transition: none;
+}
+
+body.sidebar-resizing {
+  cursor: ew-resize !important;
+  user-select: none;
+}
+
+@media (min-width: 901px) {
+  .sidebar-resize {
+    display: block;
+  }
+}
 
 /* Session sticky: let the timer stack grow so the note editor can fill the peach card (desktop sidebar). */
 @media (min-width: 901px) {
@@ -3090,7 +3142,6 @@ button:active,
 }
 
 @media (max-width: 1200px) {
-  .dashboard-shell { grid-template-columns: minmax(200px, 240px) minmax(0, 1fr); }
   .filter-bar { padding-inline: var(--space-4); }
   .table-shell { margin: var(--space-4); }
 }

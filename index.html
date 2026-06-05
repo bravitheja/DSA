@@ -171,8 +171,8 @@
     </div>
 
     <div id="appRoot" class="app-root">
-    <div class="dashboard-shell">
-      <aside class="sidebar" aria-label="Progress and tools sidebar">
+    <div id="dashboardShell" class="dashboard-shell">
+      <aside class="sidebar" id="sidebarPanel" aria-label="Progress and tools sidebar">
         <div class="brand-row">
           <div>
             <h1>AlgoInsight</h1>
@@ -292,6 +292,14 @@
             </section>
           </div>
         </div>
+        <div
+          id="sidebarResize"
+          class="sidebar-resize"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Drag to resize sidebar"
+          tabindex="0"
+        ></div>
       </aside>
 
       <main class="main-pane" id="mainContent">
